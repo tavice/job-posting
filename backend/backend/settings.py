@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'job'
 ]
 
 MIDDLEWARE = [
@@ -99,6 +100,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#Custom backend
+AUTHENTICATION_BACKENDS =['backend.apis.backend.CustomBackend']
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
