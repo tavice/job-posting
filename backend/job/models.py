@@ -56,14 +56,16 @@ class JobListing(models.Model):
     def __str__(self):
         return self.jobtitle
 
-#Job seeker schema: This schema would define the job seeker model for the app, including fields like name, email, phone, and location. Job seekers can create profiles and apply for jobs through this schema.
+#Job seeker schema: This schema would define the job seeker model fJob seekers can create profiles and apply for jobs through this schema.
 
 class JobSeeker(models.Model):
-    name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=254)
-    phone = models.CharField(max_length=50)
-    location = models.CharField(max_length=50)
+   
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    bio = models.CharField(max_length=250, default='bio')
+    location = models.CharField(max_length=50, default='location')
+    phone = models.CharField(max_length=50, default='0000000000')
+    
+
     
 
     def __str__(self):

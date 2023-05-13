@@ -8,7 +8,8 @@ class JobListingAdmin(admin.ModelAdmin):
     list_display = ('jobtitle', 'description', 'location', 'salary', 'jobrequirements', 'employer')
 
 class JobSeekerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'phone', 'location', 'user')
+    list_display = ('bio', 'location', 'phone', 'user')
+
 
 class EmployerAdmin(admin.ModelAdmin):
     list_display = ('companyname', 'website', 'logo', 'location', 'phone', 'user')
