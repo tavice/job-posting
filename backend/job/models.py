@@ -47,10 +47,10 @@ class Employer(models.Model):
 
 class JobListing(models.Model):
     jobtitle = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
-    location = models.CharField(max_length=50)
-    salary = models.CharField(max_length=50)
-    jobrequirements = models.CharField(max_length=50)
+    description = models.CharField(max_length=1000)
+    location = models.CharField(max_length=250)
+    salary = models.CharField(max_length=250)
+    jobrequirements = models.CharField(max_length=1000)
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
 
     def __str__(self):
