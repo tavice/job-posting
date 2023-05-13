@@ -1,3 +1,4 @@
 Pipfile
 Pipfile.lock
 users.json
+/node_modules
