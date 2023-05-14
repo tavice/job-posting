@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 
@@ -22,6 +23,12 @@ class User(AbstractUser): #The AbstractUser class is provided by Django and incl
             'Specific permissions for this user.'
             ),
     )
+
+    #save password as hash using django's hashing function
+    def save(self, *args, **kwargs):
+        # Hash the password before saving the user
+        self.password = make_password(self.password) #make_password is a django function that hashes the password
+        super().save(*args, **kwargs) #super() calls the parent class's save method
     
     def __str__(self):
         return self.username

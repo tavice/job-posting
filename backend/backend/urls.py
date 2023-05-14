@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from job import views
+from rest_framework.authtoken.views import ObtainAuthToken
 
 from rest_framework import routers
 
@@ -35,4 +36,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')), #this is for the browsable API
     path('api/login/', views.login_view, name='login_view'),
+    path('api-token-auth/', ObtainAuthToken.as_view()),
 ]
