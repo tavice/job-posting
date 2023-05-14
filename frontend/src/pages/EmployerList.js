@@ -19,10 +19,12 @@ const EmployerList = ({ baseUrl }) => {
   console.log(employerList);
   //=======================================================//
   // Fetching Job Listings//
-  const fetchJobListings = async (employerId) => {
+  const fetchJobListings = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/api/joblistings/?employer=${employerId}`);
+      const response = await axios.get(`${baseUrl}/api/joblistings`);
+     
       const data = response.data;
+      console.log(data);
       return data;
     } catch (error) {
       console.log(error);
@@ -30,22 +32,29 @@ const EmployerList = ({ baseUrl }) => {
     }
   };
 
+  //=======================================================//
+  // once we have the job listings, we need to group them by employer
+  // that means we need to create a new object where the keys are the employer ids
+  // and the values are the job listings for that employer
+
+
   const [jobListings, setJobListings] = useState({});
-
   useEffect(() => {
-    const fetchData = async () => {
-      const jobListingsData = {};
-      for (const employer of employerList) {
-        const jobs = await fetchJobListings(employer.id);
-        console.log(jobs);
-        jobListingsData[employer.id] = jobs;
-      }
-      setJobListings(jobListingsData);
+    const getJobListings = async () => {
+      const data = await fetchJobListings(); // fetch job listings
+      const jobListings = data.reduce((acc, job) => { // group job listings by employer
+        if (!acc[job.employer]) { // if the employer doesn't exist in the object yet, add it
+          acc[job.employer] = []; // initialize the array
+        }
+        acc[job.employer].push(job); // add the job listing to the array
+        return acc;
+      }, {});
+      setJobListings(jobListings);
     };
-    fetchData();
-  }, [employerList]);
+    getJobListings();
+  }, []);
 
-  console.log(jobListings);
+  console.log('joblisting is ', jobListings);
 
   //=======================================================//
 
