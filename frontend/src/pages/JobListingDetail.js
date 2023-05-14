@@ -11,27 +11,22 @@ const JobListingDetail = ({ baseUrl }) => {
   const [user, setUser] = useState({});
   const navigate = useNavigate();
 
+
+  console.log('ide is', id);
   //=======================================================//
   // Fetching Job Listing//
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (user.is_authenticated) {
-        try {
-          const response = await axios.get(
-            `${baseUrl}/api/users/${user.profile.user}`
-          );
-          const data = response.data;
-          setUser(data);
-        } catch (error) {
-          console.log(error);
-          // Display a friendly error message to the user
-        }
-      }
-    };
-    fetchUser();
-  }, [user]);
+  const fetchJobListing = async () => {
+    const response = await axios.get(`${baseUrl}/api/joblistings/${id}`);
+    const data = response.data;
+    setJobListing(data);
+  };
 
-  console.log(user);
+  useEffect(() => {
+    fetchJobListing();
+  }, []);
+
+  console.log(jobListing);
+
 
   //=======================================================//
   // Fetching Employer//
@@ -53,21 +48,21 @@ const JobListingDetail = ({ baseUrl }) => {
   //=======================================================//
   //Fetching User//
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get(`${baseUrl}/api/users/${user.id}/`);
-        const data = response.data;
-        setUser(data);
-      } catch (error) {
-        console.log(error);
-        // Display a friendly error message to the user
-      }
-    };
-    if (user && user.is_authenticated) { // Add null check before calling axios.get()
-      fetchUser();
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const response = await axios.get(`${baseUrl}/api/users/${user.id}/`);
+  //       const data = response.data;
+  //       setUser(data);
+  //     } catch (error) {
+  //       console.log(error);
+  //       // Display a friendly error message to the user
+  //     }
+  //   };
+  //   if (user && user.is_authenticated) { // Add null check before calling axios.get()
+  //     fetchUser();
+  //   }
+  // }, [user]);
   
   //=======================================================//
   // Delete Job Listing//
