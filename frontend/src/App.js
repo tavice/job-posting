@@ -5,6 +5,8 @@ import { Route, Routes } from "react-router-dom";
 //Importing Components
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Register from './components/Register';
+import Login from './components/Login'; 
 
 //Importing Pages
 import Home from './pages/Home';
@@ -21,6 +23,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/employer-job-listing" element={<EmployerList baseUrl={baseUrl} />} />
         <Route path="/job-listing-detail/:id" element={<JobListingDetail baseUrl={baseUrl}/>} />
+        <Route path="/register" element={<Register baseUrl={baseUrl} />} />
+        <Route path="/login" element={<Login baseUrl={baseUrl} />} />
       </Routes>
       <Footer />
  

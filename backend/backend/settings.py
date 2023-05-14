@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'rest_framework.authtoken', #this is for the browsable API
     'rest_framework',
     'django_extensions', 
     'job'

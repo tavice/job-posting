@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from job import views
+
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -32,4 +33,6 @@ router.register(r'users', views.UserViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls')), #this is for the browsable API
+    path('api/login/', views.login_view, name='login_view'),
 ]
