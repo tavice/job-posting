@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from .models import Employer, JobListing, JobSeeker, JobApplication, Payment
+from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 
 class EmployerSerializer(serializers.ModelSerializer):
     class Meta:

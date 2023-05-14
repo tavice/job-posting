@@ -1,3 +1,4 @@
+/*=============================================*/
 /* Main Styling */
 body {
   font-family: Arial, sans-serif;
@@ -7,6 +8,7 @@ body {
   padding: 0;
 }
 
+/*=============================================*/
 /* Header Styling */
 .header{
   background-color: #007bff;
@@ -42,6 +44,17 @@ body {
   color: #007bff;
 }
 
+
+/*=============================================*/
+/*Footer.js*/
+.footer{
+  background-color: #007bff;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+/*=============================================*/
 /*Form Styling*/
 h1 {
   margin-top: 2rem;
@@ -103,6 +116,7 @@ input[type="submit"]:disabled, button[type="submit"]:disabled {
   cursor: not-allowed;
 }
 
+/*=============================================*/
 /* EmployerList.js */
 .logo {
   height: 50px;
@@ -137,36 +151,41 @@ input[type="submit"]:disabled, button[type="submit"]:disabled {
   margin-bottom: 20px;
   max-width: 800px;
   margin: 0 auto;
-  flex-wrap: wrap; /* add this to wrap the elements to the next line when there is not enough space */
+  flex-wrap: wrap; 
 }
 
 .employer-info {
   display: flex;
   align-items: center;
   margin-bottom: 30px;
-  flex-wrap: wrap; /* add this to wrap the elements to the next line when there is not enough space */
+  flex-wrap: wrap; 
 }
 
 .logo-container {
   width: 200px;
   margin-right: 20px;
-  flex: 0 0 200px; /* add this to keep the width of the container at 200px */
+  flex: 0 0 200px;
 }
 
 .logo-container img {
   max-width: 100%;
-  height: auto; /* add this to maintain aspect ratio of the image */
+  height: auto; 
 }
 
 .job {
   margin-bottom: 30px;
   border: 1px solid #ccc;
   padding: 20px;
-  width: 100%; /* add this to make sure the width is 100% of the container */
+  width: 100%; 
 }
 
+/*=============================================*/
+/* JobList.js */
 
 
+
+
+/*=============================================*/
 /* login.html */
 form {
   max-width: 400px;

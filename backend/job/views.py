@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import Employer, JobListing, JobSeeker, JobApplication, Payment
-from .serializers import EmployerSerializer, JobListingSerializer, JobSeekerSerializer, JobApplicationSerializer, PaymentSerializer
+from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User
+from .serializers import UserSerializer, EmployerSerializer, JobListingSerializer, JobSeekerSerializer, JobApplicationSerializer, PaymentSerializer
+
+# User views
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 # Employer views
 class EmployerViewSet(viewsets.ModelViewSet):
