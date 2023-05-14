@@ -57,10 +57,52 @@ const EmployerList = ({ baseUrl }) => {
   console.log('joblisting is ', jobListings);
 
   //=======================================================//
+  // Filtering Job Listings//
+
+  const [filter, setFilter] = useState("");
+  const [filteredJobListings, setFilteredJobListings] = useState([]);
+
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+
+  };
+
+  const handleFilterSubmit = (event) => {
+    event.preventDefault();
+    const filteredJobListings = Object.values(jobListings)
+      .flatMap((jobs) => jobs)
+      .filter((job) => job.jobtitle.toLowerCase().includes(filter.toLowerCase()));
+      console.log('filtered joblisting is ', filteredJobListings);
+    setFilteredJobListings(filteredJobListings);
+  };
+
+
+  
+  console.log('filtered joblisting is ', filteredJobListings);
+  
+
+
+
+
+  console.log('filter is ', filter);
+
+
+  //=======================================================//
+  // Rendering Employer List//
 
   return (
     <div>
       <h1>Employer List</h1>
+      <div className="filter-container">
+        <label htmlFor="filter">Search Job Title:</label>
+        <input
+          type="text"
+          id="filter"
+          value={filter}
+          onChange={handleFilterChange}
+
+        />
+      </div>
       {employerList.map((employer) => (
         <section key={employer.id}>
           <div className="container">
