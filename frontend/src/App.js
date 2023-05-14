@@ -20,7 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/employer-job-listing" element={<EmployerList baseUrl={baseUrl} />} />
-        <Route path="/job-listing-detail/:id" element={<JobListingDetail />} />
+        <Route path="/job-listing-detail/:id" element={<JobListingDetail baseUrl={baseUrl}/>} />
       </Routes>
       <Footer />
  

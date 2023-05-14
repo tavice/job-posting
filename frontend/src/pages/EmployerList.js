@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const EmployerList = ({ baseUrl }) => {
   const [employerList, setEmployerList] = useState([]);
@@ -125,7 +126,7 @@ const EmployerList = ({ baseUrl }) => {
                 jobListings[employer.id].map((job) => (
                   <div className="job" key={job.id}>
                     <h3>
-                      <a href={`/job/${job.pk}`}>{job.jobtitle}</a>
+                      <Link to={`/job-listing-detail/${job.id}`}>{job.jobtitle}</Link>
                     </h3>
                     <p>
                       <strong>Location:</strong> {job.location}
