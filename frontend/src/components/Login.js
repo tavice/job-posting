@@ -24,6 +24,9 @@ const Login = ({ baseUrl }) => {
       const body = JSON.stringify({ username, password });
       const response = await axios.post(`${baseUrl}/api/login/`, body, config);
       const token = response.data.token;
+      localStorage.setItem("token", token); // save the token to local storage so we can use it later for example to check if the user is logged in
+      localStorage.setItem("authenticated_user", response.data.user.id);
+   
       axios.defaults.headers.common["Authorization"] = `Token ${token}`;
       const data = response.data;
       console.log(data);

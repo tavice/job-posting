@@ -18,7 +18,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
+      <Header baseUrl={baseUrl}/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/employer-job-listing" element={<EmployerList baseUrl={baseUrl} />} />

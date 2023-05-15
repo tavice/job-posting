@@ -109,6 +109,13 @@ AUTH_PASSWORD_VALIDATORS = [
 #Custom backend
 AUTHENTICATION_BACKENDS =['backend.apis.backend.CustomBackend']
 
+
+#CSFR and Session settings
+CSRF_COOKIE_NAME = "csrftoken"
+SESSION_COOKIE_NAME = "sessionid"
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 

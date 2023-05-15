@@ -36,5 +36,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')), #this is for the browsable API
     path('api/login/', views.login_view, name='login_view'),
+    path('api/logout/', views.logout_view, name='logout_view'),
     path('api-token-auth/', ObtainAuthToken.as_view()),
 ]
