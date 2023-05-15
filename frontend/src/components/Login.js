@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
 const Login = ({ baseUrl }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +34,7 @@ const Login = ({ baseUrl }) => {
       if (data.message === "You are logged in.") {
         console.log("User is logged in.");
       }
-      navigate("/");
+      window.location.href = "/";
     } catch (err) {
       console.error(err);
       setError("Invalid username or password.");

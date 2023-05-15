@@ -27,7 +27,7 @@ margin: 0 1rem;
 
     </div>
     ) : (
-        <h2> Sign in For More Information</h2>
+        <h2> Welcome ! Sign in For More Information</h2>
     )}
     </div>
   )
