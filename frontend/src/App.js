@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Register from './components/Register';
 import Login from './components/Login'; 
+import HeaderUserIdentified from './components/HeaderUserIdentified';
 
 //Importing Pages
 import Home from './pages/Home';
@@ -19,6 +20,7 @@ function App() {
   return (
     <div className="App">
       <Header baseUrl={baseUrl}/>
+      <HeaderUserIdentified />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/employer-job-listing" element={<EmployerList baseUrl={baseUrl} />} />

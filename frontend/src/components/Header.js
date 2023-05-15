@@ -18,20 +18,20 @@ const Header = ({ baseUrl }) => {
 
   //================================================================//
   //Get Cookie Function//
-  const getCookie = (name) => {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith(name + "=")) {
-        return decodeURIComponent(cookie.substring(name.length + 1));
-      }
-    }
-    return null;
-  };
+  // const getCookie = (name) => {
+  //   const cookies = document.cookie.split(";");
+  //   for (let i = 0; i < cookies.length; i++) {
+  //     const cookie = cookies[i].trim();
+  //     if (cookie.startsWith(name + "=")) {
+  //       return decodeURIComponent(cookie.substring(name.length + 1));
+  //     }
+  //   }
+  //   return null;
+  // };
 
   //================================================================//
   //Logout Function//
-  const csrf_token = getCookie("csrftoken");
+  //const csrf_token = getCookie("csrftoken");
 
   const handleLogout = async () => {
     try {

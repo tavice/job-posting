@@ -46,6 +46,26 @@ body {
 
 
 /*=============================================*/
+/* HeaderUserIdentified.js */
+
+.header-user-identified-main{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f05e23;
+  height: 2rem;
+}
+
+.header-user-identified{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/*=============================================*/
 /*Footer.js*/
 .footer{
   background-color: #007bff;
