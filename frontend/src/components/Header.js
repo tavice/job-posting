@@ -19,12 +19,31 @@ const StyledLink = styled(Link)`
     <div className="header">
       <h1 className="main-title">MyJobSearch.com</h1>
       <nav className="nav-bar">
+        <div className="link-to-pages">
         <StyledLink to="/" className="nav-link">
           Home
         </StyledLink>
         <StyledLink to="/employer-job-listing" className="nav-link">
           Job Listings
         </StyledLink>
+        </div>
+        {localStorage.getItem("token") ? ( //if token is in local storage, show logout link
+        <div className="link-to-auth">
+        <StyledLink to="/logout" className="nav-link">
+          Logout 
+        </StyledLink>
+        </div>
+        ):( //if token is not in local storage, show register and login links
+
+        <div className="link-to-auth">
+        <StyledLink to="/register" className="nav-link">
+          Register
+        </StyledLink>
+        <StyledLink to="/login" className="nav-link">
+          Login
+        </StyledLink>
+        </div>
+        )}
        
        
       </nav>
