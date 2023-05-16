@@ -47,7 +47,7 @@ const Register = ({ baseUrl }) => {
       const res = await axios.post(`${baseUrl}/api/users/`, body, config);
 
       console.log(res.data);
-        navigate("/");
+        navigate("/Home");
     } catch (err) {
       console.error(err.response.data);
     }

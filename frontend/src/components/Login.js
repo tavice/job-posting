@@ -34,7 +34,7 @@ const Login = ({ baseUrl }) => {
       if (data.message === "You are logged in.") {
         console.log("User is logged in.");
       }
-      window.location.href = "/";
+      window.location.href = "/Home";
     } catch (err) {
       console.error(err);
       setError("Invalid username or password.");

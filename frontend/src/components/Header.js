@@ -4,7 +4,26 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
-import { Button, Typography, Grid, Paper, AppBar, Toolbar } from "@mui/material";
+//================================================================//
+//Material UI
+
+import {
+  Button,
+  Typography,
+  Grid,
+  Paper,
+  AppBar,
+  Toolbar,
+} from "@mui/material";
+import Container from "@mui/material/Container";
+import WorkIcon from "@mui/icons-material/Work";
+import Box from "@mui/material/Box";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
 
 const Header = ({ baseUrl }) => {
   //================================================================//
@@ -51,7 +70,7 @@ const Header = ({ baseUrl }) => {
         localStorage.removeItem("token");
         localStorage.removeItem("authenticated_user");
         console.log("User is logged out.");
-        window.location.href = "/";
+        window.location.href = "/Home";
       } else {
         console.error("Failed to log out");
       }
@@ -62,52 +81,198 @@ const Header = ({ baseUrl }) => {
   };
 
   //================================================================//
+  //Nav Menu//
+  const pages = ["Home", "Job Listings", "About Us", "Contact Us"];
+  const pagesLinks = ["/", "/job-listings", "/about-us", "/contact-us"];
+  const settings = ["My Dashboard", "Log Out"];
+
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const handleClickNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  console.log(anchorElNav);
+
+  const handleClickUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
+
+  console.log(anchorElUser);
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  //================================================================//
   //Render//
   return (
-    <div className="headerClass" style={{display: "flex"}} >
-      <AppBar position="static">
-      <Toolbar>
-      <Typography variant="h1" style={{ flexGrow: 1 }}>MyJobSearch.com</Typography>
-      <nav className="nav-bar">
-        <div className="link-to-pages">
-          <StyledLink to="/" className="nav-link">
-            Home
-          </StyledLink>
-          <StyledLink to="/employer-job-listing" className="nav-link">
-            Job Listings
-          </StyledLink>
-        </div>
-        {localStorage.getItem("token") ? ( //if token is in local storage, show logout link
-          <div className="link-to-auth">
-            <Button
-              variant="contained"
-              color="secondary"
-              style={{ margin: "0 1rem" }}
-              onClick={handleLogout}
+    <AppBar position="static">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <WorkIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              fontFamily: "Roboto, sans-serif",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            MYJOBSEARCH.COM
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleClickNavMenu}
+              color="inherit"
             >
-              Logout
-            </Button>
-          </div>
-        ) : (
-          //if token is not in local storage, show register and login links
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: "block", md: "none" },
+              }}
+            >
+              {pages.map((page) => (
+                //each page is to be associated with a link which is stored in the pagesLinks array
 
-          <div className="link-to-auth">
-            <StyledLink to="/register" className="nav-link">
-              Register
-            </StyledLink>
-            <StyledLink to="/login" className="nav-link">
-              Login
-            </StyledLink>
-            
-          </div>
-        )}
-      </nav>
-      </Toolbar>
-      </AppBar>
-    </div>
+                <MenuItem>
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center"
+                    component={Link}
+                    to={`/${page}`}
+                    
+                    >{page}
+                    </Typography>
+                  </MenuItem>
+
+                
+                </MenuItem>
+               
+              ))}
+            </Menu>
+          </Box>
+          <WorkIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 2,
+              display: { xs: "flex", md: "none" },
+              flexGrow: 1,
+              fontFamily: "Roboto, sans-serif",
+              fontWeight: 700,
+              letterSpacing: ".3rem",
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            MYJOBSEARCH.COM
+          </Typography>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {pages.map((page) => (
+        
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                component={Link}
+                to={`/${page}`}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                {page}
+              </Button>
+            ))}
+          </Box>
+          {localStorage.getItem("token") ? (   
+
+          //Button to log out
+          
+          
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleClickUserMenu} sx={{ p: 0 }}>
+                <Avatar alt="avatar" src="/static/images/avatar/2.jpg" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              <MenuItem><Link to="/dashboard">My Dashboard</Link></MenuItem>
+              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+            </Menu>
+          </Box>
+          ) : (
+            <Box sx={{ flexGrow: 0 }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to="/login"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Sign In
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to="/register"
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Sign Up
+              </Button>
+            </Box>
+          )}
+
+     
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 
 export default Header;
-
-

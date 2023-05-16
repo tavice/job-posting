@@ -22,8 +22,8 @@ function App() {
       <Header baseUrl={baseUrl}/>
       <HeaderUserIdentified />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/employer-job-listing" element={<EmployerList baseUrl={baseUrl} />} />
+        <Route path="/Home" element={<Home />} />
+        <Route path="/Job Listings" element={<EmployerList baseUrl={baseUrl} />} />
         <Route path="/job-listing-detail/:id" element={<JobListingDetail baseUrl={baseUrl}/>} />
         <Route path="/register" element={<Register baseUrl={baseUrl} />} />
         <Route path="/login" element={<Login baseUrl={baseUrl} />} />
