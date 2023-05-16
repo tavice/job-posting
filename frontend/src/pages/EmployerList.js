@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Button, Typography, Grid, Paper, Divider } from "@mui/material";
 
 const EmployerList = ({ baseUrl }) => {
   const [employerList, setEmployerList] = useState([]);
@@ -23,7 +24,7 @@ const EmployerList = ({ baseUrl }) => {
   const fetchJobListings = async () => {
     try {
       const response = await axios.get(`${baseUrl}/api/joblistings`);
-     
+
       const data = response.data;
       console.log(data);
       return data;
@@ -38,13 +39,14 @@ const EmployerList = ({ baseUrl }) => {
   // that means we need to create a new object where the keys are the employer ids
   // and the values are the job listings for that employer
 
-
   const [jobListings, setJobListings] = useState({});
   useEffect(() => {
     const getJobListings = async () => {
       const data = await fetchJobListings(); // fetch job listings
-      const jobListings = data.reduce((acc, job) => { // group job listings by employer
-        if (!acc[job.employer]) { // if the employer doesn't exist in the object yet, add it
+      const jobListings = data.reduce((acc, job) => {
+        // group job listings by employer
+        if (!acc[job.employer]) {
+          // if the employer doesn't exist in the object yet, add it
           acc[job.employer] = []; // initialize the array
         }
         acc[job.employer].push(job); // add the job listing to the array
@@ -55,7 +57,7 @@ const EmployerList = ({ baseUrl }) => {
     getJobListings();
   }, []);
 
-  console.log('joblisting is ', jobListings);
+  console.log("joblisting is ", jobListings);
 
   //=======================================================//
   // Filtering Job Listings//
@@ -65,35 +67,31 @@ const EmployerList = ({ baseUrl }) => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
-
   };
 
   const handleFilterSubmit = (event) => {
     event.preventDefault();
     const filteredJobListings = Object.values(jobListings)
       .flatMap((jobs) => jobs)
-      .filter((job) => job.jobtitle.toLowerCase().includes(filter.toLowerCase()));
-      console.log('filtered joblisting is ', filteredJobListings);
+      .filter((job) =>
+        job.jobtitle.toLowerCase().includes(filter.toLowerCase())
+      );
+    console.log("filtered joblisting is ", filteredJobListings);
     setFilteredJobListings(filteredJobListings);
   };
 
+  console.log("filtered joblisting is ", filteredJobListings);
 
-  
-  console.log('filtered joblisting is ', filteredJobListings);
-  
-
-
-
-
-  console.log('filter is ', filter);
-
+  console.log("filter is ", filter);
 
   //=======================================================//
   // Rendering Employer List//
 
   return (
-    <div>
-      <h1>Employer List</h1>
+    <div style={{ padding: 20 }}>
+      <Typography variant="h2" style={{ marginBottom: 20, alignItems:"center" }}>
+        Current Jobs Available
+      </Typography>
       <div className="filter-container">
         <label htmlFor="filter">Search Job Title:</label>
         <input
@@ -101,53 +99,66 @@ const EmployerList = ({ baseUrl }) => {
           id="filter"
           value={filter}
           onChange={handleFilterChange}
-
         />
       </div>
       {employerList.map((employer) => (
-        <section key={employer.id}>
-          <div className="container">
-            <div className="employer-info">
-              <h1>{employer.companyname}</h1>
-              <div className="logo-container">
-                <img src={employer.logo} alt="Company Logo" />
-              </div>
-              <p>
-                <strong>Website:</strong>{" "}
-                <a href={employer.website}>{employer.companyname}</a>
-              </p>
-              <p>
-                <strong>Location:</strong> {employer.location}
-              </p>
-            </div>
-            <div className="job-listings">
-              <h2>Job Listings</h2>
-              {jobListings[employer.id] && jobListings[employer.id].length > 0 ? (
+        
+          <Grid container spacing={2} style={{ alignItems:"center", margin: 0 }}key={employer.id}>
+            
+              <Paper elevation={3} style={{ width:"80%", alignItems: "center", padding: 20, margin: ' auto',  marginBottom: 40 }}>
+                <Grid item xs={12} sm container style={{ justifyContent: "space-between", marginBottom: 20, marginTop: 20 }}>
+                <Typography variant="h3" gutterBottom>
+                  {employer.companyname}
+                </Typography>
+                <div style={{  justifyContent: "center" }}>
+                  <img src={employer.logo} alt="Company Logo" height={100} />
+                </div>
+                <Typography variant="body1" gutterBottom>
+                  <strong>Website:</strong>{" "}
+                  <a
+                    href={employer.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {employer.website}
+                  </a>
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Location:</strong> {employer.location}{" "}
+                </Typography>
+             
+              </Grid >
+              <Divider style={{ height: 5 }} />
+              <Typography variant="h4" style={{marginBottom: 40, marginTop:40 }}>Open Roles: </Typography>
+              {jobListings[employer.id] &&
+              jobListings[employer.id].length > 0 ? (
                 jobListings[employer.id].map((job) => (
-                  <div className="job" key={job.id}>
-                    <h3>
-                      <Link to={`/job-listing-detail/${job.id}`}>{job.jobtitle}</Link>
-                    </h3>
-                    <p>
+                  <Paper elevation={3} style={{ width:"80%", alignItems: "center", padding: 20, margin: 'auto', marginBottom: 20 }} key={job.id}>
+                     <Typography variant="h5" style={{ marginBottom: 20 }}>
+                      <Link to={`/job-listing-detail/${job.id}`}>
+                        {job.jobtitle}
+                      </Link>
+                    </Typography>
+                    <Typography variant="body1">
                       <strong>Location:</strong> {job.location}
-                    </p>
-                    <p>
+                    </Typography>
+                    <Typography variant="body1">
                       <strong>Salary:</strong> {job.salary}
-                    </p>
-                    <p>
+                    </Typography>
+                    <Typography variant="body1">
                       <strong>Requirements:</strong> {job.jobrequirements}
-                    </p>
-                    <p>
+                    </Typography>
+                    <Typography variant="body1">
                       <strong>Description:</strong> {job.description}
-                    </p>
-                  </div>
+                    </Typography>
+                  </Paper>
                 ))
               ) : (
                 <p>No job listings found.</p>
               )}
-            </div>
-          </div>
-        </section>
+            </Paper>
+          </Grid>
+       
       ))}
     </div>
   );

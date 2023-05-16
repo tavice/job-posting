@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
+import { Button, Typography, Grid, Paper } from "@mui/material";
+
 const Header = ({ baseUrl }) => {
   //================================================================//
   //Styled Components//
@@ -62,7 +64,7 @@ const Header = ({ baseUrl }) => {
   //Render//
   return (
     <div className="header">
-      <h1 className="main-title">MyJobSearch.com</h1>
+      <Typography variant="h1" style={{ marginBottom: 20 }}>MyJobSearch.com</Typography>
       <nav className="nav-bar">
         <div className="link-to-pages">
           <StyledLink to="/" className="nav-link">

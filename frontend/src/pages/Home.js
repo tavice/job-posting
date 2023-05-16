@@ -5,7 +5,7 @@ import { Button, Typography, Grid, Paper } from "@mui/material";
 const Home = () => {
   return (
     <div style={{ padding: 20 }}>
-      <Typography variant="h3" style={{ marginBottom: 20 }}>Welcome to Our Job Board!</Typography>
+      <Typography variant="h3" style={{ marginBottom: 20 }}>Welcome to MyJobSearch.com !</Typography>
 
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12} md={6}>
