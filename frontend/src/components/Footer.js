@@ -1,13 +1,16 @@
-import React from 'react'
+import React from 'react';
+import { Typography, Container } from '@mui/material';
 
 const Footer = () => {
   return (
-    <div>
-      <footer className="footer">
-        <p className="footer-text">MyJobSearch.com</p>
-      </footer>
-    </div>
-  )
-}
+    <footer className="footer">
+      <Container>
+        <Typography variant="body1" align="center" color="textSecondary">
+          &copy; {new Date().getFullYear()} MyJobSearch.com. All rights reserved.
+        </Typography>
+      </Container>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;

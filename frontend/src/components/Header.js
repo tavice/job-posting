@@ -112,7 +112,7 @@ const Header = ({ baseUrl }) => {
   //================================================================//
   //Render//
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{zIndex:2}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <WorkIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -120,7 +120,7 @@ const Header = ({ baseUrl }) => {
             variant="h5"
             noWrap
             component="a"
-            href="/"
+            href="/Home"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },

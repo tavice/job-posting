@@ -1,6 +1,13 @@
 import React from 'react'
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+//import styled from "styled-components";
+
+import { styled } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+
+import Typography from '@mui/material/Typography';
+
 
 const HeaderUserIdentified = () => {
 //This header will be displayed when the user is logged in just underneath the main header
@@ -18,7 +25,9 @@ margin: 0 1rem;
 `;
 
   return (
-    <div className='header-user-identified-main'>
+    <Box sx={{ flexGrow: 1 }}>
+    <AppBar position="static" style={{ backgroundColor: 'rgba(252, 70, 107, 0.6)', padding:20}}>
+     
     {localStorage.getItem("token") ? (
     <div className='header-user-identified'>
         <StyledLink to="/profile">My Dashboard</StyledLink>
@@ -27,9 +36,11 @@ margin: 0 1rem;
 
     </div>
     ) : (
-        <h2> Welcome ! Sign in For More Information</h2>
+      <Typography variant='h4'>Welcome! Sign in For More Information</Typography>
     )}
-    </div>
+     
+      </AppBar>
+    </Box>
   )
 }
 

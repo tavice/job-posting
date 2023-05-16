@@ -1,17 +1,38 @@
 /*=============================================*/
 /*Import fonts*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 
 
 
 /*=============================================*/
 /* Main Styling */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  color: #333;
-  margin: 0;
-  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  position: relative;
+  /* display: flex;
+  flex-direction: column; */
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(rgba(252, 70, 107, 0), rgba(63, 94, 251, 0.5)); /* Gradient background with transparency */
+             /* url("TBD") no-repeat center center / cover; /* Image URL and properties */
+  width: 100%;
+  height: 100%;
+  color: white;
+  text-align: center;
+ 
 }
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(252, 70, 107, 0.5), rgba(63, 94, 251, 0.7)); /* Gradient overlay with transparency */
+   z-index: -1;
+}   
 
 /*=============================================*/
 /* Header Styling */
@@ -58,9 +79,9 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  /*margin-bottom: 2rem;*/
   padding: 1rem;
-  background-color: #f05e23;
+  background-color: rgba(252, 70, 107, 0.7);
   height: 2rem;
 }
 
@@ -70,6 +91,44 @@ body {
   align-items: center;
 }
 
+.header-user-identified a{
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  margin: 0 1rem;
+}
+
+
+/*=============================================*/
+/* Home.js */
+
+/* .main-page{
+  position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(252, 70, 107, 0), rgba(63, 94, 251, 0.5)); /* Gradient background with transparency */
+               /* url("TBD") no-repeat center center / cover; Image URL and properties */
+    /* width: 100%;
+    height: 100vh;
+    color: white;
+    text-align: center; */
+   
+
+/* }
+
+.main-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(252, 70, 107, 0.5), rgba(63, 94, 251, 0.7)); /* Gradient overlay with transparency */
+  /* z-index: 0;
+}   */
+
 /*=============================================*/
 /*Footer.js*/
 .footer{
@@ -77,6 +136,7 @@ body {
   color: #fff;
   padding: 1rem;
   text-align: center;
+  z-index: 2;
 }
 
 /*=============================================*/

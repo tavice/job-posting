@@ -135,7 +135,7 @@ const EmployerList = ({ baseUrl }) => {
                 jobListings[employer.id].map((job) => (
                   <Paper elevation={3} style={{ width:"80%", alignItems: "center", padding: 20, margin: 'auto', marginBottom: 20 }} key={job.id}>
                      <Typography variant="h5" style={{ marginBottom: 20 }}>
-                      <Link to={`/job-listing-detail/${job.id}`}>
+                      <Link to={`/Job Listings/${job.id}`}>
                         {job.jobtitle}
                       </Link>
                     </Typography>

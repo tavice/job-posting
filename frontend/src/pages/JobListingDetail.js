@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { CircularProgress } from "@mui/material"; // import CircularProgress from Material UI
+import { CircularProgress, Typography, Grid, Paper } from "@mui/material";
 
 const JobListingDetail = ({ baseUrl }) => {
   const { id } = useParams();
   const [jobListing, setJobListing] = useState({});
   const [employer, setEmployer] = useState({});
-  const [isLoading, setIsLoading] = useState(true); // add state for loading
-  //const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
-  console.log('id is', id);
-  
-  //=======================================================//
-  // Fetching Job Listing//
   const fetchJobListing = async () => {
     try {
       const response = await axios.get(`${baseUrl}/api/joblistings/${id}`);
@@ -21,19 +16,12 @@ const JobListingDetail = ({ baseUrl }) => {
       setJobListing(data);
     } catch (error) {
       console.log(error);
-     
     }
   };
 
   useEffect(() => {
     fetchJobListing();
   }, []);
-
-  console.log(jobListing);
-  console.log('employer id is', jobListing.employer);
-
-  //=======================================================//
-  // Fetching Employer//
 
   const fetchEmployer = async () => {
     try {
@@ -42,49 +30,68 @@ const JobListingDetail = ({ baseUrl }) => {
       );
       const data = response.data;
       setEmployer(data);
-      setIsLoading(false); // set loading state to false after data is fetched
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
-      
     }
   };
 
   useEffect(() => {
-    if (jobListing.employer) { // only fetch employer if the job listing has an employer id useful to avoid errors
+    if (jobListing.employer) {
       fetchEmployer();
     }
   }, [jobListing.employer]);
 
-  console.log(employer);
-
   return (
     <div className="job-listing-detail">
-      {isLoading ? ( // render loading spinner when loading state is true
+      {isLoading ? (
         <CircularProgress />
       ) : (
-        <section className="job-details">
-          <h1 className="job-title">{jobListing.jobtitle}</h1>
-          <p className="employer-name">
-            <strong>Employer: </strong>
-            {employer.companyname}
-          </p>
-          <p className="job-description">
-            <strong>Description: </strong>
-            {jobListing.description}
-          </p>
-          <p className="job-location">
-            <strong>Location: </strong>
-            {jobListing.location}
-          </p>
-          <p className="job-salary">
-            <strong>Salary: </strong>
-            {jobListing.salary}
-          </p>
-          <p className="job-requirements">
-            <strong>Job Requirements: </strong>
-            {jobListing.jobrequirements}
-          </p>
-        </section>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h4" gutterBottom>
+              {jobListing.jobtitle}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Employer:
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                {employer.companyname}
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Location:
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                {jobListing.location}
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Salary:
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                {jobListing.salary}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Description:
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                {jobListing.description}
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Job Requirements:
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                {jobListing.jobrequirements}
+              </Typography>
+            </Paper>
+          </Grid>
+        </Grid>
       )}
     </div>
   );
