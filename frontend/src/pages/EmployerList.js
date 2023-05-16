@@ -154,7 +154,7 @@ const EmployerList = ({ baseUrl }) => {
                   </Paper>
                 ))
               ) : (
-                <p>No job listings found.</p>
+                <Typography variant="body1">No job listings found.</Typography>
               )}
             </Paper>
           </Grid>

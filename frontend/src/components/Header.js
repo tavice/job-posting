@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import styled from "styled-components";
 import axios from "axios";
 
-import { Button, Typography, Grid, Paper } from "@mui/material";
+import { Button, Typography, Grid, Paper, AppBar, Toolbar } from "@mui/material";
 
 const Header = ({ baseUrl }) => {
   //================================================================//
@@ -63,8 +64,10 @@ const Header = ({ baseUrl }) => {
   //================================================================//
   //Render//
   return (
-    <div className="header">
-      <Typography variant="h1" style={{ marginBottom: 20 }}>MyJobSearch.com</Typography>
+    <div className="headerClass" style={{display: "flex"}} >
+      <AppBar position="static">
+      <Toolbar>
+      <Typography variant="h1" style={{ flexGrow: 1 }}>MyJobSearch.com</Typography>
       <nav className="nav-bar">
         <div className="link-to-pages">
           <StyledLink to="/" className="nav-link">
@@ -76,9 +79,14 @@ const Header = ({ baseUrl }) => {
         </div>
         {localStorage.getItem("token") ? ( //if token is in local storage, show logout link
           <div className="link-to-auth">
-            <button onClick={handleLogout} className="nav-link">
+            <Button
+              variant="contained"
+              color="secondary"
+              style={{ margin: "0 1rem" }}
+              onClick={handleLogout}
+            >
               Logout
-            </button>
+            </Button>
           </div>
         ) : (
           //if token is not in local storage, show register and login links
@@ -94,8 +102,12 @@ const Header = ({ baseUrl }) => {
           </div>
         )}
       </nav>
+      </Toolbar>
+      </AppBar>
     </div>
   );
 };
 
 export default Header;
+
+
