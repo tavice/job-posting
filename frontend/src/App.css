@@ -139,7 +139,8 @@ body::before {
   align-items: center;
   margin-bottom: 2rem;
   padding: 1rem;
-  background-color: rgba(252, 70, 107, 0.2);
+  /*background-color: white;*/
+  background-color: rgba(252, 252, 252, 0.5);
   height: 100%;
   border-radius: 3%;
   width: 40%;
@@ -291,7 +292,7 @@ input[type="submit"]:disabled, button[type="submit"]:disabled {
 /*=============================================*/
 /* login.html */
 form {
-  max-width: 400px;
+  max-width: 80%;
   margin: 50px auto;
   padding: 20px;
   background-color: #fff;

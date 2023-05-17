@@ -74,53 +74,59 @@ const NewJobListingForm = ({ baseUrl }) => {
     <div style={{ padding: 20 }}>
         
       <form className="form-create-job" onSubmit={handleFormSubmit} style={{padding: 20}}>
-      <Typography variant="h4" style={{ marginBottom: 20, alignItems:"center", textTransform:'uppercase' }}>Create a New Job Listing</Typography>
+      <Typography variant="h4" style={{ marginBottom: 20, alignItems:"center", textTransform:'uppercase', color:'black' }}>Create a New Job Listing</Typography>
         <TextField
+          required
           label="Job Title"
           type="text"
-          id="job-title"
+          id="jpb-title"
           value={jobTitle}
           variant="standard"
-          style={{ marginBottom: 20 }}
+          style={{ marginBottom: 20, width: 500 }}
           onChange={(e) => setJobTitle(e.target.value)}
         />
 
         <TextField
+        required
           label="Job Description"
           type="text"
           id="description"
+          multiline
           value={description}
           variant="standard"
-          style={{ marginBottom: 20 }}
+          style={{ marginBottom: 20, width: 500 }}
           onChange={(e) => setDescription(e.target.value)}
         />
 
         <TextField
+        required
           label="Job Location"
           type="text"
           id="location"
           variant="standard"
-          style={{ marginBottom: 20 }}
+          style={{ marginBottom: 20, width: 500 }}
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
 
         <TextField
+        required
           label="Enter Job Salary"
           type="text"
           id="salary"
           variant="standard"
-          style={{ marginBottom: 20 }}
+          style={{ marginBottom: 20, width: 500 }}
           value={salary}
           onChange={(e) => setSalary(e.target.value)}
         />
 
         <TextField
+        required
           label="Enter Job Requirements"
           type="text"
           id="job-requirements"
           variant="standard"
-          style={{ marginBottom: 20, color: "white" }}
+          style={{ marginBottom: 20, width: 500 }}
           value={jobRequirements}
           onChange={(e) => setJobRequirements(e.target.value)}
         />
@@ -131,7 +137,7 @@ const NewJobListingForm = ({ baseUrl }) => {
             labelId="select-employer"
             id="employer-id"
             value={employerId}
-            style={{ marginBottom: 20 }}
+            style={{ marginBottom: 20, width: 500 }}
             onChange={(e) => setEmployerId(e.target.value)}
           >
             {employers.map((employer) => (
