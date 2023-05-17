@@ -12,7 +12,7 @@ import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 const Home = () => {
   return (
     <div class="main-page" style={{ padding: 20}}>
-      <Typography variant="h1" style={{padding:20, marginTop:60, marginBottom: 60}}>
+      <Typography variant="h3" style={{padding:20, marginTop:60, marginBottom: 60}}>
         Welcome to MyJobSearch.com !
       </Typography>
 
@@ -20,7 +20,7 @@ const Home = () => {
         <Grid container spacing={2}>
           <Grid item xs={6} md={6}>
             <Paper style={{ padding: 20 }}>
-              <Typography variant="h2" style={{ marginBottom: 10 }}>
+              <Typography variant="h4" style={{ marginBottom: 10 }}>
                 For Job Seekers
               </Typography>
               <Typography variant="body1" style={{ marginBottom: 20 }}>
@@ -44,7 +44,7 @@ const Home = () => {
               </Grid>
               <Grid item xs={12} md={12}>
             <Paper style={{ padding: 20, marginBottom: 10 }}>
-              <Typography variant="h5" style={{ marginBottom: 10 }}>
+              <Typography variant="h5" style={{ marginBottom: 10 }} >
               <SpaIcon style={{ fontSize: 40,  }}/> Streamlined Job Search
               </Typography>
               <Typography variant="body1" style={{ marginBottom: 20 }}>
@@ -69,7 +69,7 @@ const Home = () => {
 
           <Grid item xs={6} md={6}>
             <Paper style={{ padding: 20 }}>
-              <Typography variant="h2" style={{ marginBottom: 10 }}>
+              <Typography variant="h4" style={{ marginBottom: 10 }}>
                 For Employers
               </Typography>
               <Typography variant="body1" style={{ marginBottom: 20 }}>

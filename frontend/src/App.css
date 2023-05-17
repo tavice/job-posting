@@ -14,7 +14,7 @@ body {
   flex-direction: column; */
   align-items: center;
   justify-content: center;
-  background: linear-gradient(rgba(252, 70, 107, 0), rgba(63, 94, 251, 0.5)); /* Gradient background with transparency */
+  background: linear-gradient(rgba(252, 70, 107, 0.5), rgba(63, 94, 251, 0.5)); /* Gradient background with transparency */
              /* url("TBD") no-repeat center center / cover; /* Image URL and properties */
   width: 100%;
   height: 100%;

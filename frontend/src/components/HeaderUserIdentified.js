@@ -26,7 +26,7 @@ margin: 0 1rem;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-    <AppBar position="static" style={{ backgroundColor: 'rgba(252, 70, 107, 0.6)', padding:20}}>
+    <AppBar position="static" style={{ background: 'linear-gradient(90deg, #FC466B 0%, #3F5EFB 100%)', padding:20}}>
      
     {localStorage.getItem("token") ? (
     <div className='header-user-identified'>

@@ -112,7 +112,7 @@ const Header = ({ baseUrl }) => {
   //================================================================//
   //Render//
   return (
-    <AppBar position="static" style={{zIndex:2}}>
+    <AppBar position="static" style={{ padding:20, background:'linear-gradient(90deg, #d53369 0%, #daae51 100%)'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <WorkIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -133,7 +133,7 @@ const Header = ({ baseUrl }) => {
           >
             MYJOBSEARCH.COM
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, paddingInline:10 }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -166,7 +166,7 @@ const Header = ({ baseUrl }) => {
                 //each page is to be associated with a link which is stored in the pagesLinks array
 
                 <MenuItem>
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={handleCloseNavMenu} >
                     <Typography textAlign="center"
                     component={Link}
                     to={`/${page}`}
@@ -246,10 +246,10 @@ const Header = ({ baseUrl }) => {
             </Menu>
           </Box>
           ) : (
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0, display:'flex' }}>
               <Button
                 variant="contained"
-                color="secondary"
+                color="primary"
                 component={Link}
                 to="/login"
                 sx={{ my: 2, color: "white", display: "block" }}
