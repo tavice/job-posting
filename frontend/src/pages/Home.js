@@ -11,7 +11,7 @@ import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 
 const Home = () => {
   return (
-    <div class="main-page" style={{ padding: 20}}>
+    <div className="main-page" style={{ padding: 20}}>
       <Typography variant="h3" style={{padding:20, marginTop:60, marginBottom: 60}}>
         Welcome to MyJobSearch.com !
       </Typography>
@@ -75,7 +75,7 @@ const Home = () => {
               <Typography variant="body1" style={{ marginBottom: 20 }}>
                 Post your job openings and find qualified candidates.
               </Typography>
-              <Link to="/employers">
+              <Link to="/new-job-listing">
                 <Button variant="contained" color="secondary">
                   Post a Job
                 </Button>

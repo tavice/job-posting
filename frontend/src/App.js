@@ -13,6 +13,7 @@ import HeaderUserIdentified from './components/HeaderUserIdentified';
 import Home from './pages/Home';
 import EmployerList from './pages/EmployerList';
 import JobListingDetail from './pages/JobListingDetail';
+import NewJobListingForm from './pages/NewJobListingForm';
 
 function App() {
   const baseUrl = 'http://127.0.0.1:8000'
@@ -27,6 +28,7 @@ function App() {
         <Route path="/Job Listings/:id" element={<JobListingDetail baseUrl={baseUrl}/>} />
         <Route path="/register" element={<Register baseUrl={baseUrl} />} />
         <Route path="/login" element={<Login baseUrl={baseUrl} />} />
+        <Route path="/new-job-listing" element={<NewJobListingForm baseUrl={baseUrl} />} />
       </Routes>
       <Footer />
  
