@@ -129,6 +129,24 @@ body::before {
   /* z-index: 0;
 }   */
 
+
+/* NewJobListingForm.js */
+
+.form-create-job{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: rgba(252, 70, 107, 0.2);
+  height: 100%;
+  border-radius: 3%;
+  width: 40%;
+}
+
+
+
 /*=============================================*/
 /*Footer.js*/
 .footer{

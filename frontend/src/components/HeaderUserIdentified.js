@@ -17,6 +17,7 @@ const HeaderUserIdentified = () => {
 const StyledLink = styled(Link)`
 color: #fff;
 text-decoration: none;
+text-transform: uppercase;
 font-size: 1.5rem;
 margin: 0 1rem;
 &:hover {
@@ -36,7 +37,7 @@ margin: 0 1rem;
 
     </div>
     ) : (
-      <Typography variant='h4'>Welcome! Sign in For More Information</Typography>
+      <Typography variant='h4' style={{textTransform:'uppercase'}}>Welcome! Sign in For More Information</Typography>
     )}
      
       </AppBar>

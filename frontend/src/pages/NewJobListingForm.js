@@ -2,6 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import { TextField } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormLabel from "@mui/material/FormLabel";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
 const NewJobListingForm = ({ baseUrl }) => {
   const [jobTitle, setJobTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -63,73 +71,80 @@ const NewJobListingForm = ({ baseUrl }) => {
   };
 
   return (
-    <div>
-      <h2>Create a New Job Listing</h2>
-      <form onSubmit={handleFormSubmit}>
-        <div>
-          <label htmlFor="job-title">Job Title:</label>
-          <input
-            placeholder="Enter Job Title"
-            type="text"
-            id="job-title"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Description:</label>
-          <textarea
-            placeholder="Enter Job Description"
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="location">Location:</label>
-          <input
-            placeholder="Enter Job Location"
-            type="text"
-            id="location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="salary">Salary:</label>
-          <input
-            placeholder="Enter Job Salary"
-            type="text"
-            id="salary"
-            value={salary}
-            onChange={(e) => setSalary(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="job-requirements">Job Requirements:</label>
-          <textarea
-            placeholder="Enter Job Requirements"
-            id="job-requirements"
-            value={jobRequirements}
-            onChange={(e) => setJobRequirements(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="employer-id">Employer Name:</label>
-          <select
+    <div style={{ padding: 20 }}>
+        
+      <form className="form-create-job" onSubmit={handleFormSubmit} style={{padding: 20}}>
+      <Typography variant="h4" style={{ marginBottom: 20, alignItems:"center", textTransform:'uppercase' }}>Create a New Job Listing</Typography>
+        <TextField
+          label="Job Title"
+          type="text"
+          id="job-title"
+          value={jobTitle}
+          variant="standard"
+          style={{ marginBottom: 20 }}
+          onChange={(e) => setJobTitle(e.target.value)}
+        />
+
+        <TextField
+          label="Job Description"
+          type="text"
+          id="description"
+          value={description}
+          variant="standard"
+          style={{ marginBottom: 20 }}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+
+        <TextField
+          label="Job Location"
+          type="text"
+          id="location"
+          variant="standard"
+          style={{ marginBottom: 20 }}
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+        />
+
+        <TextField
+          label="Enter Job Salary"
+          type="text"
+          id="salary"
+          variant="standard"
+          style={{ marginBottom: 20 }}
+          value={salary}
+          onChange={(e) => setSalary(e.target.value)}
+        />
+
+        <TextField
+          label="Enter Job Requirements"
+          type="text"
+          id="job-requirements"
+          variant="standard"
+          style={{ marginBottom: 20, color: "white" }}
+          value={jobRequirements}
+          onChange={(e) => setJobRequirements(e.target.value)}
+        />
+
+        <FormControl>
+          <FormLabel>Select Company: </FormLabel>
+          <Select
+            labelId="select-employer"
             id="employer-id"
             value={employerId}
+            style={{ marginBottom: 20 }}
             onChange={(e) => setEmployerId(e.target.value)}
           >
-            <option value="">--Select Employer--</option>
             {employers.map((employer) => (
-              <option key={employer.id} value={employer.id}>
+              <MenuItem key={employer.id} value={employer.id}>
                 {employer.name}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </div>
-        <button type="submit">Create Job Listing</button>
+          </Select>
+        </FormControl>
+
+        <Button variant="contained" type="submit">
+          Create Job Listing
+        </Button>
         {errorMessage && <p>{errorMessage}</p>}
       </form>
     </div>
