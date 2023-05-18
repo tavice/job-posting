@@ -151,9 +151,10 @@ body::before {
 /*=============================================*/
 /*Footer.js*/
 .footer{
-  background-color: #007bff;
+  background: linear-gradient(36deg, rgba(182,86,150,1) 18%, rgba(178,69,252,0.6993391106442577) 66%);
   color: #fff;
   padding: 1rem;
+  height: 3rem;
   text-align: center;
   z-index: 2;
 }
