@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User
-from .serializers import UserSerializer, EmployerSerializer, JobListingSerializer, JobSeekerSerializer, JobApplicationSerializer, PaymentSerializer
+from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, UserJob
+from .serializers import UserJobSerializer, EmployerSerializer, JobListingSerializer, JobSeekerSerializer, JobApplicationSerializer, PaymentSerializer
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 #import crsf
@@ -21,10 +22,10 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
-# User views
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# UserJob views
+class UserJobViewSet(viewsets.ModelViewSet):
+    queryset = UserJob.objects.all()
+    serializer_class = UserJobSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -56,6 +57,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
 # Login view
 @api_view(['POST'])
 def login_view(request):
+    print(request.data)
     username = request.data.get('username')
     password = request.data.get('password')
     user = authenticate(username=username, password=password)
@@ -68,7 +70,7 @@ def login_view(request):
         print(token)
          # save the token to local storage
         response = Response({'token': token.key, 
-                             'user': UserSerializer(user).data,
+                             'user': UserJobSerializer(user).data,
                              #'employer': EmployerSerializer(user.employer).data,
                              #'job_seeker': JobSeekerSerializer(user.job_seeker).data,
                              'message': 'You are logged in.'})
@@ -112,5 +114,28 @@ def logout_view(request):
         return Response({'error': 'You are not authenticated.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-
-   
+# Register view
+@api_view(['POST'])
+def register_view(request):
+    print(request.data)
+    username = request.data.get('username')
+    password = request.data.get('password')
+    email = request.data.get('email')
+    first_name = request.data.get('first_name')
+    last_name = request.data.get('last_name')
+    user_type = request.data.get('user_type')
+    print('user type is', user_type)
+    if username is None or password is None or email is None or first_name is None or last_name is None or user_type is None:
+        return Response({'error': 'Please provide all required fields.'}, status=status.HTTP_400_BAD_REQUEST)
+    if UserJob.objects.filter(username=username).exists():
+        return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+    if UserJob.objects.filter(email=email).exists():
+        return Response({'error': 'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+    user = UserJob.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+    if user_type == 'E':
+        employer = Employer.objects.create(user=user)
+        employer.save()
+    elif user_type == 'J':
+        job_seeker = JobSeeker.objects.create(user=user)
+        job_seeker.save()
+    return Response({'message': 'User created successfully.'}, status=status.HTTP_201_CREATED)

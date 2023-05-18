@@ -7,14 +7,15 @@ from django.contrib.auth.hashers import make_password
 
 # user schemeUser schema: This schema would define the user model for the app, including fields like username, email, password, and user type. The user type field would distinguish between employers and job seekers.
 
-class User(AbstractUser): #The AbstractUser class is provided by Django and includes some common fields for a user model, such as username, email, and password
+class UserJob(AbstractUser): #The AbstractUser class is provided by Django and includes some common fields for a user model, such as username, email, and password
+    
     groups = models.ManyToManyField(Group, blank=True, related_name='job_users')
-    user_type_choices = [
+    userjob_type_choices = [
         ('E', 'Employer'),
         ('J', 'Job Seeker'),
     ]
-    user_type = models.CharField(max_length=1, choices=user_type_choices, default='J')
-    user_permissions = models.ManyToManyField(
+    userjob_type = models.CharField(max_length=1, choices=userjob_type_choices, default='J')
+    userjob_permissions = models.ManyToManyField(
         Permission,
         blank=True,
         related_name='job_user_permissions',
@@ -23,6 +24,10 @@ class User(AbstractUser): #The AbstractUser class is provided by Django and incl
             'Specific permissions for this user.'
             ),
     )
+
+    class Meta:
+        app_label = 'job'
+
 
     #save password as hash using django's hashing function
     def save(self, *args, **kwargs):
@@ -44,7 +49,7 @@ class Employer(models.Model):
     logo = models.CharField(max_length=50)
     location = models.CharField(max_length=50)
     phone = models.CharField(max_length=50, default='0000000000')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    userjob = models.ForeignKey(UserJob, on_delete=models.CASCADE, default=1)
 
 
     def __str__(self):
@@ -59,6 +64,7 @@ class JobListing(models.Model):
     salary = models.CharField(max_length=250)
     jobrequirements = models.CharField(max_length=1000)
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
+    jobseeker = models.ManyToManyField('JobSeeker', through='JobApplication')
 
     def __str__(self):
         return self.jobtitle
@@ -67,7 +73,7 @@ class JobListing(models.Model):
 
 class JobSeeker(models.Model):
    
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    userjob = models.ForeignKey(UserJob, on_delete=models.CASCADE, default=1)
     bio = models.CharField(max_length=250, default='bio')
     location = models.CharField(max_length=50, default='location')
     phone = models.CharField(max_length=50, default='0000000000')
@@ -97,7 +103,7 @@ class JobApplication(models.Model):
     applicationdate = models.CharField(max_length=50)
     applicationfeedback = models.CharField(max_length=50)
     jobseeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
-    joblisting = models.ForeignKey(JobListing, on_delete=models.CASCADE)
+    joblisting = models.ForeignKey(JobListing, on_delete=models.CASCADE, default=1)
 
 
     def __str__(self):
@@ -111,6 +117,7 @@ class Payment(models.Model):
     paymentamount = models.CharField(max_length=50)
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
     joblisting = models.ForeignKey(JobListing, on_delete=models.CASCADE)
+    jobseeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return self.paymentdate

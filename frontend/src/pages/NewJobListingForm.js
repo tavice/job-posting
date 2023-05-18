@@ -79,7 +79,7 @@ const NewJobListingForm = ({ baseUrl }) => {
           required
           label="Job Title"
           type="text"
-          id="jpb-title"
+          id="job-title"
           value={jobTitle}
           variant="standard"
           style={{ marginBottom: 20, width: 500 }}

@@ -124,6 +124,9 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS =['backend.apis.backend.CustomBackend']
 
 
+#Custom Auth Model
+AUTH_USER_MODEL = "job.UserJob" 
+
 #CSFR and Session settings
 CSRF_COOKIE_NAME = "csrftoken"
 SESSION_COOKIE_NAME = "sessionid"

@@ -27,7 +27,7 @@ router.register(r'joblistings', views.JobListingViewSet)
 router.register(r'jobseekers', views.JobSeekerViewSet)
 router.register(r'jobapplications', views.JobApplicationViewSet)
 router.register(r'payments', views.PaymentViewSet)
-router.register(r'users', views.UserViewSet)
+router.register(r'userjobs', views.UserJobViewSet)
 
 
 
@@ -37,5 +37,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')), #this is for the browsable API
     path('api/login/', views.login_view, name='login_view'),
     path('api/logout/', views.logout_view, name='logout_view'),
+    path('api/register/', views.register_view, name='register_view'),
     path('api-token-auth/', ObtainAuthToken.as_view()),
 ]

@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import { TextField } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormLabel from "@mui/material/FormLabel";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
 const Register = ({ baseUrl }) => {
 
     const navigate = useNavigate();
@@ -44,7 +52,7 @@ const Register = ({ baseUrl }) => {
 
       const body = JSON.stringify(newUser);
 
-      const res = await axios.post(`${baseUrl}/api/users/`, body, config);
+      const res = await axios.post(`${baseUrl}/api/register/`, body, config);
 
       console.log(res.data);
         navigate("/Home");
@@ -54,71 +62,77 @@ const Register = ({ baseUrl }) => {
   };
 
   return (
-    <div>
+    <div style={{ padding: 20 }}>
       <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="form-create-job" onSubmit={handleSubmit} style={{padding: 20}}>
+        
           <label>Username: </label>
-          <input
+          <TextField
+            label="Username"
             type="text"
             name="username"
             value={username}
+            //style={{ marginBottom: 20, width: 500 }}
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
+        
+       
           <label>Email: </label>
-          <input
+          <TextField
+            label="Email"
             type="email"
             name="email"
             value={email}
             onChange={handleChange}
             required
           />
-        </div>
-        <div>
-          <div>
+        
+        
+          
             <label>Password: </label>
-            <input
+            <TextField
+              label="Password"
               type="password"
               name="password"
               value={password}
               onChange={handleChange}
               required
             />
-          </div>
+          
 
           <label>First Name: </label>
-          <input
+          <TextField
+           label="First Name"
             type="text"
             name="first_name"
             value={first_name}
             onChange={handleChange}
           />
-        </div>
-        <div>
+       
+        
           <label>Last Name: </label>
-          <input
+          <TextField
+          label="Last Name"
             type="text"
             name="last_name"
             value={last_name}
             onChange={handleChange}
           />
-        </div>
-        <div>
-          <label>User Type: </label>
-          <select
+        
+        <FormControl>
+          <FormLabel>User Type: </FormLabel>
+          <Select
             name="user_type"
             value={user_type}
             onChange={handleChange}
             required
           >
-            <option value="">Select User Type</option>
-            <option value="E">Employer</option>
-            <option value="J">Job Seeker</option>
-          </select>
-        </div>
+            <MenuItem value="">Select User Type</MenuItem>
+            <MenuItem value="E">Employer</MenuItem>
+            <MenuItem value="J">Job Seeker</MenuItem>
+          </Select>
+        </FormControl>
 
         <input type="submit" value="Register" />
       </form>
