@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import UserJob, Employer, JobListing, JobSeeker, Resume, JobApplication, Payment
 
 class UserJobAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'password', 'userjob_type_choices')
+    list_display = ('username', 'email', 'userjob_type_choices')
 
 class JobListingAdmin(admin.ModelAdmin):
     list_display = ('jobtitle', 'description', 'location', 'salary', 'jobrequirements', 'employer', 'get_jobseeker_count','get_joblisting', 'get_employer', 'get_jobseeker', 'get_applicationstatus')

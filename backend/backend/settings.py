@@ -22,6 +22,10 @@ from dotenv import dotenv_values
 
 config = dotenv_values(".env")
 
+#import psycopg2
+
+
+
 
 
 from pathlib import Path
@@ -96,8 +100,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "jobposting",
+        "USER": str(os.getenv('DB_USER')),
+        "PASSWORD": str(os.getenv('DB_PASSWORD')),
+        "HOST": "localhost",
+        'PORT': '',
     }
 }
 
@@ -132,6 +140,7 @@ CSRF_COOKIE_NAME = "csrftoken"
 SESSION_COOKIE_NAME = "sessionid"
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_DOMAIN = None
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

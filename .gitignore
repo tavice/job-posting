@@ -3,3 +3,9 @@ Pipfile.lock
 users.json
 /node_modules
 .env
+*.pyc
+__pycache__
+db.sqlite3
+/env
+*.env
+.vscode

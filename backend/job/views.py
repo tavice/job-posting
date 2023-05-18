@@ -131,11 +131,11 @@ def register_view(request):
         return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
     if UserJob.objects.filter(email=email).exists():
         return Response({'error': 'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-    user = UserJob.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+    userjob = UserJob.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
     if user_type == 'E':
-        employer = Employer.objects.create(user=user)
+        employer = Employer.objects.create(userjob=userjob)
         employer.save()
     elif user_type == 'J':
-        job_seeker = JobSeeker.objects.create(user=user)
+        job_seeker = JobSeeker.objects.create(userjob=userjob)
         job_seeker.save()
     return Response({'message': 'User created successfully.'}, status=status.HTTP_201_CREATED)
