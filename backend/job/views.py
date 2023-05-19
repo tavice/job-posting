@@ -7,12 +7,19 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status, permissions
+from rest_framework import  status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+
+
+#import custom auth backend for login
+from backend.apis.backend import CustomBackend
+
+
 
 
 #import crsf
@@ -60,30 +67,36 @@ def login_view(request):
     print(request.data)
     username = request.data.get('username')
     password = request.data.get('password')
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        login(request, user)
-        print('user is', user)
+
+    print('username in login view is', username)
+    print('password in login view is', password)
+    print('Using authentication backend:', CustomBackend)
+
+    userjob = authenticate(request, username=username, password=password)
+    if userjob is not None:
+        login(request, userjob)
+        print('user is', userjob)
         print(request)
-        token, created = Token.objects.get_or_create(user=user)
+        token, created = Token.objects.get_or_create(userjob=userjob)
 
         print(token)
-         # save the token to local storage
-        response = Response({'token': token.key, 
-                             'user': UserJobSerializer(user).data,
-                             #'employer': EmployerSerializer(user.employer).data,
-                             #'job_seeker': JobSeekerSerializer(user.job_seeker).data,
-                             'message': 'You are logged in.'})
+        # Save the token to local storage
+        response = Response({
+            'token': token.key,
+            'user': UserJobSerializer(userjob).data,
+            'message': 'You are logged in.'
+        })
         response.set_cookie('token', token.key)
 
-        #Save authenticated user to session
-        print('user id is', user.id)
+        # Save authenticated user to session
+        print('user id is', userjob.id)
 
-        request.session['authenticated_user'] = user.id  
+        request.session['authenticated_user'] = userjob.id
 
         return response
     else:
         return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 # Logout view
 # @api_view(['POST'])
@@ -131,7 +144,10 @@ def register_view(request):
         return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
     if UserJob.objects.filter(email=email).exists():
         return Response({'error': 'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-    userjob = UserJob.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+    print('password', password)
+    hashed_password = make_password(password)
+    print('hashed_password', hashed_password)
+    userjob = UserJob.objects.create_user(username=username, password=hashed_password , email=email, first_name=first_name, last_name=last_name)
     if user_type == 'E':
         employer = Employer.objects.create(userjob=userjob)
         employer.save()
