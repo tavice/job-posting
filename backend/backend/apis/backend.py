@@ -1,6 +1,7 @@
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from rest_framework.authtoken.models import Token
 
 from job.models import User
 
@@ -19,4 +20,36 @@ class CustomBackend(BaseBackend):
 
         return None
     
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
+    
+    def get_or_create_user(self, username, email, password=None):
+        try:
+            user = User.objects.get(username=username)
+            print('user is', user)
+            print('password is', password)
+            
+            return user
+        except User.DoesNotExist:
+            user = User.objects.create_user(username=username, email=email, password=password)
+            return user
+        return None
+    
+    def get_or_create_token(self, user):
+        try:
+            token = Token.objects.get(user=user)
+            return token
+        except Token.DoesNotExist:
+            token = Token.objects.create(user=user)
+            return token
+        return None  
+    
+        
+
+
+    
+  
     

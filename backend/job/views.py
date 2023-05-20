@@ -14,13 +14,16 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 # from rest_framework.authentication import TokenAuthentication
-# from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-# from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
+from django.middleware.csrf import get_token
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 # from django.contrib.auth.models import User
 # from rest_framework.serializers import Serializer, CharField
@@ -31,7 +34,7 @@ from django.http import JsonResponse
 
 
 # import custom auth backend for login
-# from backend.apis.backend import CustomBackend
+from backend.apis.backend import CustomBackend
 
 # import authentication_backend
 
@@ -101,7 +104,13 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return JsonResponse(
+            refresh = RefreshToken.for_user(user)
+            #token, created = Token.objects.get_or_create(user=user)
+            csrf_token = get_token(request)  # Get the CSRF token
+            print("csrf_token is", csrf_token)
+
+           # Set the CSRF token as a cookie in the response
+            response = JsonResponse(
                 {
                     "message": "Login successful.",
                     "data": {
@@ -109,10 +118,17 @@ def login_view(request):
                         "username": user.username,
                         "email": user.email,
                         "userjob_type": user.userjob_type,
+                        "csrf_token": csrf_token,  # Include the CSRF token in the response
                     },
+                    #"token": token.key,
+                    'access_token': str(refresh.access_token),
+                    'refresh_token': str(refresh),
                 },
                 status=200,
             )
+            response.set_cookie("csrftoken", csrf_token)
+            print("csrf_token is", csrf_token)
+            return response
         else:
             return JsonResponse({"error": "Invalid credentials."}, status=401)
     else:
@@ -162,15 +178,29 @@ def login_view(request):
 
 
 # Simple logout view
-@api_view(["POST"])
-def logout_view(request):
-    print(request.user)
-    if request.user.is_authenticated:
-        logout(request)
-        return Response({"message": "You are logged out."})
-    else:
-        return Response({"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
+# @api_view(["POST"])
+# def logout_view(request):
+#     print(request.user)
+#     if request.user.is_authenticated:
+#         logout(request)
+#         return Response({"message": "You are logged out."})
+#     else:
+#         return Response({"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+#logout with JWT
+def logout_view(request):
+    refresh_token = request.data.get('refresh_token')
+
+    if refresh_token:
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return JsonResponse({'message': 'Logout successful.'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': 'Invalid refresh token.'}, status=400)
+    else:
+        return JsonResponse({'error': 'Refresh token not provided.'}, status=400)
 
 
 # Register view

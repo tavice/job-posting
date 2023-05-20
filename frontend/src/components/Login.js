@@ -18,14 +18,27 @@ const Login = ({ baseUrl }) => {
     try {
       const body = { username, password };
       const response = await axios.post(`${baseUrl}/api/login/`, body);
+       // Extract the CSRF token from the response headers instead of the response body/data
+      
+      const token = response.headers['x-csrftoken']; 
+      axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+      
+      console.log('token is', token)
+      console.log('Response headers:', response.headers);
+     
       const data = response.data;
+      console.log(data)
       
       if (data.message === "Login successful.") {
         console.log("User is logged in.");
         console.log(data)
         localStorage.setItem("authenticated_user", data.data.user_id);
         localStorage.setItem("user_type", data.data.userjob_type);
+        localStorage.setItem("csrf_token", data.data.csrf_token);
+        localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
         navigate("/Home");
+        //window.location.href = "/Home";
       }
     } catch (err) {
       console.error(err);

@@ -40,38 +40,45 @@ const Header = ({ baseUrl }) => {
 
   //================================================================//
   //Get Cookie Function//
-  // const getCookie = (name) => {
-  //   const cookies = document.cookie.split(";");
-  //   for (let i = 0; i < cookies.length; i++) {
-  //     const cookie = cookies[i].trim();
-  //     if (cookie.startsWith(name + "=")) {
-  //       return decodeURIComponent(cookie.substring(name.length + 1));
-  //     }
-  //   }
-  //   return null;
-  // };
+  const getCookie = (name) => {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + "=")) {
+        return decodeURIComponent(cookie.substring(name.length + 1));
+      }
+    }
+    return null;
+  };
 
   //================================================================//
   //Logout Function//
-  //const csrf_token = getCookie("csrftoken");
+ 
 
   const handleLogout = async () => {
     try {
-      const authenticatedUser = localStorage.getItem("authenticated_user");
-      if (authenticatedUser) {
-        const response = await axios.post(`${baseUrl}/api/logout/`);
+      const refresh_token = localStorage.getItem('refresh_token');
+      
+        // Fetch the CSRF token from the cookie
+        //const csrfToken = getCookie("csrftoken");
+        // Include the CSRF token in the headers of the axios post request
+        const response = await axios.post(`${baseUrl}/api/logout/`, {refresh_token});
+  
         console.log(response);
+
         if (response.status === 200) {
-          localStorage.removeItem("user_type");
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
           localStorage.removeItem("authenticated_user");
+          localStorage.removeItem("csrf_token");
+          localStorage.removeItem("user_type");
+          localStorage.removeItem("");
           console.log("User is logged out.");
           window.location.href = "/Home";
         } else {
           console.error("Failed to log out");
         }
-      } else {
-        console.error("User is not authenticated");
-      }
+      
     } catch (err) {
       console.error(err);
       console.error("Failed to log out");
@@ -94,7 +101,7 @@ const Header = ({ baseUrl }) => {
     setAnchorElNav(event.currentTarget);
   };
 
-  console.log(anchorElNav);
+  //console.log(anchorElNav);
 
   const handleClickUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -104,7 +111,7 @@ const Header = ({ baseUrl }) => {
     setAnchorElNav(null);
   };
 
-  console.log(anchorElUser);
+  //console.log(anchorElUser);
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);

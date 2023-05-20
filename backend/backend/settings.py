@@ -22,9 +22,13 @@ from dotenv import dotenv_values
 
 config = dotenv_values(".env")
 
-#import psycopg2
 
 
+from datetime import timedelta
+
+
+#DATABASE LATER
+##import psycopg2
 
 
 
@@ -155,15 +159,21 @@ USE_I18N = True
 USE_TZ = True
 
 #REST framework settings
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework.authentication.TokenAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#     ],
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',
-#     ],
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+       'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+# JWT settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+}
 
 
 
@@ -181,6 +191,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #CORS settings to allow requests from localhost:3000
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000'
+]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    # other allowed origins
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

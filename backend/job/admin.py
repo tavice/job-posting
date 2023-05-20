@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User, Employer, JobListing, JobSeeker, Resume, JobApplication, Payment
 
 class UserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'userjob_type_choices')
+    list_display = ('username', 'email', 'userjob_type_choices','last_login', 'is_staff', 'is_active', 'date_joined')
 
 #class UserJobAdmin(admin.ModelAdmin):
  #   list_display = ('username', 'email', 'userjob_type_choices')
