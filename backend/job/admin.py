@@ -3,33 +3,33 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User, Employer, JobListing, JobSeeker, Resume, JobApplication, Payment
 
 class UserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'userjob_type_choices','last_login', 'is_staff', 'is_active', 'date_joined')
+    list_display = ('username', 'email', 'userjob_type','last_login', 'is_staff', 'is_active', 'date_joined')
 
 #class UserJobAdmin(admin.ModelAdmin):
  #   list_display = ('username', 'email', 'userjob_type_choices')
 
 class JobListingAdmin(admin.ModelAdmin):
-    list_display = ('jobtitle', 'description', 'location', 'salary', 'jobrequirements', 'employer', 'get_jobseeker_count','get_joblisting', 'get_employer', 'get_jobseeker', 'get_applicationstatus')
+    list_display = ('jobtitle', 'description', 'location', 'salary', 'jobrequirements', 'employer') # 'get_jobseeker_count','get_joblisting', 'get_employer', 'get_jobseeker', 'get_applicationstatus')
 
-    def get_jobseeker_count(self, obj):
-        return obj.jobseeker.count()
-    get_jobseeker_count.short_description = 'Jobseeker Count'
+    # def get_jobseeker_count(self, obj):
+    #     return obj.jobseeker.count()
+    # get_jobseeker_count.short_description = 'Jobseeker Count'
 
-    def get_joblisting(self, obj):
-        return obj.joblisting.jobtitle
-    get_joblisting.short_description = 'joblisting'
+    # def get_joblisting(self, obj):
+    #     return obj.joblisting.jobtitle
+    # get_joblisting.short_description = 'jobtitle'
 
-    def get_employer(self, obj):
-        return obj.joblisting.employer
-    get_employer.short_description = 'employer'
+    # def get_employer(self, obj):
+    #     return obj.joblisting.employer
+    # get_employer.short_description = 'employer'
 
-    def get_jobseeker(self, obj):
-        return obj.jobseeker.jobseeker  
-    get_jobseeker.short_description = 'jobseeker'
+    # def get_jobseeker(self, obj):
+    #     return obj.jobseeker.jobseeker  
+    # get_jobseeker.short_description = 'jobseeker'
 
-    def get_applicationstatus(self, obj):
-        return obj.applicationstatus
-    get_applicationstatus.short_description = 'applicationstatus'
+    # def get_applicationstatus(self, obj):
+    #     return obj.applicationstatus
+   # get_applicationstatus.short_description = 'applicationstatus'
 
 class JobSeekerAdmin(admin.ModelAdmin):
     list_display = ('bio', 'location', 'phone', 'user')

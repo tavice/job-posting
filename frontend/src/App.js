@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import Register from './components/Register';
 import Login from './components/Login'; 
 import HeaderUserIdentified from './components/HeaderUserIdentified';
+import Dashboard from './components/Dashboard';
 
 //Importing Pages
 import Home from './pages/Home';
@@ -29,6 +30,7 @@ function App() {
         <Route path="/register" element={<Register baseUrl={baseUrl} />} />
         <Route path="/login" element={<Login baseUrl={baseUrl} />} />
         <Route path="/new-job-listing" element={<NewJobListingForm baseUrl={baseUrl} />} />
+        <Route path="/dashboard" element={<Dashboard baseUrl={baseUrl} />} />
       </Routes>
       <Footer />
  

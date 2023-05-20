@@ -31,14 +31,14 @@ margin: 0 1rem;
      
     {localStorage.getItem("user_type") === 'J' ? (
     <div className='header-user-identified'>
-        <StyledLink to="/profile">My Dashboard</StyledLink>
+        <StyledLink to="/dashboard">My Dashboard</StyledLink>
         <StyledLink to="/current-job">Improve your Resume</StyledLink>
        
 
     </div>
        ) : localStorage.getItem("user_type") === 'E' ? (
         <div className='header-user-identified'>
-          <StyledLink to="/profile">My Dashboard</StyledLink>
+          <StyledLink to="/dashboard">My Dashboard</StyledLink>
           <StyledLink to="/create-your-job-offer">Create your Job Offer !</StyledLink>
           
         </div>
