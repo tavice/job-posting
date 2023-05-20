@@ -5,17 +5,17 @@ from .serializers import UserSerializer, EmployerSerializer, JobListingSerialize
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+# from rest_framework.authentication import TokenAuthentication
+# from rest_framework.permissions import IsAuthenticated
 from rest_framework import  status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
+# from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from rest_framework.serializers import Serializer, CharField
+#from django.contrib.auth.models import User
+# from rest_framework.serializers import Serializer, CharField
 
-from django.contrib.auth.hashers import make_password
+# from django.contrib.auth.hashers import make_password
 import json
 from django.http import JsonResponse
 
