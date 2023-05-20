@@ -63,7 +63,7 @@ const Register = ({ baseUrl }) => {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Register</h1>
+       <Typography variant="h4" gutterBottom>Register</Typography>
       <form className="form-create-job" onSubmit={handleSubmit} style={{padding: 20}}>
         
           <label>Username: </label>

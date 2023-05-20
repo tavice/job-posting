@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 
 const Login = ({ baseUrl }) => {
@@ -48,29 +51,29 @@ const Login = ({ baseUrl }) => {
 
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div div style={{ padding: 20 }}>
+     <Typography variant="h4" gutterBottom>Login</Typography>
       {error && <div className="error">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="form-create-job" onSubmit={handleSubmit}>
+        
           <label htmlFor="username">Username:</label>
-          <input
+          <TextField
             type="text"
             id="username"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
           />
-        </div>
-        <div>
+        
+        
           <label htmlFor="password">Password:</label>
-          <input
+          <TextField
             type="password"
             id="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
-        </div>
-        <button type="submit">Login</button>
+        
+        <Button type="submit">Login</Button>
       </form>
     </div>
   );
