@@ -57,29 +57,30 @@ const Header = ({ baseUrl }) => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post(`${baseUrl}/api/logout/`, null, {
-        headers: {
-          Authorization: `Token ${localStorage.getItem("token")}`,
-
-          //'X-CSRFToken': csrf_token,
-        },
-      });
-      console.log(response);
-      if (response.status === 200) {
-        //if logout is successful, remove token and user_id from local storage and redirect to home page
-        localStorage.removeItem("token");
-        localStorage.removeItem("authenticated_user");
-        console.log("User is logged out.");
-        window.location.href = "/Home";
+      const authenticatedUser = localStorage.getItem("authenticated_user");
+      if (authenticatedUser) {
+        const response = await axios.post(`${baseUrl}/api/logout/`);
+        console.log(response);
+        if (response.status === 200) {
+          localStorage.removeItem("user_type");
+          localStorage.removeItem("authenticated_user");
+          console.log("User is logged out.");
+          window.location.href = "/Home";
+        } else {
+          console.error("Failed to log out");
+        }
       } else {
-        console.error("Failed to log out");
+        console.error("User is not authenticated");
       }
     } catch (err) {
       console.error(err);
       console.error("Failed to log out");
     }
   };
-
+  
+  
+  
+  
   //================================================================//
   //Nav Menu//
   const pages = ["Home", "Job Listings", "About Us", "Contact Us"];
@@ -108,6 +109,10 @@ const Header = ({ baseUrl }) => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  //================================================================//
+  //Find user type and display appropriate menu//
+  const userType = localStorage.getItem("user_type");
 
   //================================================================//
   //Render//
@@ -214,7 +219,7 @@ const Header = ({ baseUrl }) => {
               </Button>
             ))}
           </Box>
-          {localStorage.getItem("token") ? (   
+          {userType === 'E' || userType === 'J' ? (   
 
           //Button to log out
           
@@ -241,7 +246,7 @@ const Header = ({ baseUrl }) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem><Link to="/dashboard">My Dashboard</Link></MenuItem>
+              <MenuItem component={Link} to="/dashboard"> My Dashboard</MenuItem>
               <MenuItem onClick={handleLogout}>Log Out</MenuItem>
             </Menu>
           </Box>

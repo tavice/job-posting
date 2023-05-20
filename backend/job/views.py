@@ -164,16 +164,13 @@ def login_view(request):
 # Simple logout view
 @api_view(["POST"])
 def logout_view(request):
-    user = request.session.get("authenticated_user")
-    print(user)
-    if user is None:
+    print(request.user)
+    if request.user.is_authenticated:
         logout(request)
-        response = Response({"message": "You are logged out."})
-        return response
+        return Response({"message": "You are logged out."})
     else:
-        return Response(
-            {"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED
-        )
+        return Response({"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 # Register view
