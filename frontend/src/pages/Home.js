@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Typography, Grid, Paper } from "@mui/material";
+import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import PersonIcon from '@mui/icons-material/Person';
 import HandshakeIcon from '@mui/icons-material/Handshake';
@@ -11,8 +12,8 @@ import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 
 const Home = () => {
   return (
-    <div className="main-page" style={{ padding: 20}}>
-      <Typography variant="h3" style={{padding:20, marginTop:60, marginBottom: 60}}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h3" style={{padding:20, marginTop:60, marginBottom: 60, textTransform:'uppercase'}}>
         Welcome to MyJobSearch.com !
       </Typography>
 
@@ -27,7 +28,7 @@ const Home = () => {
                 Find your next career opportunity with our job board.
               </Typography>
               <Link to="/Job Listings">
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" style={{ marginBottom: 10 }}>
                   Browse Jobs
                 </Button>
               </Link>
@@ -76,7 +77,7 @@ const Home = () => {
                 Post your job openings and find qualified candidates.
               </Typography>
               <Link to="/new-job-listing">
-                <Button variant="contained" color="secondary">
+                <Button variant="contained" color="secondary" style={{ marginBottom: 10 }}> 
                   Post a Job
                 </Button>
               </Link>
@@ -129,7 +130,7 @@ const Home = () => {
         
         </Grid>
       </Box>
-    </div>
+    </Container>
   );
 };
 

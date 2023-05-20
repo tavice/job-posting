@@ -9,13 +9,16 @@ import Register from './components/Register';
 import Login from './components/Login'; 
 import HeaderUserIdentified from './components/HeaderUserIdentified';
 import Dashboard from './components/Dashboard';
-import AboutUs from './components/AboutUs';
+import ListOfJobsYouAppliedTo from './components/ListOfJobsYouAppliedTo';
+
 
 //Importing Pages
 import Home from './pages/Home';
 import EmployerList from './pages/EmployerList';
 import JobListingDetail from './pages/JobListingDetail';
 import NewJobListingForm from './pages/NewJobListingForm';
+import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
 
 function App() {
   const baseUrl = 'http://127.0.0.1:8000'
@@ -33,6 +36,7 @@ function App() {
         <Route path="/new-job-listing" element={<NewJobListingForm baseUrl={baseUrl} />} />
         <Route path="/dashboard" element={<Dashboard baseUrl={baseUrl} />} />
         <Route path="/About Us" element={<AboutUs />} />
+        <Route path="/Contact Us" element={<ContactUs />} />
       </Routes>
       <Footer />
  

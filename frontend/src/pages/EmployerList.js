@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Container from "@mui/material/Container";
 import { Button, Typography, Grid, Paper, Divider } from "@mui/material";
 
 const EmployerList = ({ baseUrl }) => {
@@ -88,7 +89,7 @@ const EmployerList = ({ baseUrl }) => {
   // Rendering Employer List//
 
   return (
-    <div style={{ padding: 20 }}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h2" style={{ marginBottom: 20, alignItems:"center" }}>
         Current Jobs Available
       </Typography>
@@ -160,7 +161,7 @@ const EmployerList = ({ baseUrl }) => {
           </Grid>
        
       ))}
-    </div>
+    </Container>
   );
 };
 

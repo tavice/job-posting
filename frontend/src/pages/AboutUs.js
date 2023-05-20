@@ -1,9 +1,10 @@
 import React from "react";
 import { Typography, Paper, Grid } from "@mui/material";
+import Container from "@mui/material/Container";
 
 const AboutUs = () => {
   return (
-    <div style={{ padding: 20}}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h3" style={{padding:20, marginTop:60, marginBottom: 60}}>AboutUs</Typography>
       <Grid container spacing={2}>
           <Grid item xs={6} md={6}>
@@ -30,7 +31,7 @@ const AboutUs = () => {
         </div>
       </Grid>
       </Grid>
-    </div>
+    </Container>
   );
 };
 
