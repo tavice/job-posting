@@ -16,6 +16,8 @@ from django.contrib.auth.models import User
 from rest_framework.serializers import Serializer, CharField
 
 from django.contrib.auth.hashers import make_password
+import json
+from django.http import JsonResponse
 
 
 #import custom auth backend for login
@@ -24,7 +26,7 @@ from django.contrib.auth.hashers import make_password
 #import authentication_backend
 
 
-#import crsf
+
 
 
 
@@ -65,30 +67,63 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
 # Login view
 # Login view
-class LoginSerializer(Serializer):
-    username = CharField()
-    password = CharField()
 
-@api_view(['POST'])
+
+##### ======== Login view ======== #####
+#====SIMPLE ONE ======#
+
+@csrf_exempt
 def login_view(request):
-    serializer = LoginSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.body)
+            username = body.get('username')
+            password = body.get('password')
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid request body.'}, status=400)
 
-    username = serializer.validated_data['username']
-    password = serializer.validated_data['password']
+        if not username or not password:
+            return JsonResponse({'error': 'Invalid username or password.'}, status=400)
 
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-        token, created = Token.objects.get_or_create(user=user)
-        response_data = {
-            'token': token.key,
-            'user': user.id,
-            'message': 'You are logged in.'
-        }
-        return Response(response_data, status=status.HTTP_200_OK)
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'message': 'Login successful.',
+                                    'user_id': user.id,
+                                    'username': user.username,
+                                    'email': user.email,
+                                    #'user_type': user.user_type,
+                                 
+                
+                                 }, status=200)
+        else:
+            return JsonResponse({'error': 'Invalid credentials.'}, status=401)
     else:
-        return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+# class LoginSerializer(Serializer):
+#     username = CharField()
+#     password = CharField()
+
+# @api_view(['POST'])
+# def login_view(request):
+#     serializer = LoginSerializer(data=request.data)
+#     serializer.is_valid(raise_exception=True)
+
+#     username = serializer.validated_data['username']
+#     password = serializer.validated_data['password']
+
+#     user = authenticate(request, username=username, password=password)
+#     if user is not None:
+#         login(request, user)
+#         token, created = Token.objects.get_or_create(user=user)
+#         response_data = {
+#             'token': token.key,
+#             'user': user.id,
+#             'message': 'You are logged in.'
+#         }
+#         return Response(response_data, status=status.HTTP_200_OK)
+#     else:
+#         return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 # Logout view

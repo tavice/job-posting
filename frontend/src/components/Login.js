@@ -14,37 +14,24 @@ const Login = ({ baseUrl }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-  
-      const body = JSON.stringify({ username, password });
-      const response = await axios.post(`${baseUrl}/api/login/`, body, config);
-      const token = response.data.token;
-      // Set the authorization header
-    axios.defaults.headers.common["Authorization"] = `Token ${token}`;
 
-      localStorage.setItem("token", token); // save the token to local storage so we can use it later for example to check if the user is logged in
-      localStorage.setItem("authenticated_user", response.data.user.id);
-   
-      axios.defaults.headers.common["Authorization"] = `Token ${token}`;
+    try {
+      const body = { username, password };
+      const response = await axios.post(`${baseUrl}/api/login/`, body);
       const data = response.data;
-      console.log(data);
-      if (data.message === "You are logged in.") {
+      
+      if (data.message === "Login successful.") {
         console.log("User is logged in.");
+        console.log(data)
+        localStorage.setItem("authenticated_user", data.user_id);
+        navigate("/Home");
       }
-      window.location.href = "/Home";
     } catch (err) {
       console.error(err);
       setError("Invalid username or password.");
-      console.log(error);
     }
   };
-  
+
 
   return (
     <div>
