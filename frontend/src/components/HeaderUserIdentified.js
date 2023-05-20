@@ -29,13 +29,19 @@ margin: 0 1rem;
     <Box sx={{ flexGrow: 1 }}>
     <AppBar position="static" style={{ background: 'linear-gradient(90deg, #FC466B 0%, #3F5EFB 100%)', padding:20}}>
      
-    {localStorage.getItem("token") ? (
+    {localStorage.getItem("user_type") === 'J' ? (
     <div className='header-user-identified'>
         <StyledLink to="/profile">My Dashboard</StyledLink>
-        <StyledLink to="/current-job">Current Job</StyledLink>
-        <StyledLink to="/current-job-listings">Current Job Listings</StyledLink>
+        <StyledLink to="/current-job">Improve your Resume</StyledLink>
+       
 
     </div>
+       ) : localStorage.getItem("user_type") === 'E' ? (
+        <div className='header-user-identified'>
+          <StyledLink to="/profile">My Dashboard</StyledLink>
+          <StyledLink to="/create-your-job-offer">Create your Job Offer !</StyledLink>
+          
+        </div>
     ) : (
       <Typography variant='h4' style={{textTransform:'uppercase'}}>Welcome! Sign in For More Information</Typography>
     )}

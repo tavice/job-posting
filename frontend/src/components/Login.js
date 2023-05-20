@@ -23,7 +23,8 @@ const Login = ({ baseUrl }) => {
       if (data.message === "Login successful.") {
         console.log("User is logged in.");
         console.log(data)
-        localStorage.setItem("authenticated_user", data.user_id);
+        localStorage.setItem("authenticated_user", data.data.user_id);
+        localStorage.setItem("user_type", data.data.userjob_type);
         navigate("/Home");
       }
     } catch (err) {
