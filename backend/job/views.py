@@ -23,6 +23,8 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
 from django.middleware.csrf import get_token
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 
 
 # from django.contrib.auth.models import User
@@ -189,18 +191,25 @@ def login_view(request):
 
 
 #logout with JWT
+@api_view(["POST"])
 def logout_view(request):
-    refresh_token = request.data.get('refresh_token')
+    # Retrieve the access token from the request headers
+    authorization_header = request.headers.get('Authorization')
+    if authorization_header is None:
+        return JsonResponse({'error': 'Access token not provided.'}, status=400)
 
-    if refresh_token:
-        try:
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return JsonResponse({'message': 'Logout successful.'}, status=200)
-        except Exception as e:
-            return JsonResponse({'error': 'Invalid refresh token.'}, status=400)
-    else:
-        return JsonResponse({'error': 'Refresh token not provided.'}, status=400)
+    try:
+        access_token = JWTAuthentication().get_validated_token(authorization_header)
+    except Exception as e:
+        return JsonResponse({'error': 'Invalid access token.'}, status=400)
+
+    # Blacklist the access token
+    try:
+        token = RefreshToken(access_token)
+        token.blacklist()
+        return JsonResponse({'message': 'Logout successful.'}, status=200)
+    except Exception as e:
+        return JsonResponse({'error': 'Invalid access token.'}, status=400)
 
 
 # Register view

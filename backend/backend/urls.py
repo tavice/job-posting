@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.decorators.csrf import csrf_exempt
 from job import views
 from rest_framework.authtoken.views import ObtainAuthToken
 
@@ -33,10 +34,10 @@ router.register(r'payments', views.PaymentViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/', (include(router.urls))),
     path('api-auth/', include('rest_framework.urls')), #this is for the browsable API
-    path('api/login/', views.login_view, name='login_view'),
-    path('api/logout/', views.logout_view, name='logout_view'),
-    path('api/register/', views.register_view, name='register_view'),
+    path('api/login/', csrf_exempt(views.login_view), name='login_view'),
+    path('api/logout/', csrf_exempt(views.logout_view), name='logout_view'),
+    path('api/register/', csrf_exempt(views.register_view), name='register_view'),
     path('api-token-auth/', ObtainAuthToken.as_view()),
 ]

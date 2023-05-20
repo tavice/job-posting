@@ -58,11 +58,14 @@ const Header = ({ baseUrl }) => {
   const handleLogout = async () => {
     try {
       const refresh_token = localStorage.getItem('refresh_token');
-      
+       // Include the refresh_token in the Authorization header
+      const headers = {
+      'Authorization': `Bearer ${refresh_token}`,
+      };
         // Fetch the CSRF token from the cookie
         //const csrfToken = getCookie("csrftoken");
         // Include the CSRF token in the headers of the axios post request
-        const response = await axios.post(`${baseUrl}/api/logout/`, {refresh_token});
+        const response = await axios.post(`${baseUrl}/api/logout/`, {headers});
   
         console.log(response);
 
