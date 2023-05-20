@@ -32,7 +32,7 @@ class JobListingAdmin(admin.ModelAdmin):
    # get_applicationstatus.short_description = 'applicationstatus'
 
 class JobSeekerAdmin(admin.ModelAdmin):
-    list_display = ('bio', 'location', 'phone', 'user')
+    list_display = ('user', 'bio', 'location', 'phone' )
 
 class EmployerAdmin(admin.ModelAdmin):
     list_display = ('companyname', 'website', 'logo', 'location', 'phone', 'user')
@@ -41,11 +41,8 @@ class ResumeAdmin(admin.ModelAdmin):
     list_display = ('education', 'experience', 'skills', 'certifications', 'jobseeker')
 
 class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = ('joblisting', 'jobseeker', 'get_employer', 'applicationstatus')
+    list_display = ('joblisting', 'jobseeker', 'applicationstatus')
 
-    def get_employer(self, obj):
-        return obj.joblisting.employer
-    get_employer.short_description = 'employer'
 
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('joblisting', 'jobseeker', 'employer', 'paymentamount')

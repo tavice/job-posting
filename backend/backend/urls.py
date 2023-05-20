@@ -28,7 +28,7 @@ router.register(r'joblistings', views.JobListingViewSet)
 router.register(r'jobseekers', views.JobSeekerViewSet)
 router.register(r'jobapplications', views.JobApplicationViewSet)
 router.register(r'payments', views.PaymentViewSet)
-#router.register(r'userjobs', views.UserJobViewSet)
+router.register(r'user', views.UserViewSet)
 
 
 
