@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, UserJob
+from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User
 
-class UserJobSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserJob
+        model = User
         fields = '__all__'
 
 

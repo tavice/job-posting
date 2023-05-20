@@ -1,5 +1,6 @@
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password
 
 from job.models import UserJob
 
@@ -11,7 +12,7 @@ class CustomBackend(BaseBackend):
             print('password is', password)
             print('user.password is', user.password)
             #check if username and password match, return user if they do
-            if user.check_password(password):
+            if check_password(password, user.password):
                 return user
         except UserJob.DoesNotExist:
             return None

@@ -186,7 +186,7 @@ const Header = ({ baseUrl }) => {
             variant="h5"
             noWrap
             component="a"
-            href="/"
+            href="/Home"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },

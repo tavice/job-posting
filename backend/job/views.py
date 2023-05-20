@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, UserJob
-from .serializers import UserJobSerializer, EmployerSerializer, JobListingSerializer, JobSeekerSerializer, JobApplicationSerializer, PaymentSerializer
+from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User
+from .serializers import UserSerializer, EmployerSerializer, JobListingSerializer, JobSeekerSerializer, JobApplicationSerializer, PaymentSerializer
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -13,13 +13,15 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from rest_framework.serializers import Serializer, CharField
+
 from django.contrib.auth.hashers import make_password
 
 
 #import custom auth backend for login
-from backend.apis.backend import CustomBackend
+#from backend.apis.backend import CustomBackend
 
-
+#import authentication_backend
 
 
 #import crsf
@@ -30,11 +32,11 @@ from backend.apis.backend import CustomBackend
 
 
 # UserJob views
-class UserJobViewSet(viewsets.ModelViewSet):
-    queryset = UserJob.objects.all()
-    serializer_class = UserJobSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+# class UserJobViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     authentication_classes = [TokenAuthentication]
+#     permission_classes = [IsAuthenticated]
 
 # Employer views
 class EmployerViewSet(viewsets.ModelViewSet):
@@ -62,38 +64,29 @@ class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
 
 # Login view
+# Login view
+class LoginSerializer(Serializer):
+    username = CharField()
+    password = CharField()
+
 @api_view(['POST'])
 def login_view(request):
-    print(request.data)
-    username = request.data.get('username')
-    password = request.data.get('password')
+    serializer = LoginSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
 
-    print('username in login view is', username)
-    print('password in login view is', password)
-    print('Using authentication backend:', CustomBackend)
+    username = serializer.validated_data['username']
+    password = serializer.validated_data['password']
 
-    userjob = authenticate(request, username=username, password=password)
-    if userjob is not None:
-        login(request, userjob)
-        print('user is', userjob)
-        print(request)
-        token, created = Token.objects.get_or_create(userjob=userjob)
-
-        print(token)
-        # Save the token to local storage
-        response = Response({
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        token, created = Token.objects.get_or_create(user=user)
+        response_data = {
             'token': token.key,
-            'user': UserJobSerializer(userjob).data,
+            'user': user.id,
             'message': 'You are logged in.'
-        })
-        response.set_cookie('token', token.key)
-
-        # Save authenticated user to session
-        print('user id is', userjob.id)
-
-        request.session['authenticated_user'] = userjob.id
-
-        return response
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -130,28 +123,33 @@ def logout_view(request):
 # Register view
 @api_view(['POST'])
 def register_view(request):
-    print(request.data)
+    # Retrieve user data from the request
     username = request.data.get('username')
     password = request.data.get('password')
     email = request.data.get('email')
     first_name = request.data.get('first_name')
     last_name = request.data.get('last_name')
     user_type = request.data.get('user_type')
-    print('user type is', user_type)
+
+    # Check if all required fields are provided
     if username is None or password is None or email is None or first_name is None or last_name is None or user_type is None:
         return Response({'error': 'Please provide all required fields.'}, status=status.HTTP_400_BAD_REQUEST)
-    if UserJob.objects.filter(username=username).exists():
+
+    # Check if the username or email already exists
+    if User.objects.filter(username=username).exists():
         return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-    if UserJob.objects.filter(email=email).exists():
+    if User.objects.filter(email=email).exists():
         return Response({'error': 'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-    print('password', password)
-    hashed_password = make_password(password)
-    print('hashed_password', hashed_password)
-    userjob = UserJob.objects.create_user(username=username, password=hashed_password , email=email, first_name=first_name, last_name=last_name)
+
+    # Create the user
+    user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+
+    # Check the user_type and create the corresponding model instance
     if user_type == 'E':
-        employer = Employer.objects.create(userjob=userjob)
+        employer = Employer.objects.create(user=user)
         employer.save()
     elif user_type == 'J':
-        job_seeker = JobSeeker.objects.create(userjob=userjob)
+        job_seeker = JobSeeker.objects.create(user=user)
         job_seeker.save()
+
     return Response({'message': 'User created successfully.'}, status=status.HTTP_201_CREATED)

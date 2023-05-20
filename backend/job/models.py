@@ -7,34 +7,39 @@ from django.contrib.auth.hashers import make_password
 
 # user schemeUser schema: This schema would define the user model for the app, including fields like username, email, password, and user type. The user type field would distinguish between employers and job seekers.
 
-class UserJob(AbstractUser): #The AbstractUser class is provided by Django and includes some common fields for a user model, such as username, email, and password
+class User(AbstractUser): #The AbstractUser class is provided by Django and includes some common fields for a user model, such as username, email, and password
     
-    groups = models.ManyToManyField(Group, blank=True, related_name='job_users')
+    
     userjob_type_choices = [
         ('E', 'Employer'),
         ('J', 'Job Seeker'),
     ]
     userjob_type = models.CharField(max_length=1, choices=userjob_type_choices, default='J')
-    userjob_permissions = models.ManyToManyField(
-        Permission,
+    
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+
+     # Add a related_name argument to avoid clashes with auth.User's groups field
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name=_('groups'),
         blank=True,
-        related_name='job_user_permissions',
-        verbose_name=_('user permissions'),
         help_text=_(
-            'Specific permissions for this user.'
-            ),
+            'The groups this user belongs to. A user will get all permissions '
+            'granted to each of their groups.'
+        ),
+        related_name='job_user_set'  # Use a unique related_name
     )
 
-    class Meta:
-        app_label = 'job'
-
-
-    #save password as hash using django's hashing function
-    def save(self, *args, **kwargs):
-        # Hash the password before saving the user
-        self.password = make_password(self.password) #make_password is a django function that hashes the password
-        super().save(*args, **kwargs) #super() calls the parent class's save method
-    
+    # Add a related_name argument to avoid clashes with auth.User's user_permissions field
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name=_('user permissions'),
+        blank=True,
+        help_text=_('Specific permissions for this user.'),
+        related_name='job_user_set'  # Use a unique related_name
+    )
     def __str__(self):
         return self.username
     
@@ -49,7 +54,7 @@ class Employer(models.Model):
     logo = models.CharField(max_length=50)
     location = models.CharField(max_length=50)
     phone = models.CharField(max_length=50, default='0000000000')
-    userjob = models.ForeignKey(UserJob, on_delete=models.CASCADE, default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
 
 
     def __str__(self):
@@ -73,10 +78,11 @@ class JobListing(models.Model):
 
 class JobSeeker(models.Model):
    
-    userjob = models.ForeignKey(UserJob, on_delete=models.CASCADE, default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     bio = models.CharField(max_length=250, default='bio')
     location = models.CharField(max_length=50, default='location')
     phone = models.CharField(max_length=50, default='0000000000')
+
     
 
     

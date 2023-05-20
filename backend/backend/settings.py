@@ -129,12 +129,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 #Custom backend
-AUTHENTICATION_BACKENDS =['backend.apis.backend.CustomBackend',
-                          'django.contrib.auth.backends.ModelBackend',]
+#AUTHENTICATION_BACKENDS =['backend.apis.backend.CustomBackend',
+                          #'django.contrib.auth.backends.ModelBackend',]
 
 
 #Custom Auth Model
-AUTH_USER_MODEL = "job.UserJob" 
+#AUTH_USER_MODEL = "job.UserJob" 
 
 #CSFR and Session settings
 CSRF_COOKIE_NAME = "csrftoken"

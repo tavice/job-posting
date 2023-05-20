@@ -1,8 +1,12 @@
 from django.contrib import admin
-from .models import UserJob, Employer, JobListing, JobSeeker, Resume, JobApplication, Payment
+from django.contrib.auth.admin import UserAdmin
+from .models import User, Employer, JobListing, JobSeeker, Resume, JobApplication, Payment
 
-class UserJobAdmin(admin.ModelAdmin):
+class UserAdmin(UserAdmin):
     list_display = ('username', 'email', 'userjob_type_choices')
+
+#class UserJobAdmin(admin.ModelAdmin):
+ #   list_display = ('username', 'email', 'userjob_type_choices')
 
 class JobListingAdmin(admin.ModelAdmin):
     list_display = ('jobtitle', 'description', 'location', 'salary', 'jobrequirements', 'employer', 'get_jobseeker_count','get_joblisting', 'get_employer', 'get_jobseeker', 'get_applicationstatus')
@@ -28,10 +32,10 @@ class JobListingAdmin(admin.ModelAdmin):
     get_applicationstatus.short_description = 'applicationstatus'
 
 class JobSeekerAdmin(admin.ModelAdmin):
-    list_display = ('bio', 'location', 'phone', 'userjob')
+    list_display = ('bio', 'location', 'phone', 'user')
 
 class EmployerAdmin(admin.ModelAdmin):
-    list_display = ('companyname', 'website', 'logo', 'location', 'phone', 'userjob')
+    list_display = ('companyname', 'website', 'logo', 'location', 'phone', 'user')
 
 class ResumeAdmin(admin.ModelAdmin):
     list_display = ('education', 'experience', 'skills', 'certifications', 'jobseeker')
@@ -47,7 +51,7 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ('joblisting', 'jobseeker', 'employer', 'paymentamount')
 
 # Register your models here.
-admin.site.register(UserJob, UserJobAdmin)
+admin.site.register(User, UserAdmin)
 admin.site.register(Employer, EmployerAdmin)
 admin.site.register(JobListing, JobListingAdmin)
 admin.site.register(JobSeeker, JobSeekerAdmin)
