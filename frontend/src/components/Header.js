@@ -55,37 +55,51 @@ const Header = ({ baseUrl }) => {
   //Logout Function//
  
 
-  const handleLogout = async () => {
-    try {
-      const refresh_token = localStorage.getItem('refresh_token');
-       // Include the refresh_token in the Authorization header
-      const headers = {
-      'Authorization': `Bearer ${refresh_token}`,
-      };
-        // Fetch the CSRF token from the cookie
-        //const csrfToken = getCookie("csrftoken");
-        // Include the CSRF token in the headers of the axios post request
-        const response = await axios.post(`${baseUrl}/api/logout/`, {headers});
+  // const handleLogout = async () => {
+  //   try {
+  //     const refresh_token = localStorage.getItem('refresh_token');
+  //      // Include the refresh_token in the Authorization header
+  //     const headers = {
+  //     'Authorization': `Bearer ${refresh_token}`,
+  //     };
+  //       // Fetch the CSRF token from the cookie
+  //       //const csrfToken = getCookie("csrftoken");
+  //       // Include the CSRF token in the headers of the axios post request
+  //       const response = await axios.post(`${baseUrl}/api/logout/`, {headers});
   
-        console.log(response);
+  //       console.log(response);
 
-        if (response.status === 200) {
-          localStorage.removeItem("access_token");
-          localStorage.removeItem("refresh_token");
-          localStorage.removeItem("authenticated_user");
-          localStorage.removeItem("csrf_token");
-          localStorage.removeItem("user_type");
-          localStorage.removeItem("");
-          console.log("User is logged out.");
-          window.location.href = "/Home";
-        } else {
-          console.error("Failed to log out");
-        }
+  //       if (response.status === 200) {
+  //         localStorage.removeItem("access_token");
+  //         localStorage.removeItem("refresh_token");
+  //         localStorage.removeItem("authenticated_user");
+  //         localStorage.removeItem("csrf_token");
+  //         localStorage.removeItem("user_type");
+  //         localStorage.removeItem("");
+  //         console.log("User is logged out.");
+  //         window.location.href = "/Home";
+  //       } else {
+  //         console.error("Failed to log out");
+  //       }
       
-    } catch (err) {
-      console.error(err);
-      console.error("Failed to log out");
+  //   } catch (err) {
+  //     console.error(err);
+  //     console.error("Failed to log out");
+  //   }
+  // };
+
+  const handleLogout =  () => {
+    if (localStorage.getItem("access_token")) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("authenticated_user");
+      localStorage.removeItem("csrf_token");
+      localStorage.removeItem("user_type");
+      localStorage.removeItem("");
+      console.log("User is logged out.");
+      window.location.href = "/Home";
     }
+
   };
   
   

@@ -63,60 +63,68 @@ const Register = ({ baseUrl }) => {
 
   return (
     <div style={{ padding: 20 }}>
-       <Typography variant="h4" gutterBottom>Register</Typography>
       <form className="form-create-job" onSubmit={handleSubmit} style={{padding: 20}}>
+       <Typography variant="h4" style={{ marginBottom: 20, alignItems:"center", textTransform:'uppercase', color:'black' }}>Register</Typography>
         
-          <label>Username: </label>
+          
           <TextField
             label="Username"
             type="text"
             name="username"
             value={username}
-            //style={{ marginBottom: 20, width: 500 }}
+            variant="standard"
+            style={{ marginBottom: 20, width: 200 }}
             onChange={handleChange}
             required
           />
         
        
-          <label>Email: </label>
+         
           <TextField
             label="Email"
             type="email"
             name="email"
             value={email}
+            variant="standard"
+            style={{ marginBottom: 20, width: 200 }}
             onChange={handleChange}
             required
           />
         
         
           
-            <label>Password: </label>
+            
             <TextField
               label="Password"
               type="password"
               name="password"
               value={password}
+              variant="standard"
+            style={{ marginBottom: 20, width: 200 }}
               onChange={handleChange}
               required
             />
           
 
-          <label>First Name: </label>
           <TextField
            label="First Name"
             type="text"
             name="first_name"
             value={first_name}
+            variant="standard"
+            style={{ marginBottom: 20, width: 200 }}
             onChange={handleChange}
           />
        
         
-          <label>Last Name: </label>
+         
           <TextField
           label="Last Name"
             type="text"
             name="last_name"
             value={last_name}
+            variant="standard"
+            style={{ marginBottom: 20, width: 200 }}
             onChange={handleChange}
           />
         
@@ -127,6 +135,7 @@ const Register = ({ baseUrl }) => {
             value={user_type}
             onChange={handleChange}
             required
+            style={{ marginBottom: 20, width: 200 }}
           >
             <MenuItem value="">Select User Type</MenuItem>
             <MenuItem value="E">Employer</MenuItem>

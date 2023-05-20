@@ -40,8 +40,8 @@ const Login = ({ baseUrl }) => {
         localStorage.setItem("csrf_token", data.data.csrf_token);
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("refresh_token", data.refresh_token);
-        navigate("/Home");
-        //window.location.href = "/Home";
+        //navigate("/Home");
+        window.location.href = "/Home";
       }
     } catch (err) {
       console.error(err);
@@ -52,24 +52,30 @@ const Login = ({ baseUrl }) => {
 
   return (
     <div div style={{ padding: 20 }}>
-     <Typography variant="h4" gutterBottom>Login</Typography>
       {error && <div className="error">{error}</div>}
       <form className="form-create-job" onSubmit={handleSubmit}>
+     <Typography variant="h4" style={{ marginBottom: 20, alignItems:"center", textTransform:'uppercase', color:'black' }}>Login</Typography>
         
-          <label htmlFor="username">Username:</label>
+          
           <TextField
+            label="Enter username"
             type="text"
             id="username"
             value={username}
+            variant="standard"
+            style={{ marginBottom: 20, width: 200 }}
             onChange={(event) => setUsername(event.target.value)}
           />
         
         
-          <label htmlFor="password">Password:</label>
+          
           <TextField
+            label="Enter password"
             type="password"
             id="password"
             value={password}
+            variant="standard"
+            style={{ marginBottom: 20, width: 200 }}
             onChange={(event) => setPassword(event.target.value)}
           />
         
