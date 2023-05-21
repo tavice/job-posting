@@ -44,19 +44,27 @@ class User(
         related_name="job_user_set",  # Use a unique related_name
     )
 
+    #check if the user is an employer or job seeker
+    def has_employer(self):
+        return hasattr(self, 'employer')
+    
+    def has_jobseeker(self):
+        return hasattr(self, 'jobseeker')
+
     # if the user is a job seeker list all the jobs they applied for
 
     @property
     def user_job_applications(self):
-        return self.jobapplication_set.all()
-
+        if self.has_jobseeker():
+            return self.jobseeker.jobapplication_set.all()
+        return None
 
     # if the user is an employer list all the jobs they posted
     @property
     def get_user_job_listings(self):
-        return self.joblisting_set.all()
-
-   
+        if self.has_employer():
+            return self.employer.joblisting_set.all()
+        return None
 
     def __str__(self):
         return self.username
@@ -71,7 +79,7 @@ class Employer(models.Model):
     logo = models.CharField(max_length=50)
     location = models.CharField(max_length=50)
     phone = models.CharField(max_length=50, default="0000000000")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='employer', default=1)
 
     def __str__(self):
         return self.companyname
@@ -97,7 +105,7 @@ class JobListing(models.Model):
 
 
 class JobSeeker(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,  related_name='job_seeker', default=1)
     bio = models.CharField(max_length=250, default="bio")
     location = models.CharField(max_length=50, default="location")
     phone = models.CharField(max_length=50, default="0000000000")

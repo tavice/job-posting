@@ -3,9 +3,14 @@ from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, Us
 
 #Serializer we will use for get requests and or to display data
 class UserSerializer(serializers.ModelSerializer):
+    #jobseeker = serializers.PrimaryKeyRelatedField(read_only=True) #this is the field that will be used to display the jobseeker id if it exists
+    #employer = serializers.PrimaryKeyRelatedField(read_only=True) #this is the field that will be used to display the employer id if it exists
+
     class Meta:
         model = User
         fields = '__all__'
+        # fields = ['id', 'username', 'email', 'jobseeker', 'employer']
+
 
 
 class EmployerSerializer(serializers.ModelSerializer):

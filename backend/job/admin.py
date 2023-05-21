@@ -2,11 +2,26 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Employer, JobListing, JobSeeker, Resume, JobApplication, Payment
 
-class UserAdmin(UserAdmin):
-    list_display = ('username', 'email','last_login', 'is_staff', 'is_active', 'date_joined')
 
-#class UserJobAdmin(admin.ModelAdmin):
- #   list_display = ('username', 'email', 'userjob_type_choices')
+
+class UserAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'username', 'email', 'first_name', 'last_name',
+        'auth_token', 'is_staff', 'is_superuser', 'is_active',
+        'date_joined', 'last_login', 'employer'
+    )
+
+    def employer(self, obj):
+        if obj.has_employer():
+            print(obj.employer)
+            
+        else:
+            return None
+
+    employer.short_description = 'Company Name'
+    employer.admin_order_field = 'employer__companyname'
+
+    
 
 class JobListingAdmin(admin.ModelAdmin):
     list_display = ('jobtitle', 'description', 'location', 'salary', 'jobrequirements', 'employer') # 'get_jobseeker_count','get_joblisting', 'get_employer', 'get_jobseeker', 'get_applicationstatus')
@@ -32,7 +47,11 @@ class JobListingAdmin(admin.ModelAdmin):
    # get_applicationstatus.short_description = 'applicationstatus'
 
 class JobSeekerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'bio', 'location', 'phone' )
+    list_display = ('id','get_user',  'user', 'bio', 'location', 'phone',  )
+    def get_user(self, obj):
+        return obj.user.id
+    get_user.short_description = 'user_id (FK)'
+    get_user.admin_order_field = 'user__id'
 
 class EmployerAdmin(admin.ModelAdmin):
     list_display = ('companyname', 'website', 'logo', 'location', 'phone', 'user')

@@ -13,9 +13,11 @@ from .serializers import (
 )
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied, BadRequest
+from django.views.decorators.http import require_POST
 
 
 from rest_framework.authentication import TokenAuthentication
@@ -101,64 +103,73 @@ from rest_framework_simplejwt.tokens import RefreshToken
 User = get_user_model()  # Access the user model
 
 
+@require_POST
 @csrf_exempt
 def login_view(request):
-    if request.method == "POST":
-        try:
-            body = json.loads(request.body)
-            username = body.get("username")
-            password = body.get("password")
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid request body."}, status=400)
+    try:
+        body = json.loads(request.body)
+        username = body.get("username")
+        password = body.get("password")
+    except BadRequest:
+        return JsonResponse({"error": "Invalid request body."}, status=400)
 
-        if not username or not password:
-            return JsonResponse({"error": "Invalid username or password."}, status=400)
+    if not username or not password:
+        return JsonResponse({"error": "Invalid username or password."}, status=400)
 
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            refresh = RefreshToken.for_user(user)
-            # Generate tokens
-            access_token = refresh.access_token
-            token = str(access_token)
-            csrf_token = get_token(request)  # Get the CSRF token
-            print("csrf_token is", csrf_token)
-            print("token is", token)
-
-          # Determine user type based on associated models
-            
-            if hasattr(user, 'jobseeker'):
-                user_type = "J"  # Job Seeker
-            elif hasattr(user, 'employer'):
-                user_type = "E"  # Employer
-            else:
-                user_type = "J"  # Assume Job Seeker by default
-
-            # Set the CSRF token as a cookie in the response
-            response = JsonResponse(
-                {
-                    "message": "Login successful.",
-                    "user": UserSerializer(user).data,
-                    "data": {
-                        "user_id": user.id,
-                        "username": user.username,
-                        "email": user.email,
-                        "userjob_type": user_type,
-                        "csrf_token": csrf_token,  # Include the CSRF token in the response
-                    },
-                    "token": token,
-                    'access_token': str(access_token),
-                    'refresh_token': str(refresh),
-                },
-                status=200,
-            )
-            response.set_cookie("csrftoken", csrf_token)
-            print("csrf_token is", csrf_token)
-            return response
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        print("user loggend in is", user)
+        IsAuthenticated()
+        refresh = RefreshToken.for_user(user)
+        # Generate tokens
+        access_token = refresh.access_token
+        token = str(access_token)
+        csrf_token = get_token(request)  # Get the CSRF token
+        print("csrf_token is", csrf_token)
+        print("token is", token)
+        print(user)
+        
+        #get the user object to determine user type
+        user = User.objects.get(id=user.id)
+        employer = Employer.objects.filter(user=user)
+        print(employer)
+        jobseeker = JobSeeker.objects.filter(user=user)
+        print(jobseeker)
+        # Determine user type based on associated models
+       
+        if employer:
+            user_type = "E"
+        elif jobseeker:
+            user_type = "J"
         else:
-            return JsonResponse({"error": "Invalid credentials."}, status=401)
+            PermissionDenied("User does not have a user type.")
+
+
+        # Set the CSRF token as a cookie in the response
+        response = JsonResponse(
+            {
+                "message": "Login successful.",
+                "user": UserSerializer(user).data,
+                "data": {
+                    "user_id": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                    "userjob_type": user_type,
+                    "csrf_token": csrf_token,  # Include the CSRF token in the response
+                },
+                "token": token,
+                "access_token": str(access_token),
+                "refresh_token": str(refresh),
+            },
+            status=200,
+        )
+        response.set_cookie("csrftoken", csrf_token)
+        print("csrf_token is", csrf_token)
+        print(UserSerializer(user).data)
+        return response
     else:
-        return JsonResponse({"error": "Invalid request method."}, status=405)
+        return HttpResponse("Invalid credentials.", status=401)
 
 # class LoginSerializer(Serializer):
 #     username = CharField()

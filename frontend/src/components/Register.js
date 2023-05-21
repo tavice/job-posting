@@ -169,6 +169,15 @@ const handleSubmit = async (e) => {
           style={{ marginBottom: 20, width: 200 }}
           onChange={handleChange}
         />
+        <TextField
+          label="Phone Number"
+          type="text"
+          name="phone"
+          value={phone}
+          variant="standard"
+          style={{ marginBottom: 20, width: 200 }}
+          onChange={handleChange}
+        />
       </>
     );
   };

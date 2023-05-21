@@ -135,11 +135,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #Custom backend
 AUTHENTICATION_BACKENDS =['backend.apis.backend.CustomBackend',
-                          'django.contrib.auth.backends.ModelBackend',]
+                          'django.contrib.auth.backends.ModelBackend' ]
 
 
 #Custom Auth Model
-#AUTH_USER_MODEL = "job.UserJob" 
+AUTH_USER_MODEL = "job.User" 
 
 #CSFR and Session settings
 CSRF_COOKIE_NAME = "csrftoken"
@@ -160,21 +160,21 @@ USE_I18N = True
 USE_TZ = True
 
 #REST framework settings
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#        'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     ],
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',
-#     ],
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+       'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 
-# # JWT settings
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#     'ROTATE_REFRESH_TOKENS': False,
-# }
+# JWT settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+}
 
 
 
