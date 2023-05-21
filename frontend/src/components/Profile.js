@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -83,8 +84,15 @@ const Profile = ({ baseUrl }) => {
             />
             Username: {currentUser.username}
           </Typography>
-          <Button>Update Profile</Button>
-          <Button>Delete Profile</Button>
+          <Button 
+          component={Link}
+                to="/update-user">
+                    Update Profile
+                    </Button>
+          <Button
+          component={Link}
+          to="/delete-user"
+          >Delete Profile</Button>
           <Button>Share Profile with Employers</Button>
 
           <Divider textAlign="left" style={{ padding: 20 }}>

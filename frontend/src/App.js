@@ -19,6 +19,8 @@ import JobListingDetail from './pages/JobListingDetail';
 import NewJobListingForm from './pages/NewJobListingForm';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
+import UpdateUserForm from './pages/UpdateUserForm';
+import DeleteUserForm from './pages/DeleteUserForm';
 
 function App() {
   const baseUrl = 'http://127.0.0.1:8000'
@@ -37,6 +39,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard baseUrl={baseUrl} />} />
         <Route path="/About Us" element={<AboutUs />} />
         <Route path="/Contact Us" element={<ContactUs />} />
+        <Route path="/update-user" element={<UpdateUserForm baseUrl={baseUrl} />} />
+        <Route path="/delete-user" element={<DeleteUserForm baseUrl={baseUrl} />} />
       </Routes>
       <Footer />
  
