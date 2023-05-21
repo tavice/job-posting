@@ -1,6 +1,8 @@
+from typing import Optional, Set
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from django.db.models.base import Model
 from rest_framework.authtoken.models import Token
 
 from job.models import User
@@ -19,6 +21,8 @@ class CustomBackend(BaseBackend):
             return None
 
         return None
+    
+  
     
     def get_user(self, user_id):
         try:

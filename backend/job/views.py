@@ -11,12 +11,13 @@ from .serializers import (
     UserUpdateSerializer,
 )
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
 
-# from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
@@ -34,10 +35,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 
-# from django.contrib.auth.models import User
-# from rest_framework.serializers import Serializer, CharField
 
-# from django.contrib.auth.hashers import make_password
 import json
 from django.http import JsonResponse
 
@@ -55,8 +53,8 @@ from backend.apis.backend import CustomBackend
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
 
 # Employer views
@@ -97,6 +95,11 @@ class PaymentViewSet(viewsets.ModelViewSet):
 # ====SIMPLE ONE ======#
 
 
+from rest_framework_simplejwt.tokens import RefreshToken
+
+User = get_user_model()  # Access the user model
+
+
 @csrf_exempt
 def login_view(request):
     if request.method == "POST":
@@ -114,23 +117,36 @@ def login_view(request):
         if user is not None:
             login(request, user)
             refresh = RefreshToken.for_user(user)
-            #token, created = Token.objects.get_or_create(user=user)
+            # Generate tokens
+            access_token = refresh.access_token
+            token = str(access_token)
             csrf_token = get_token(request)  # Get the CSRF token
             print("csrf_token is", csrf_token)
+            print("token is", token)
 
-           # Set the CSRF token as a cookie in the response
+          # Determine user type based on associated models
+            
+            if hasattr(user, 'jobseeker'):
+                user_type = "J"  # Job Seeker
+            elif hasattr(user, 'employer'):
+                user_type = "E"  # Employer
+            else:
+                user_type = "J"  # Assume Job Seeker by default
+
+            # Set the CSRF token as a cookie in the response
             response = JsonResponse(
                 {
                     "message": "Login successful.",
+                    "user": UserSerializer(user).data,
                     "data": {
                         "user_id": user.id,
                         "username": user.username,
                         "email": user.email,
-                        "userjob_type": user.userjob_type,
+                        "userjob_type": user_type,
                         "csrf_token": csrf_token,  # Include the CSRF token in the response
                     },
-                    #"token": token.key,
-                    'access_token': str(refresh.access_token),
+                    "token": token,
+                    'access_token': str(access_token),
                     'refresh_token': str(refresh),
                 },
                 status=200,
@@ -142,7 +158,6 @@ def login_view(request):
             return JsonResponse({"error": "Invalid credentials."}, status=401)
     else:
         return JsonResponse({"error": "Invalid request method."}, status=405)
-
 
 # class LoginSerializer(Serializer):
 #     username = CharField()
@@ -262,6 +277,8 @@ def register_view(request):
         email=email,
         first_name=first_name,
         last_name=last_name,
+        
+
     )
 
     # Check the user_type and create the corresponding model instance

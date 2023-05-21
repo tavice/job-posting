@@ -11,13 +11,13 @@ from django.contrib.auth.hashers import make_password
 class User(
     AbstractUser
 ):  # The AbstractUser class is provided by Django and includes some common fields for a user model, such as username, email, and password
-    userjob_type_choices = [
-        ("E", "Employer"),
-        ("J", "Job Seeker"),
-    ]
-    userjob_type = models.CharField(
-        max_length=1, choices=userjob_type_choices, default="J"
-    )
+    # userjob_type_choices = [
+    #     ("E", "Employer"),
+    #     ("J", "Job Seeker"),
+    # ]
+    # userjob_type = models.CharField(
+    #     max_length=1, choices=userjob_type_choices, default="J"
+    # )
 
     class Meta:
         verbose_name = _("user")
