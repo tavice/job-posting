@@ -135,49 +135,52 @@ const Dashboard = ({ baseUrl }) => {
   //render//
   return (
     <div>
-      <h1>Hello {currentUser.first_name} ! </h1>
+     
       {userType === "E" ? (
         <h1> Employer Dashboard</h1>
       ) : (
-       
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                <Typography variant="h4" style={{ marginBottom: 10 }}> Profile</Typography>
-                <Profile baseUrl={baseUrl}/>
-                </Paper>
-              </Grid>
-
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  <Typography variant="h4" style={{ marginBottom: 10 }}> List of the jobs you applied to</Typography>
-                  <ListOfJobsYouAppliedTo baseUrl={baseUrl}/>
-                </Paper>
-              </Grid>
-
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  <Typography variant="h4" style={{ marginBottom: 10 }}> List of the jobs you saved</Typography>
-                </Paper>
-              </Grid>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+                <Profile baseUrl={baseUrl} />
+              </Paper>
             </Grid>
-          </Container>
-        
+
+            <Grid item xs={12} md={8} lg={9}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  height: 240,
+                }}
+              >
+                <Typography variant="h4" style={{ marginBottom: 10 }}>
+                  {" "}
+                  List of the jobs you applied to
+                </Typography>
+                <ListOfJobsYouAppliedTo baseUrl={baseUrl} />
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  height: 240,
+                }}
+              >
+                <Typography variant="h4" style={{ marginBottom: 10 }}>
+                  {" "}
+                  List of the jobs you saved
+                </Typography>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Container>
       )}
     </div>
   );

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const ListOfJobsYouAppliedTo = ({baseUrl}) => {
+    console.log(baseUrl)
    
     //Fetch the current user
     const [currentUser, setCurrentUser] = useState({});
