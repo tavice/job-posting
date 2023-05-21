@@ -39,5 +39,7 @@ urlpatterns = [
     path('api/login/', csrf_exempt(views.login_view), name='login_view'),
     path('api/logout/', csrf_exempt(views.logout_view), name='logout_view'),
     path('api/register/', csrf_exempt(views.register_view), name='register_view'),
+    path('api/update/<int:pk>/', csrf_exempt(views.update_user), name='update_view'),
+    #path('api/userprofile/', csrf_exempt(views.get_user_profile_view), name='get_user_profile_view'),
     path('api-token-auth/', ObtainAuthToken.as_view()),
 ]

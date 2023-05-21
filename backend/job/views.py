@@ -8,10 +8,13 @@ from .serializers import (
     JobSeekerSerializer,
     JobApplicationSerializer,
     PaymentSerializer,
+    UserUpdateSerializer,
 )
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+
 
 # from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -22,8 +25,12 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
 from django.middleware.csrf import get_token
+from django.views.decorators.csrf import csrf_protect
+
+
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
 
 
 
@@ -192,6 +199,7 @@ def login_view(request):
 
 #logout with JWT
 @api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
 def logout_view(request):
     # Retrieve the access token from the request headers
     authorization_header = request.headers.get('Authorization')
@@ -267,3 +275,33 @@ def register_view(request):
     return Response(
         {"message": "User created successfully."}, status=status.HTTP_201_CREATED
     )
+
+
+#Update User
+@csrf_protect
+@api_view(["PUT"])
+def update_user(request, pk):
+
+
+    print('request user is ', request.user)
+    print('pk is', pk)
+    # Retrieve the user from the database
+    try:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
+        return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    # Check if the user is the same as the authenticated user
+    if request.user != user:
+        return Response(
+            {"error": "You don't have permission to edit this user."},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    # Create an instance of the UserUpdateSerializer with the user and request.data
+    serializer = UserUpdateSerializer(user, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "User updated successfully."}, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

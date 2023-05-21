@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User
 
+#Serializer we will use for get requests and or to display data
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -31,3 +32,13 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = '__all__'
+
+#Serializer we will use for update (PUT) requests
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'email', 'first_name', 'last_name', 'user_type']
+        extra_kwargs = {
+            'password': {'write_only': True},  # Password should not be returned in response
+            
+        }
