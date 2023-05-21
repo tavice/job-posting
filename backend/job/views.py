@@ -120,7 +120,9 @@ def login_view(request):
     if user is not None:
         login(request, user)
         print("user loggend in is", user)
-        IsAuthenticated()
+        
+
+        # Generate refresh token
         refresh = RefreshToken.for_user(user)
         # Generate tokens
         access_token = refresh.access_token
