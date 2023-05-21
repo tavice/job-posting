@@ -42,3 +42,44 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},  # Password should not be returned in response
             
         }
+
+#Serializer we will use for create (POST) requests
+class UserRegistrationSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=128, write_only=True)
+    username = serializers.CharField(max_length=150)
+    email = serializers.EmailField(max_length=255)
+    first_name = serializers.CharField(max_length=30, required=False)
+    last_name = serializers.CharField(max_length=150, required=False)
+    user_type = serializers.ChoiceField(choices=[("E", "Employer"), ("J", "Job Seeker")])
+    bio = serializers.CharField(max_length=250, required=False)  # Additional field for Job Seeker
+    location = serializers.CharField(max_length=50, required=False)  # Additional field for both Job Seeker and Employer
+    companyname = serializers.CharField(max_length=50, required=False)  # Additional field for Employer
+    website = serializers.CharField(max_length=50, required=False)  # Additional field for Employer
+
+    def create(self, validated_data):
+        # Create the user model instance
+        user = User.objects.create_user(**validated_data)
+
+        # Get the additional fields from validated_data
+        bio = validated_data.get("bio")
+        location = validated_data.get("location")
+        companyname = validated_data.get("companyname")
+        website = validated_data.get("website")
+
+        # Create the corresponding model instance based on user_type
+        user_type = validated_data.get("user_type")
+        if user_type == "E":
+            Employer.objects.create(
+                user=user,
+                companyname=companyname,
+                website=website,
+                location=location,
+            )
+        elif user_type == "J":
+            JobSeeker.objects.create(
+                user=user,
+                bio=bio,
+                location=location,
+            )
+
+        return user        

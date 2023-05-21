@@ -9,6 +9,7 @@ from .serializers import (
     JobApplicationSerializer,
     PaymentSerializer,
     UserUpdateSerializer,
+    UserRegistrationSerializer,
 )
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
@@ -238,60 +239,61 @@ def logout_view(request):
 # Register view
 @api_view(["POST"])
 def register_view(request):
-    # Retrieve user data from the request
-    username = request.data.get("username")
-    password = request.data.get("password")
-    email = request.data.get("email")
-    first_name = request.data.get("first_name")
-    last_name = request.data.get("last_name")
-    user_type = request.data.get("user_type")
+    serializer = UserRegistrationSerializer(data=request.data)
+    if serializer.is_valid():
+        username = serializer.validated_data.get("username")
+        password = serializer.validated_data.get("password")
+        email = serializer.validated_data.get("email")
+        first_name = serializer.validated_data.get("first_name")
+        last_name = serializer.validated_data.get("last_name")
+        user_type = serializer.validated_data.get("user_type")
+        bio = serializer.validated_data.get("bio")  # Additional field for Job Seeker
+        location = serializer.validated_data.get("location")  # Additional field for both Job Seeker and Employer
+        companyname = serializer.validated_data.get("companyname")  # Additional field for Employer
+        website = serializer.validated_data.get("website")  # Additional field for Employer
 
-    # Check if all required fields are provided
-    if (
-        username is None
-        or password is None
-        or email is None
-        or first_name is None
-        or last_name is None
-        or user_type is None
-    ):
-        return Response(
-            {"error": "Please provide all required fields."},
-            status=status.HTTP_400_BAD_REQUEST,
+        if User.objects.filter(username=username).exists():
+            return Response(
+                {"error": "Username already exists."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if User.objects.filter(email=email).exists():
+            return Response(
+                {"error": "Email already exists."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
         )
 
-    # Check if the username or email already exists
-    if User.objects.filter(username=username).exists():
+        if user_type == "E":
+            employer = Employer.objects.create(
+                user=user,
+                companyname=companyname,
+                website=website,
+                location=location,
+            )
+        elif user_type == "J":
+            job_seeker = JobSeeker.objects.create(
+                user=user,
+                bio=bio,
+                location=location,
+            )
+
+        user_serializer = UserSerializer(user)
         return Response(
-            {"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST
+            {"message": "User created successfully.", "user": user_serializer.data},
+            status=status.HTTP_201_CREATED,
         )
-    if User.objects.filter(email=email).exists():
-        return Response(
-            {"error": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST
-        )
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # Create the user
-    user = User.objects.create_user(
-        username=username,
-        password=password,
-        email=email,
-        first_name=first_name,
-        last_name=last_name,
-        
 
-    )
-
-    # Check the user_type and create the corresponding model instance
-    if user_type == "E":
-        employer = Employer.objects.create(user=user)
-        employer.save()
-    elif user_type == "J":
-        job_seeker = JobSeeker.objects.create(user=user)
-        job_seeker.save()
-
-    return Response(
-        {"message": "User created successfully."}, status=status.HTTP_201_CREATED
-    )
 
 
 #Update User
