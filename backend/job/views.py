@@ -120,18 +120,14 @@ def login_view(request):
     if user is not None:
         login(request, user)
         print("user loggend in is", user)
-        
 
-        # Generate refresh token
-        refresh = RefreshToken.for_user(user)
-        # Generate tokens
-        access_token = refresh.access_token
-        token = str(access_token)
-        csrf_token = get_token(request)  # Get the CSRF token
-        print("csrf_token is", csrf_token)
-        print("token is", token)
-        print(user)
-        
+        # Get or create the token for the user
+        try:
+            token = Token.objects.get(user=user)
+        except Token.DoesNotExist:
+            token = Token.objects.create(user=user)
+       
+
         #get the user object to determine user type
         user = User.objects.get(id=user.id)
         employer = Employer.objects.filter(user=user)
@@ -160,7 +156,7 @@ def login_view(request):
                     "userjob_type": user_type,
                     "csrf_token": csrf_token,  # Include the CSRF token in the response
                 },
-                "token": token,
+                "token": token.key,
                 "access_token": str(access_token),
                 "refresh_token": str(refresh),
             },

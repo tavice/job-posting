@@ -36,6 +36,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', (include(router.urls))),
     path('api-auth/', include('rest_framework.urls')), #this is for the browsable API
+    #path('api-token-auth/', views.obtain_auth_token), #https://www.django-rest-framework.org/api-guide/authentication/
     path('api/login/', csrf_exempt(views.login_view), name='login_view'),
     path('api/logout/', csrf_exempt(views.logout_view), name='logout_view'),
     path('api/register/', csrf_exempt(views.register_view), name='register_view'),
