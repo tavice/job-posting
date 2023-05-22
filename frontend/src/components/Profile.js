@@ -9,13 +9,17 @@ import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 import Avatar from "@mui/material/Avatar";
-import Button  from "@mui/material/Button";
+import Button from "@mui/material/Button";
 
 const Profile = ({ baseUrl }) => {
   console.log(baseUrl);
+  const userType = localStorage.getItem("user_type");
+
+  //=======================================================//
   //Fetch the current user
   const [currentUser, setCurrentUser] = useState({});
   const [jobSeeker, setJobSeeker] = useState({});
+  const [employer, setEmployer] = useState({});
 
   //=======================================================//
   //Fetch the current user the user id in the database matches the authenticated_user  id saved in local storage when logged
@@ -59,12 +63,38 @@ const Profile = ({ baseUrl }) => {
 
   console.log("job seeker is ", jobSeeker);
 
+  //================================================================//
+  //Fetches all employers, matches the user id in the database to the current user id
+  const fetchEmployer = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/api/employers`);
+      const data = response.data;
+      const foundEmployer = data.find((item) => item.user === currentUser.id);
+      if (foundEmployer) {
+        setEmployer(foundEmployer);
+      } else {
+        console.log("no employer found");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployer();
+  }, []);
+
+  console.log("employer is ", employer);
+
   //=======================================================//
   //Style for the list
   const style = {
     width: "100%",
     bgcolor: "background.paper",
   };
+
+  //=======================================================//
+  //render//
 
   return (
     <Box style={{ textAlign: "left" }}>
@@ -84,37 +114,62 @@ const Profile = ({ baseUrl }) => {
             />
             Username: {currentUser.username}
           </Typography>
-          <Button 
-          component={Link}
-                to="/update-user">
-                    Update Profile
-                    </Button>
-          <Button
-          component={Link}
-          to="/delete-user"
-          >Delete Profile</Button>
-          <Button>Share Profile with Employers</Button>
+          <Button component={Link} to="/update-user">
+            Update Profile
+          </Button>
+          <Button component={Link} to="/delete-user">
+            Delete Profile
+          </Button>
+
+          {userType === "J" ? (
+               <Button>Share Profile with Employers</Button>
+          ):(
+            <Button>Share Profile with Job Seekers</Button>
+          )}
+         
 
           <Divider textAlign="left" style={{ padding: 20 }}>
             <Chip label="CONTACT INFO" />
           </Divider>
-          <Typography>Phone Number: {jobSeeker.phone}</Typography>
-          <Typography>Email: {currentUser.email}</Typography>
-          <Typography>Location: {jobSeeker.location}</Typography>
+          {userType === "J" ? (
+            <div>
+              <Typography>Phone Number: {jobSeeker.phone}</Typography>
+              <Typography>Email: {currentUser.email}</Typography>
+              <Typography>Location: {jobSeeker.location}</Typography>
+            </div>
+          ) : (
+            <div>
+              <Typography>Company Name: {employer.companyname}</Typography>
+              <Typography>Company Phone Number: {employer.phone}</Typography>
+              <Typography>
+                Company Website: <Link>{employer.website}</Link>
+              </Typography>
+              <Typography>Email: {currentUser.email}</Typography>
+              <Typography>Location: {employer.location}</Typography>
+            </div>
+          )}
 
-          <Divider textAlign="left" style={{ padding: 20 }}>
-            <Chip label="ABOUT ME" />
-          </Divider>
-          <Typography
-            variant="h5"
-            style={{ padding: 20, marginTop: 20, marginBottom: 20 }}
-          >
-            {jobSeeker.bio}
-          </Typography>
+          {userType === "J" ? (
+            <div>
+              <Divider textAlign="left" style={{ padding: 20 }}>
+                <Chip label="ABOUT ME" />
+              </Divider>
+              <Typography
+                variant="h5"
+                style={{ padding: 20, marginTop: 20, marginBottom: 20 }}
+              >
+                {jobSeeker.bio}
+              </Typography>
+            </div>
+          ) : (
+            <Divider textAlign="left" style={{ padding: 20 }}>
+              <Chip label="ABOUT COMPANY" />
+            </Divider>
+          )}
         </Grid>
         <Grid item xs={6} md={6}>
           <img
-            src="https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+            src="https://picsum.photos/200/300"
             alt="profile"
             style={{ width: "100%", height: "100%" }}
           />
