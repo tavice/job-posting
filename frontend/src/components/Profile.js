@@ -15,76 +15,46 @@ const Profile = ({ baseUrl }) => {
   console.log(baseUrl);
   const userType = localStorage.getItem("user_type");
 
-  //=======================================================//
-  //Fetch the current user
   const [currentUser, setCurrentUser] = useState({});
   const [jobSeeker, setJobSeeker] = useState({});
   const [employer, setEmployer] = useState({});
 
   //=======================================================//
   //Fetch the current user the user id in the database matches the authenticated_user  id saved in local storage when logged
-  const fetchCurrentUser = async () => {
-    try {
-      const response = await axios.get(
-        `${baseUrl}/api/user/${localStorage.getItem("authenticated_user")}`
-      );
-      const data = response.data;
-      setCurrentUser(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //Do it in one fetch to optimize had issues before with (3) fetches
   useEffect(() => {
-    fetchCurrentUser();
-  }, []);
-
-  console.log("current user is ", currentUser);
-
-  //=======================================================//
-  //Fetches all job seekers, matches the user id in the database to the current user id
-  const fetchJobSeeker = async () => {
-    try {
-      const response = await axios.get(`${baseUrl}/api/jobseekers`);
-      const data = response.data;
-      const foundJobSeeker = data.find((item) => item.user === currentUser.id);
-      if (foundJobSeeker) {
-        setJobSeeker(foundJobSeeker);
-      } else {
-        console.log("no job seeker found");
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `${baseUrl}/api/user/${localStorage.getItem("authenticated_user")}`
+        );
+        const { data } = response;
+        setCurrentUser(data);
+        const jobSeekerResponse = await axios.get(`${baseUrl}/api/jobseekers`);
+        const employerResponse = await axios.get(`${baseUrl}/api/employers`);
+        const jobSeekerData = jobSeekerResponse.data.find(
+          (item) => item.user === data.id
+        );
+        const employerData = employerResponse.data.find(
+          (item) => item.user === data.id
+        );
+        if (jobSeekerData) {
+          setJobSeeker(jobSeekerData);
+        } else {
+          console.log("no job seeker found");
+        }
+        if (employerData) {
+          setEmployer(employerData);
+        } else {
+          console.log("no employer found");
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    };
 
-  useEffect(() => {
-    fetchJobSeeker();
+    fetchUserData();
   }, []);
-
-  console.log("job seeker is ", jobSeeker);
-
-  //================================================================//
-  //Fetches all employers, matches the user id in the database to the current user id
-  const fetchEmployer = async () => {
-    try {
-      const response = await axios.get(`${baseUrl}/api/employers`);
-      const data = response.data;
-      const foundEmployer = data.find((item) => item.user === currentUser.id);
-      if (foundEmployer) {
-        setEmployer(foundEmployer);
-      } else {
-        console.log("no employer found");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchEmployer();
-  }, []);
-
-  console.log("employer is ", employer);
 
   //=======================================================//
   //Style for the list
