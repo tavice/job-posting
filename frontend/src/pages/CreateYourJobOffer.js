@@ -17,35 +17,37 @@ const NewJobListingForm = ({ baseUrl }) => {
   const [location, setLocation] = useState("");
   const [salary, setSalary] = useState("");
   const [jobRequirements, setJobRequirements] = useState("");
-  const [employerId, setEmployerId] = useState("");
+
   const [errorMessage, setErrorMessage] = useState("");
   const [employers, setEmployers] = useState([]);
+  const [employer, setEmployer] = useState([]);
 
   const navigate = useNavigate();
 
   //Select element in local storage
   const userType = localStorage.getItem("user_type");
-  const userId = localStorage.getItem("authenticated_user")
+  const userId = localStorage.getItem("authenticated_user");
+  console.log(userId);
+  const employerId = localStorage.getItem("employer_id");
 
   //================================================================//
-  //Fetch all employers
-  const fetchEmployers = async () => {
-    try {
-      const response = await axios.get(`${baseUrl}/api/employers/`);
-      const data = response.data.map((employer) => {
-        return { ...employer, name: employer.companyname };
-      });
-      setEmployers(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  //fetch the employer with the employerID received from the local storage
   useEffect(() => {
-    fetchEmployers();
-  }, []);
+    const fetchEmployer = async () => {
+      try {
+        const response = await axios.get(
+          `${baseUrl}/api/employers/${employerId}`
+        );
+        const data = response.data;
+        setEmployer(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchEmployer();
+  }, [employerId]);
 
-  console.log(employers);
+  console.log(employer);
   //================================================================//
   // Creating a new job listing
   const handleFormSubmit = async (e) => {
@@ -65,7 +67,7 @@ const NewJobListingForm = ({ baseUrl }) => {
       setLocation("");
       setSalary("");
       setJobRequirements("");
-      setEmployerId("");
+      //setEmployerId("");
 
       console.log("Job Listing Created");
       navigate("/Job Listings");
@@ -77,9 +79,29 @@ const NewJobListingForm = ({ baseUrl }) => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        
-      <form className="form-create-job" onSubmit={handleFormSubmit} style={{padding: 20, width:"50%"}}>
-      <Typography variant="h4" style={{ marginBottom: 20, alignItems:"center", textTransform:'uppercase', color:'black' }}>Create a New Job Listing</Typography>
+      {userType === "E" ? ( 
+        <>
+      {errorMessage && (
+        <Typography variant="h6" color="error">
+            {errorMessage}
+        </Typography>
+      )}  
+      <form
+        className="form-create-job"
+        onSubmit={handleFormSubmit}
+        style={{ padding: 20, width: "50%" }}
+      >
+        <Typography
+          variant="h4"
+          style={{
+            marginBottom: 20,
+            alignItems: "center",
+            textTransform: "uppercase",
+            color: "black",
+          }}
+        >
+          Create a job offer for {employer.companyname}
+        </Typography>
         <TextField
           required
           label="Job Title"
@@ -92,7 +114,7 @@ const NewJobListingForm = ({ baseUrl }) => {
         />
 
         <TextField
-        required
+          required
           label="Job Description"
           type="text"
           id="description"
@@ -104,7 +126,7 @@ const NewJobListingForm = ({ baseUrl }) => {
         />
 
         <TextField
-        required
+          required
           label="Job Location"
           type="text"
           id="location"
@@ -115,18 +137,18 @@ const NewJobListingForm = ({ baseUrl }) => {
         />
 
         <TextField
-        required
+          required
           label="Enter Job Salary"
           type="text"
           id="salary"
           variant="standard"
-          style={{ marginBottom: 20, width: "90%"}}
+          style={{ marginBottom: 20, width: "90%" }}
           value={salary}
           onChange={(e) => setSalary(e.target.value)}
         />
 
         <TextField
-        required
+          required
           label="Enter Job Requirements"
           type="text"
           id="job-requirements"
@@ -136,28 +158,28 @@ const NewJobListingForm = ({ baseUrl }) => {
           onChange={(e) => setJobRequirements(e.target.value)}
         />
 
-        <FormControl>
-          <FormLabel>Select Company: </FormLabel>
-          <Select
-            labelId="select-employer"
-            id="employer-id"
-            value={employerId}
-            style={{ marginBottom: 20, width: "90%" }}
-            onChange={(e) => setEmployerId(e.target.value)}
-          >
-            {employers.map((employer) => (
-              <MenuItem key={employer.id} value={employer.id}>
-                {employer.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <TextField
+          required
+          type="text"
+          id="employer"
+          variant="standard"
+          color="primary"
+          style={{ marginBottom: 20, width: "90%" }}
+          value={employer.companyname}
+        />
 
         <Button variant="contained" type="submit">
           Create Your Job Offer !
         </Button>
         {errorMessage && <p>{errorMessage}</p>}
       </form>
+      </>
+
+        ) : (
+            <Typography variant="h6" color="error">
+                You are not authorized to access this page. Please log in as an employer.
+            </Typography>
+        )};
     </Container>
   );
 };
