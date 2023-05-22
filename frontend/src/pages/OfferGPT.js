@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
+//import { useHistory } from "react-router-dom";
 
-const OfferGPT = () => {
+const OfferGPT = ({ baseUrl }) => {
   const [messages, setMessages] = useState([]);
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState("");
   const [temperature, setTemperature] = useState(0.1);
+
+  //console.log(`baseUrl: ${baseUrl}`);
+  //const history = useHistory();
+
+  //====================================================================================================
+  //Handle Submit
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -14,73 +22,100 @@ const OfferGPT = () => {
         prompt,
         temperature,
       };
+      console.log(payload)
+      console.log(`payload: ${JSON.stringify(payload)}`);
+      
 
       // Send a POST request to your API endpoint
-      const response = await fetch('/generator/chat/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await axios.post(`${baseUrl}/generator/chat/`, payload);
 
-      if (response.ok) {
-        // Parse the response
-        const data = await response.json();
+      if (response.status === 200) {
+        // Access the response data
+        const data = response.data;
         const { messages: updatedMessages, formattedResponse } = data;
 
         // Update the messages state with the updated messages
         setMessages(updatedMessages);
+        console.log(`messages: ${JSON.stringify(messages)}`);
 
         // Append the assistant's response to the messages state
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { role: 'assistant', content: formattedResponse },
-        ]);
+        setMessages((prevMessages) => {
+            if (Array.isArray(prevMessages)) {
+              return [
+                ...prevMessages,
+                { role: "assistant", content: formattedResponse },
+              ];
+            }
+            return [
+              { role: "assistant", content: formattedResponse },
+            ];
+          });
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       // Handle the error as needed
     }
   };
+
+  //====================================================================================================
+  //Handle Prompt Change
 
   const handlePromptChange = (event) => {
     setPrompt(event.target.value);
   };
 
+  //====================================================================================================
+  //Handle Temperature Change
+
   const handleTemperatureChange = (event) => {
     setTemperature(parseFloat(event.target.value));
   };
 
+  //====================================================================================================
+  //Render
+
   return (
-    <div className="row justify-content-center my-4">
-      <div className="col-md-7 mt-4">
-        <div className="card">
-          <h1 className="card-header text-center">A.I WEB ASSISTANT</h1>
-          <div className="card-body">
-            <div className="d-flex justify-content-end">
-              <button type="button" className="btn btn-primary mb-3">New Chat +</button>
+    <div>
+      <h1>Job Offer ASSISTANT</h1>
+
+      {/* <button type="button" onClick={() => history.push("/new_chat")}>
+        New Chat +
+      </button> */}
+
+      <div className="chat-history">
+        {messages.map((message, index) => (
+          <div key={index} className="answer-discussion">
+            <div>
+              <strong>{message.role}</strong>: {message.content}
             </div>
-            <div className="chat-history mb-3">
-              {messages.map((message, index) => (
-                <div key={index} className={`card mb-2 ${message.role === 'assistant' ? 'bg-success text-white' : ''}`}>
-                  <div className="card-body p-2">
-                    <strong>{message.role}</strong>: {message.content}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <form onSubmit={handleSubmit}>
-              <input className="form-control mb-2" required type="text" autoFocus name="prompt" value={prompt} onChange={handlePromptChange} />
-              <label htmlFor="temperature" className="form-label">Temperature:</label>
-              <input className="form-control mb-2" type="number" step="0.01" min="0" max="2" name="temperature" value={temperature} onChange={handleTemperatureChange} id="temperature" />
-              <button className="btn btn-success fw-bold" type="submit">
-                GENERATE
-              </button>
-            </form>
           </div>
-        </div>
+        ))}
       </div>
+      <form onSubmit={handleSubmit}>
+        <input
+          required
+          type="text"
+          placeholder="enter prompt"
+          autoFocus
+          name="prompt"
+          value={prompt}
+          onChange={handlePromptChange}
+        />
+        <label htmlFor="temperature" style={{ color: "black" }}>
+          Temperature:
+        </label>
+        <input
+          type="number"
+          step="0.01"
+          min="0"
+          max="2"
+          name="temperature"
+          value={temperature}
+          onChange={handleTemperatureChange}
+          id="temperature"
+        />
+        <button type="submit">GENERATE</button>
+      </form>
     </div>
   );
 };
