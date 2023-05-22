@@ -20,6 +20,7 @@ import ContactUs from "./pages/ContactUs";
 import UpdateUserForm from "./pages/UpdateUserForm";
 import DeleteUserForm from "./pages/DeleteUserForm";
 import CreateYourJobOffer from "./pages/CreateYourJobOffer";
+import OfferGPT from "./pages/OfferGPT";
 
 function App() {
   const baseUrl = "http://127.0.0.1:8000";
@@ -56,6 +57,7 @@ function App() {
           path="create-your-job-offer"
           element={<CreateYourJobOffer baseUrl={baseUrl} />}
         />
+        <Route path="offer-gpt" element={<OfferGPT baseUrl={baseUrl} />} />
       </Routes>
       <Footer />
     </div>

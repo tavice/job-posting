@@ -39,6 +39,7 @@ margin: 0 1rem;
        ) : localStorage.getItem("user_type") === 'E' ? (
         <div className='header-user-identified'>
           <StyledLink to="/dashboard">My Dashboard</StyledLink>
+          <StyledLink to="/offer-gpt">Create Job offers enhanced by AI</StyledLink>
           <StyledLink to="/create-your-job-offer">Create your Job Offer !</StyledLink>
           
         </div>
