@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
 from job import views
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken import views as rest_framework_views
 
 from rest_framework import routers
 
@@ -35,12 +36,12 @@ router.register(r'user', views.UserViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', (include(router.urls))),
-    path('api-auth/', include('rest_framework.urls')), #this is for the browsable API
-    #path('api-token-auth/', views.obtain_auth_token), #https://www.django-rest-framework.org/api-guide/authentication/
+    #path('api-auth/', include('rest_framework.urls')), #this is for the browsable API
+    #path('api-token-auth/', rest_framework_views.obtain_auth_token), #https://www.django-rest-framework.org/api-guide/authentication/
     path('api/login/', csrf_exempt(views.login_view), name='login_view'),
     path('api/logout/', csrf_exempt(views.logout_view), name='logout_view'),
     path('api/register/', csrf_exempt(views.register_view), name='register_view'),
     path('api/update/<int:pk>/', csrf_exempt(views.update_user), name='update_view'),
     #path('api/userprofile/', csrf_exempt(views.get_user_profile_view), name='get_user_profile_view'),
-    path('api-token-auth/', ObtainAuthToken.as_view()),
+    #path('api-token-auth/', ObtainAuthToken.as_view()),
 ]

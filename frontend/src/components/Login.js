@@ -37,9 +37,8 @@ const Login = ({ baseUrl }) => {
         console.log(data)
         localStorage.setItem("authenticated_user", data.data.user_id);
         localStorage.setItem("user_type", data.data.userjob_type);
-        localStorage.setItem("csrf_token", data.data.csrf_token);
-        localStorage.setItem("access_token", data.access_token);
-        localStorage.setItem("refresh_token", data.refresh_token);
+        localStorage.setItem("username", data.data.username);
+        localStorage.setItem("token", data.token);
         //navigate("/Home");
         window.location.href = "/Home";
       }

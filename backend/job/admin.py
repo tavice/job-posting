@@ -8,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'username', 'email', 'first_name', 'last_name',
         'auth_token', 'is_staff', 'is_superuser', 'is_active',
-        'date_joined', 'last_login', 'employer'
+        'date_joined', 'last_login', 'employer', 'jobseeker'
     )
 
     def employer(self, obj):
@@ -20,6 +20,17 @@ class UserAdmin(admin.ModelAdmin):
 
     employer.short_description = 'Company Name'
     employer.admin_order_field = 'employer__companyname'
+
+
+    def jobseeker(self, obj):
+        if obj.has_jobseeker():
+            print(obj.jobseeker)
+            
+        else:
+            return None
+        
+    jobseeker.short_description = 'Jobseeker'
+    jobseeker.admin_order_field = 'jobseeker__user__username'
 
     
 

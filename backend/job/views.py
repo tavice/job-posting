@@ -22,6 +22,8 @@ from django.views.decorators.http import require_POST
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
+
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -56,8 +58,7 @@ from backend.apis.backend import CustomBackend
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+   
 
 
 # Employer views
@@ -95,7 +96,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
 
 ##### ======== Login view ======== #####
-# ====SIMPLE ONE ======#
+
 
 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -105,6 +106,7 @@ User = get_user_model()  # Access the user model
 
 @require_POST
 @csrf_exempt
+ # Allow any user, including unauthenticated users, to access this endpoint
 def login_view(request):
     try:
         body = json.loads(request.body)
@@ -119,14 +121,17 @@ def login_view(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        print("user loggend in is", user)
+        print("user logged in is", user)
 
         # Get or create the token for the user
-        try:
-            token = Token.objects.get(user=user)
-        except Token.DoesNotExist:
-            token = Token.objects.create(user=user)
-       
+        
+        token, created = Token.objects.get_or_create(user=user)
+        if created:
+            print("token created")
+        if token is None:
+            return JsonResponse({"error": "Failed to create token."}, status=500)
+        
+        print("token is", token)
 
         #get the user object to determine user type
         user = User.objects.get(id=user.id)
@@ -143,8 +148,9 @@ def login_view(request):
         else:
             PermissionDenied("User does not have a user type.")
 
+        print("user type is", user_type)
 
-        # Set the CSRF token as a cookie in the response
+        # Set the  token as a cookie in the response
         response = JsonResponse(
             {
                 "message": "Login successful.",
@@ -154,16 +160,14 @@ def login_view(request):
                     "username": user.username,
                     "email": user.email,
                     "userjob_type": user_type,
-                    "csrf_token": csrf_token,  # Include the CSRF token in the response
+                  
                 },
                 "token": token.key,
-                "access_token": str(access_token),
-                "refresh_token": str(refresh),
+                
             },
             status=200,
         )
-        response.set_cookie("csrftoken", csrf_token)
-        print("csrf_token is", csrf_token)
+        response.set_cookie("token", token.key, httponly=True)
         print(UserSerializer(user).data)
         return response
     else:
@@ -195,6 +199,24 @@ def login_view(request):
 #         return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+##### ======== Logout view ======== #####
+@api_view(["POST"])
+def logout_view(request):
+    print(request.user)
+    if request.user.is_authenticated:
+        # Get the user's token
+        try:
+            token = Token.objects.get(user=request.user)
+            token.delete()  # Delete the token
+        except Token.DoesNotExist:
+            pass
+
+        logout(request)
+        return Response({"message": "You are logged out."})
+    else:
+        return Response({"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
+
+
 # Logout view
 # @api_view(['POST'])
 # #@permission_classes([permissions.IsAuthenticated])
@@ -222,34 +244,17 @@ def login_view(request):
 #         return Response({"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-#logout with JWT
-@api_view(["POST"])
-@permission_classes([permissions.IsAuthenticated])
-def logout_view(request):
-    # Retrieve the access token from the request headers
-    authorization_header = request.headers.get('Authorization')
-    if authorization_header is None:
-        return JsonResponse({'error': 'Access token not provided.'}, status=400)
 
-    try:
-        access_token = JWTAuthentication().get_validated_token(authorization_header)
-    except Exception as e:
-        return JsonResponse({'error': 'Invalid access token.'}, status=400)
-
-    # Blacklist the access token
-    try:
-        token = RefreshToken(access_token)
-        token.blacklist()
-        return JsonResponse({'message': 'Logout successful.'}, status=200)
-    except Exception as e:
-        return JsonResponse({'error': 'Invalid access token.'}, status=400)
 
 
 # Register view
+
 @api_view(["POST"])
 def register_view(request):
+    print('request is', request.data)
     serializer = UserRegistrationSerializer(data=request.data)
     if serializer.is_valid():
+        # Extract user registration data from the serializer
         username = serializer.validated_data.get("username")
         password = serializer.validated_data.get("password")
         email = serializer.validated_data.get("email")
@@ -261,6 +266,7 @@ def register_view(request):
         companyname = serializer.validated_data.get("companyname")  # Additional field for Employer
         website = serializer.validated_data.get("website")  # Additional field for Employer
 
+        # Check if the username or email already exists
         if User.objects.filter(username=username).exists():
             return Response(
                 {"error": "Username already exists."},
@@ -272,6 +278,7 @@ def register_view(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Create the user with the provided registration data
         user = User.objects.create_user(
             username=username,
             password=password,
@@ -280,6 +287,11 @@ def register_view(request):
             last_name=last_name,
         )
 
+        # Create an authentication token for the user
+        token = Token.objects.create(user=user)
+        print('token is', token)
+
+        # Create a Job Seeker or Employer profile based on the user type
         if user_type == "E":
             employer = Employer.objects.create(
                 user=user,
@@ -295,8 +307,12 @@ def register_view(request):
             )
 
         user_serializer = UserSerializer(user)
+        print('user serializer is', user_serializer.data)
         return Response(
-            {"message": "User created successfully.", "user": user_serializer.data},
+            {"message": "User created successfully.", 
+             "user": user_serializer.data,
+             "token": token.key,
+             },
             status=status.HTTP_201_CREATED,
         )
     else:

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User
+from rest_framework_simplejwt.tokens import RefreshToken
 
 #Serializer we will use for get requests and or to display data
 class UserSerializer(serializers.ModelSerializer):
@@ -9,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-        # fields = ['id', 'username', 'email', 'jobseeker', 'employer']
+        #fields = ['id', 'username', 'email', 'jobseeker', 'employer']
 
 
 
@@ -87,4 +88,6 @@ class UserRegistrationSerializer(serializers.Serializer):
                 location=location,
             )
 
-        return user        
+        return user 
+
+
