@@ -143,10 +143,12 @@ def login_view(request):
        
         if employer:
             user_type = "E"
-            employer_name = employer[0].company_name
+            employer_id = employer[0].id
+            jobseeker_id = None
         elif jobseeker:
             user_type = "J"
-            jobseeker_name = jobseeker[0].first_name
+            jobseeker_id = jobseeker[0].id
+            employer_id = None
         else:
             PermissionDenied("User does not have a user type.")
 
@@ -162,6 +164,8 @@ def login_view(request):
                     "username": user.username,
                     "email": user.email,
                     "userjob_type": user_type,
+                    "employer_id": employer_id,
+                    "jobseeker_id": jobseeker_id,
                   
                 },
                 "token": token.key,

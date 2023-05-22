@@ -42,6 +42,7 @@ const Header = ({ baseUrl }) => {
   //Get Cookie Function//
   const getCookie = (name) => {
     const cookies = document.cookie.split(";");
+    console.log(cookies);
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
       if (cookie.startsWith(name + "=")) {
@@ -53,54 +54,47 @@ const Header = ({ baseUrl }) => {
 
   //================================================================//
   //Logout Function//
- 
 
-  const handleLogout = async () => {
-    try {
-      const headers = {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`, // Include the token in the Authorization header
-      };
-  
-      const response = await axios.post(`${baseUrl}/api/logout/`, {}, { headers });
-  
-      console.log(response);
-  
-      if (response.status === 200) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('authenticated_user');
-        localStorage.removeItem('username');
-        localStorage.removeItem('user_type');
-        console.log('User is logged out.');
-        window.location.href = '/Home';
-      } else {
-        console.error('Failed to log out');
-      }
-    } catch (err) {
-      console.error(err);
-      console.error('Failed to log out');
+  // const handleLogout = async () => {
+  //   try {
+  //     const headers = {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Token ${localStorage.getItem('token')}`, // Include the token in the Authorization header
+  //     };
+
+  //     const response = await axios.post(`${baseUrl}/api/logout/`, {}, { headers });
+
+  //     console.log(response);
+
+  //     if (response.status === 200) {
+  //       localStorage.removeItem('token');
+  //       localStorage.removeItem('authenticated_user');
+  //       localStorage.removeItem('username');
+  //       localStorage.removeItem('user_type');
+  //       console.log('User is logged out.');
+  //       window.location.href = '/Home';
+  //     } else {
+  //       console.error('Failed to log out');
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     console.error('Failed to log out');
+  //   }
+  // };
+
+  const handleLogout = () => {
+    if (localStorage.getItem("token")) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      localStorage.removeItem("authenticated_user");
+
+      localStorage.removeItem("user_type");
+      localStorage.removeItem("");
+      console.log("User is logged out.");
+      window.location.href = "/Home";
     }
   };
-  
-  
 
-  // const handleLogout =  () => {
-  //   if (localStorage.getItem("access_token")) {
-  //     localStorage.removeItem("access_token");
-  //     localStorage.removeItem("refresh_token");
-  //     localStorage.removeItem("authenticated_user");
-  //     localStorage.removeItem("csrf_token");
-  //     localStorage.removeItem("user_type");
-  //     localStorage.removeItem("");
-  //     console.log("User is logged out.");
-  //     window.location.href = "/Home";
-  //   }
-
-  // };
-  
-  
-  
-  
   //================================================================//
   //Nav Menu//
   const pages = ["Home", "Job Listings", "About Us", "Contact Us"];
@@ -137,7 +131,13 @@ const Header = ({ baseUrl }) => {
   //================================================================//
   //Render//
   return (
-    <AppBar position="static" style={{ padding:20, background:'linear-gradient(90deg, #d53369 0%, #daae51 100%)'}}>
+    <AppBar
+      position="static"
+      style={{
+        padding: 20,
+        background: "linear-gradient(90deg, #d53369 0%, #daae51 100%)",
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <WorkIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -158,7 +158,13 @@ const Header = ({ baseUrl }) => {
           >
             MYJOBSEARCH.COM
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" }, paddingInline:10 }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "flex", md: "none" },
+              paddingInline: 10,
+            }}
+          >
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -191,18 +197,16 @@ const Header = ({ baseUrl }) => {
                 //each page is to be associated with a link which is stored in the pagesLinks array
 
                 <MenuItem>
-                <MenuItem key={page} onClick={handleCloseNavMenu} >
-                    <Typography textAlign="center"
-                    component={Link}
-                    to={`/${page}`}
-                    
-                    >{page}
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography
+                      textAlign="center"
+                      component={Link}
+                      to={`/${page}`}
+                    >
+                      {page}
                     </Typography>
                   </MenuItem>
-
-                
                 </MenuItem>
-               
               ))}
             </Menu>
           </Box>
@@ -227,7 +231,6 @@ const Header = ({ baseUrl }) => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-        
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -239,39 +242,40 @@ const Header = ({ baseUrl }) => {
               </Button>
             ))}
           </Box>
-          {userType === 'E' || userType === 'J' ? (   
+          {userType === "E" || userType === "J" ? (
+            //Button to log out
 
-          //Button to log out
-          
-          
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleClickUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="avatar" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <MenuItem component={Link} to="/dashboard"> My Dashboard</MenuItem>
-              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-            </Menu>
-          </Box>
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleClickUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="avatar" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem component={Link} to="/dashboard">
+                  {" "}
+                  My Dashboard
+                </MenuItem>
+                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+              </Menu>
+            </Box>
           ) : (
-            <Box sx={{ flexGrow: 0, display:'flex' }}>
+            <Box sx={{ flexGrow: 0, display: "flex" }}>
               <Button
                 variant="contained"
                 color="primary"
@@ -292,8 +296,6 @@ const Header = ({ baseUrl }) => {
               </Button>
             </Box>
           )}
-
-     
         </Toolbar>
       </Container>
     </AppBar>

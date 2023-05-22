@@ -38,6 +38,8 @@ const Login = ({ baseUrl }) => {
         localStorage.setItem("authenticated_user", data.data.user_id);
         localStorage.setItem("user_type", data.data.userjob_type);
         localStorage.setItem("username", data.data.username);
+        localStorage.setItem("jobseeker_id", data.data.jobseeker_id);
+        localStorage.setItem("employer_id", data.data.employer_id);
         localStorage.setItem("token", data.token);
         //navigate("/Home");
         window.location.href = "/Home";
