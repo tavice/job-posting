@@ -1,67 +1,78 @@
-import React from 'react'
-import { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const ListOfJobsYouPosted = ({baseUrl}) => {
-//recover info from local storage
+const ListOfJobsYouPosted = ({ baseUrl }) => {
+  const [currentUser, setCurrentUser] = useState({});
+  const [employer, setEmployer] = useState(null);
+  const [jobListings, setJobListings] = useState([]);
+  const [filteredJobListings, setFilteredJobListings] = useState([]);
 
-const userType = localStorage.getItem("user_type");
-const userId = localStorage.getItem("authenticated_user");
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await axios.get(`${baseUrl}/api/user/${localStorage.getItem('authenticated_user')}`);
+        const data = response.data;
+        setCurrentUser(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-//employer associated with the user
-const [employer, setEmployer] = useState({});
-const [jobListings, setJobListings] = useState([]);
-const [filteredJobListings, setFilteredJobListings] = useState([]);
+    fetchCurrentUser();
+  }, []);
 
-//Fetches all job listings
-const fetchJobListings = async () => {
-    try {
+  useEffect(() => {
+    const fetchEmployer = async () => {
+      try {
+        const response = await axios.get(`${baseUrl}/api/employers`);
+        const data = response.data;
+        const foundEmployer = data.find((item) => item.user === currentUser.id);
+        if (foundEmployer) {
+          setEmployer(foundEmployer);
+        } else {
+          console.log('Employer not found');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchEmployer();
+  }, [currentUser]);
+
+  useEffect(() => {
+    const fetchJobListings = async () => {
+      try {
         const response = await axios.get(`${baseUrl}/api/joblistings`);
         const data = response.data;
         setJobListings(data);
-    } catch (error) {
+      } catch (error) {
         console.log(error);
-    }
-};
+      }
+    };
 
-useEffect(() => {
     fetchJobListings();
-}, []);
+  }, []);
 
-//console.log("job listings are ", jobListings);
-
-//Fetches all employers
-const fetchEmployers = async () => {
-    try {
-        const response = await axios.get(`${baseUrl}/api/employers`);
-        const data = response.data;
-        setEmployer(data);
-    } catch (error) {
-        console.log(error);
-    }
-};
-
-useEffect(() => {
-    fetchEmployers();
-}, []);
-
-//console.log("employers are ", employer);
-
-//Filter job listings by employer
-useEffect(() => {
-    const filteredJobListings = jobListings.filter(
-        (item) => item.employer === employer.id
-    );
+  useEffect(() => {
+    const filteredJobListings = jobListings.filter((item) => item.employer === (employer ? employer.id : null));
     setFilteredJobListings(filteredJobListings);
-}, [employer]);
+  }, [employer, jobListings]);
 
-console.log("filtered job listings are ", filteredJobListings);
+  console.log('filtered job listings are', filteredJobListings);
 
   return (
     <div>
-
+      {filteredJobListings.map((listing) => (
+        <div key={listing.id}>
+          <h3>{listing.jobtitle}</h3>
+          <p>{listing.description}</p>
+          <p>{listing.location}</p>
+          <p>{listing.salary}</p>
+        </div>
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default ListOfJobsYouPosted
+export default ListOfJobsYouPosted;
