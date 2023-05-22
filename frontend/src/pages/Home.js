@@ -76,7 +76,7 @@ const Home = () => {
               <Typography variant="body1" style={{ marginBottom: 20 }}>
                 Post your job openings and find qualified candidates.
               </Typography>
-              <Link to="/new-job-listing">
+              <Link to="/create-your-job-offer">
                 <Button variant="contained" color="secondary" style={{ marginBottom: 10 }}> 
                   Post a Job
                 </Button>

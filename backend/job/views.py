@@ -143,8 +143,10 @@ def login_view(request):
        
         if employer:
             user_type = "E"
+            employer_name = employer[0].company_name
         elif jobseeker:
             user_type = "J"
+            jobseeker_name = jobseeker[0].first_name
         else:
             PermissionDenied("User does not have a user type.")
 

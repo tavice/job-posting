@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import { TextField } from "@mui/material";
+import Container from "@mui/material/Container";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,6 +22,10 @@ const NewJobListingForm = ({ baseUrl }) => {
   const [employers, setEmployers] = useState([]);
 
   const navigate = useNavigate();
+
+  //Select element in local storage
+  const userType = localStorage.getItem("user_type");
+  const userId = localStorage.getItem("authenticated_user")
 
   //================================================================//
   //Fetch all employers
@@ -71,9 +76,9 @@ const NewJobListingForm = ({ baseUrl }) => {
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         
-      <form className="form-create-job" onSubmit={handleFormSubmit} style={{padding: 20}}>
+      <form className="form-create-job" onSubmit={handleFormSubmit} style={{padding: 20, width:"50%"}}>
       <Typography variant="h4" style={{ marginBottom: 20, alignItems:"center", textTransform:'uppercase', color:'black' }}>Create a New Job Listing</Typography>
         <TextField
           required
@@ -82,7 +87,7 @@ const NewJobListingForm = ({ baseUrl }) => {
           id="job-title"
           value={jobTitle}
           variant="standard"
-          style={{ marginBottom: 20, width: 500 }}
+          style={{ marginBottom: 20, width: "90%" }}
           onChange={(e) => setJobTitle(e.target.value)}
         />
 
@@ -94,7 +99,7 @@ const NewJobListingForm = ({ baseUrl }) => {
           multiline
           value={description}
           variant="standard"
-          style={{ marginBottom: 20, width: 500 }}
+          style={{ marginBottom: 20, width: "90%" }}
           onChange={(e) => setDescription(e.target.value)}
         />
 
@@ -104,7 +109,7 @@ const NewJobListingForm = ({ baseUrl }) => {
           type="text"
           id="location"
           variant="standard"
-          style={{ marginBottom: 20, width: 500 }}
+          style={{ marginBottom: 20, width: "90%" }}
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
@@ -115,7 +120,7 @@ const NewJobListingForm = ({ baseUrl }) => {
           type="text"
           id="salary"
           variant="standard"
-          style={{ marginBottom: 20, width: 500 }}
+          style={{ marginBottom: 20, width: "90%"}}
           value={salary}
           onChange={(e) => setSalary(e.target.value)}
         />
@@ -126,7 +131,7 @@ const NewJobListingForm = ({ baseUrl }) => {
           type="text"
           id="job-requirements"
           variant="standard"
-          style={{ marginBottom: 20, width: 500 }}
+          style={{ marginBottom: 20, width: "90%" }}
           value={jobRequirements}
           onChange={(e) => setJobRequirements(e.target.value)}
         />
@@ -137,7 +142,7 @@ const NewJobListingForm = ({ baseUrl }) => {
             labelId="select-employer"
             id="employer-id"
             value={employerId}
-            style={{ marginBottom: 20, width: 500 }}
+            style={{ marginBottom: 20, width: "90%" }}
             onChange={(e) => setEmployerId(e.target.value)}
           >
             {employers.map((employer) => (
@@ -149,11 +154,11 @@ const NewJobListingForm = ({ baseUrl }) => {
         </FormControl>
 
         <Button variant="contained" type="submit">
-          Create Job Listing
+          Create Your Job Offer !
         </Button>
         {errorMessage && <p>{errorMessage}</p>}
       </form>
-    </div>
+    </Container>
   );
 };
 
