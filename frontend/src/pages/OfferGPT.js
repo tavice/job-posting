@@ -1,5 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Button, Typography, Grid, Paper } from "@mui/material";
+import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
+import PersonIcon from "@mui/icons-material/Person";
+import HandshakeIcon from "@mui/icons-material/Handshake";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
+import SpaIcon from "@mui/icons-material/Spa";
+import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalk";
 //import { useHistory } from "react-router-dom";
 
 const OfferGPT = ({ baseUrl }) => {
@@ -24,10 +33,9 @@ const OfferGPT = ({ baseUrl }) => {
         prompt,
         temperature,
       };
-     
-      console.log(body)
+
+      console.log(body);
       console.log(`payload: ${JSON.stringify(body)}`);
-      
 
       // Send a POST request to your API endpoint
       const response = await axios.post(`${baseUrl}/generator/chat/`, body);
@@ -38,21 +46,15 @@ const OfferGPT = ({ baseUrl }) => {
         const { messages: updatedMessages, formattedResponse } = data;
 
         // Update the messages state with the updated messages
-        setMessages(updatedMessages);
-        console.log(`messages: ${JSON.stringify(messages)}`);
-
-        // Append the assistant's response to the messages state
         setMessages((prevMessages) => {
-            if (Array.isArray(prevMessages)) {
-              return [
-                ...prevMessages,
-                { role: "assistant", content: formattedResponse },
-              ];
-            }
+          if (Array.isArray(prevMessages)) {
             return [
+              ...prevMessages,
               { role: "assistant", content: formattedResponse },
             ];
-          });
+          }
+          return [{ role: "assistant", content: formattedResponse }];
+        });
       }
     } catch (error) {
       console.error("Error:", error);
@@ -60,7 +62,7 @@ const OfferGPT = ({ baseUrl }) => {
     }
   };
 
-  console.log('messages: ', messages);
+  console.log("messages: ", messages);
 
   //====================================================================================================
   //Handle Prompt Change
@@ -69,7 +71,7 @@ const OfferGPT = ({ baseUrl }) => {
     setPrompt(event.target.value);
   };
 
-  console.log('prompt: ', prompt);
+  console.log("prompt: ", prompt);
 
   //====================================================================================================
   //Handle Temperature Change
@@ -78,14 +80,34 @@ const OfferGPT = ({ baseUrl }) => {
     setTemperature(parseFloat(event.target.value));
   };
 
-  console.log('temperature: ', temperature);
+  console.log("temperature: ", temperature);
+
+  //====================================================================================================
+  //Organize Messages into clear paragraphs etc...
+
+  const organizeMessages = (messages) => {
+    if (messages.length === 0) {
+      return [];
+    }
+  };
+
+  //====================================================================================================
+  //Handle Clear Chat
+
+  const handleClearChat = (event) => {
+    setMessages([]);
+    setPrompt("");
+    setTemperature(0.1);
+  };
 
   //====================================================================================================
   //Render
 
   return (
-    <div>
-      <h1>Job Offer ASSISTANT</h1>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h4" style={{ marginBottom: 10 }}>
+        JobGPT
+      </Typography>
 
       {/* <button type="button" onClick={() => history.push("/new_chat")}>
         New Chat +
@@ -93,11 +115,18 @@ const OfferGPT = ({ baseUrl }) => {
 
       <div className="chat-history">
         {messages.map((message, index) => (
-          <div key={index} className="answer-discussion">
-            <div>
+          <Paper
+            style={{ padding: 20 }}
+            key={index}
+            className="answer-discussion"
+          >
+            <Paper>
               <strong>{message.role}</strong>: {message.content}
-            </div>
-          </div>
+            </Paper>
+            <Paper>
+              <strong>Assistant:</strong> {message.content.answer}
+            </Paper>
+          </Paper>
         ))}
       </div>
       <form onSubmit={handleSubmit}>
@@ -124,8 +153,11 @@ const OfferGPT = ({ baseUrl }) => {
           id="temperature"
         />
         <button type="submit">GENERATE</button>
+        <button type="button" onClick={handleClearChat}>
+          CLEAR CHAT
+        </button>
       </form>
-    </div>
+    </Container>
   );
 };
 

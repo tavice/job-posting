@@ -38,7 +38,7 @@ def chat(request):
                 model="gpt-3.5-turbo",
                 messages=messages,
                 temperature=temperature,
-                max_tokens=1000,
+                max_tokens=200,
             )
 
             formatted_response = response['choices'][0]['message']['content']
@@ -50,7 +50,7 @@ def chat(request):
 
             return JsonResponse(
                 {
-                    'messages': messages,
+                    #'messages': messages,
                     'formattedResponse': formatted_response,
                 }
             )
@@ -59,3 +59,14 @@ def chat(request):
     except Exception as e:
         print(e)
         return JsonResponse({'error': str(e)})
+    
+
+    #===========================================================================#
+    #Clear the chat
+
+@require_POST
+@csrf_exempt
+def clear_chat(request):
+    if 'messages' in request.session:
+        del request.session['messages']
+    return JsonResponse({'status': 'success'})
