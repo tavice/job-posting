@@ -15,19 +15,22 @@ const OfferGPT = ({ baseUrl }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(`prompt: ${prompt}`);
+    console.log(`temperature: ${temperature}`);
 
     try {
       // Construct the request payload
-      const payload = {
+      const body = {
         prompt,
         temperature,
       };
-      console.log(payload)
-      console.log(`payload: ${JSON.stringify(payload)}`);
+     
+      console.log(body)
+      console.log(`payload: ${JSON.stringify(body)}`);
       
 
       // Send a POST request to your API endpoint
-      const response = await axios.post(`${baseUrl}/generator/chat/`, payload);
+      const response = await axios.post(`${baseUrl}/generator/chat/`, body);
 
       if (response.status === 200) {
         // Access the response data
@@ -57,6 +60,8 @@ const OfferGPT = ({ baseUrl }) => {
     }
   };
 
+  console.log('messages: ', messages);
+
   //====================================================================================================
   //Handle Prompt Change
 
@@ -64,12 +69,16 @@ const OfferGPT = ({ baseUrl }) => {
     setPrompt(event.target.value);
   };
 
+  console.log('prompt: ', prompt);
+
   //====================================================================================================
   //Handle Temperature Change
 
   const handleTemperatureChange = (event) => {
     setTemperature(parseFloat(event.target.value));
   };
+
+  console.log('temperature: ', temperature);
 
   //====================================================================================================
   //Render
