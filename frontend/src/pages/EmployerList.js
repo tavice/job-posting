@@ -3,6 +3,12 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Container from "@mui/material/Container";
 import { Button, Typography, Grid, Paper, Divider } from "@mui/material";
+import Paid from "@mui/icons-material/Paid";
+import LocationOn from "@mui/icons-material/LocationOn";
+import LanguageIcon from "@mui/icons-material/Language";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import PsychologyIcon from '@mui/icons-material/Psychology';
 
 const EmployerList = ({ baseUrl }) => {
   const [employerList, setEmployerList] = useState([]);
@@ -85,12 +91,21 @@ const EmployerList = ({ baseUrl }) => {
 
   console.log("filter is ", filter);
 
+
+
+
+  //truncated job description
+
+
   //=======================================================//
   // Rendering Employer List//
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h2" style={{ marginBottom: 20, alignItems:"center" }}>
+      <Typography
+        variant="h2"
+        style={{ marginBottom: 20, alignItems: "center" }}
+      >
         Current Jobs Available
       </Typography>
       <div className="filter-container">
@@ -103,63 +118,94 @@ const EmployerList = ({ baseUrl }) => {
         />
       </div>
       {employerList.map((employer) => (
-        
-          <Grid container spacing={2} style={{ alignItems:"center", margin: 0 }}key={employer.id}>
-            
-              <Paper elevation={3} style={{ width:"80%", alignItems: "center", padding: 20, margin: ' auto',  marginBottom: 40 }}>
-                <Grid item xs={12} sm container style={{ justifyContent: "space-between", marginBottom: 20, marginTop: 20 }}>
-                <Typography variant="h3" gutterBottom>
-                  {employer.companyname}
-                </Typography>
-                <div style={{  justifyContent: "center" }}>
-                  <img src={employer.logo} alt="Company Logo" height={100} />
-                </div>
-                <Typography variant="body1" gutterBottom>
-                  <strong>Website:</strong>{" "}
-                  <a
-                    href={employer.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {employer.website}
-                  </a>
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Location:</strong> {employer.location}{" "}
-                </Typography>
-             
-              </Grid >
-              <Divider style={{ height: 5 }} />
-              <Typography variant="h4" style={{marginBottom: 40, marginTop:40 }}>Open Roles: </Typography>
-              {jobListings[employer.id] &&
-              jobListings[employer.id].length > 0 ? (
-                jobListings[employer.id].map((job) => (
-                  <Paper elevation={3} style={{ width:"80%", alignItems: "center", padding: 20, margin: 'auto', marginBottom: 20 }} key={job.id}>
-                     <Typography variant="h5" style={{ marginBottom: 20 }}>
-                      <Link to={`/Job Listings/${job.id}`}>
-                        {job.jobtitle}
-                      </Link>
-                    </Typography>
-                    <Typography variant="body1">
-                      <strong>Location:</strong> {job.location}
-                    </Typography>
-                    <Typography variant="body1">
-                      <strong>Salary:</strong> {job.salary}
-                    </Typography>
-                    <Typography variant="body1">
-                      <strong>Requirements:</strong> {job.jobrequirements}
-                    </Typography>
-                    <Typography variant="body1">
-                      <strong>Description:</strong> {job.description}
-                    </Typography>
-                  </Paper>
-                ))
-              ) : (
-                <Typography variant="body1">No job listings found.</Typography>
-              )}
-            </Paper>
-          </Grid>
-       
+        <Grid
+          container
+          spacing={2}
+          style={{ alignItems: "center", margin: 0 }}
+          key={employer.id}
+        >
+          <Paper
+            elevation={3}
+            style={{
+              width: "80%",
+              alignItems: "center",
+              padding: 20,
+              margin: " auto",
+              marginBottom: 40,
+            }}
+          >
+            <Grid
+              item
+              xs={12}
+              sm
+              container
+              style={{
+                justifyContent: "space-between",
+                marginBottom: 20,
+                marginTop: 20,
+              }}
+            >
+              <Typography variant="h3" gutterBottom>
+                {employer.companyname}
+              </Typography>
+              <div style={{ justifyContent: "center" }}>
+                <img src={employer.logo} alt="Company Logo" height={100} />
+              </div>
+              <Typography variant="body1" gutterBottom>
+                <LanguageIcon />{" "}
+                <a
+                  href={employer.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {employer.website}
+                </a>
+              </Typography>
+              <Typography variant="body1">
+                <LocationOn /> {employer.location}{" "}
+              </Typography>
+            </Grid>
+            <Divider style={{ height: 5 }} />
+            <Typography
+              variant="h4"
+              style={{ marginBottom: 40, marginTop: 40 }}
+            >
+              Open Roles:{" "}
+            </Typography>
+            {jobListings[employer.id] && jobListings[employer.id].length > 0 ? (
+              jobListings[employer.id].map((job) => (
+                <Paper
+                  elevation={3}
+                  style={{
+                    width: "80%",
+                    alignItems: "center",
+                    padding: 20,
+                    margin: "auto",
+                    marginBottom: 20,
+                  }}
+                  key={job.id}
+                >
+                  <Typography variant="h5" style={{ marginBottom: 20 }}>
+                    <Link to={`/Job Listings/${job.id}`}>{job.jobtitle}</Link>
+                  </Typography>
+
+                  <Stack direction="row" useFlexGap flexWrap="wrap" spacing={1} style={{padding:20}}>
+                    <Chip icon={<LocationOn />} label={job.location} />
+                    <Chip icon={<Paid />} label={job.salary} />
+                    <Chip icon={<PsychologyIcon />} label={job.jobrequirements} />
+                  
+                  </Stack>
+
+                  <Typography variant="body1">
+                    <strong>Description:</strong> {job.description}
+                  </Typography>
+                </Paper>
+              ))
+            ) : (
+              <Typography variant="body1">No job listings found.</Typography>
+            )}
+          </Paper>
+        </Grid>
       ))}
     </Container>
   );
