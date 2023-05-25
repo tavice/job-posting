@@ -3,12 +3,19 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { CircularProgress, Typography, Grid, Paper, Button } from "@mui/material";
 import Container from "@mui/material/Container";
+import { useNavigate } from "react-router-dom";
+
+
+
 
 const JobListingDetail = ({ baseUrl }) => {
   const { id } = useParams();
   const [jobListing, setJobListing] = useState({});
   const [employer, setEmployer] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
+
 
   const userId = localStorage.getItem("authenticated_user");
   const userType = localStorage.getItem("user_type");
@@ -72,6 +79,36 @@ const JobListingDetail = ({ baseUrl }) => {
 
   console.log(currentUser);
 
+
+  //Apply for job
+  //====================================================================================================
+
+
+  const applyToJob = async () => {
+    try {
+      const response = await axios.post(
+        `${baseUrl}/api/apply-for-job/`,
+        {
+          joblisting: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      // You can handle the response if needed
+      console.log(response.data);
+      // Redirect the user to a success page or any other desired page
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
+      // Handle the error if needed
+    }
+  };
+  
+
+
   //====================================================================================================
   //render
 
@@ -85,7 +122,7 @@ const JobListingDetail = ({ baseUrl }) => {
             <Typography variant="h4" gutterBottom>
               {jobListing.jobtitle}
             </Typography>
-            <p style={{color:'black'}}>apply to this job!</p>
+            
           </Grid>
           <Grid item xs={12} sm={9}>
             <Paper elevation={3} sx={{ p: 2 }}>
@@ -126,7 +163,7 @@ const JobListingDetail = ({ baseUrl }) => {
           <Grid item xs={12} sm={3}>
             <Paper elevation={3} sx={{ p: 2 }} style={{display:"flex", flexDirection:"column", padding:20}}>
             <Typography variant="h6" style={{color:"black", marginTop:'20%'}}>Hey {currentUser.first_name} !</Typography>
-            <Button variant="contained" color="success" style={{marginTop:'20%'}} href="/apply">
+            <Button variant="contained" color="success" style={{marginTop:'20%'}} onClick={applyToJob}>
               Apply for this job !
             </Button>
             <Button variant="contained" color="secondary" href="/joblistings" style={{marginTop:'20%'}}>

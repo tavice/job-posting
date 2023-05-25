@@ -71,7 +71,7 @@ class ResumeAdmin(admin.ModelAdmin):
     list_display = ('education', 'experience', 'skills', 'certifications', 'jobseeker')
 
 class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = ('joblisting', 'jobseeker', 'applicationstatus')
+    list_display = ('job_listing', 'job_seeker', 'application_status')
 
 
 class PaymentAdmin(admin.ModelAdmin):

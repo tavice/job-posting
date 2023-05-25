@@ -19,6 +19,7 @@ import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import UpdateUserForm from "./pages/UpdateUserForm";
 import DeleteUserForm from "./pages/DeleteUserForm";
+import ApplyToJob from "./pages/ApplyToJob";
 import CreateYourJobOffer from "./pages/CreateYourJobOffer";
 import OfferGPT from "./pages/OfferGPT";
 
@@ -58,6 +59,7 @@ function App() {
           element={<CreateYourJobOffer baseUrl={baseUrl} />}
         />
         <Route path="offer-gpt" element={<OfferGPT baseUrl={baseUrl} />} />
+        <Route path="apply-to-job" element={<ApplyToJob baseUrl={baseUrl} />} />
       </Routes>
       <Footer />
     </div>

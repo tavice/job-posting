@@ -91,10 +91,9 @@ class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
 
 
-# Login view
-# Login view
+\
 
-
+#===================================================================================================
 ##### ======== Login view ======== #####
 
 
@@ -179,32 +178,9 @@ def login_view(request):
     else:
         return HttpResponse("Invalid credentials.", status=401)
 
-# class LoginSerializer(Serializer):
-#     username = CharField()
-#     password = CharField()
-
-# @api_view(['POST'])
-# def login_view(request):
-#     serializer = LoginSerializer(data=request.data)
-#     serializer.is_valid(raise_exception=True)
-
-#     username = serializer.validated_data['username']
-#     password = serializer.validated_data['password']
-
-#     user = authenticate(request, username=username, password=password)
-#     if user is not None:
-#         login(request, user)
-#         token, created = Token.objects.get_or_create(user=user)
-#         response_data = {
-#             'token': token.key,
-#             'user': user.id,
-#             'message': 'You are logged in.'
-#         }
-#         return Response(response_data, status=status.HTTP_200_OK)
-#     else:
-#         return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+#===================================================================================================
 ##### ======== Logout view ======== #####
 @api_view(["POST"])
 def logout_view(request):
@@ -223,36 +199,12 @@ def logout_view(request):
         return Response({"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# Logout view
-# @api_view(['POST'])
-# #@permission_classes([permissions.IsAuthenticated])
-# def logout_view(request):
-#     print(request.user)
-#     # if request.user.is_authenticated:
-#     # request.user.auth_token.delete()
-#     logout(request)
-#     response = Response({'message': 'You are logged out.'})
-#     # csrf_token = csrf.get_token(request)
-#     # response.set_cookie('csrftoken', csrf_token)
-#     return response
-#     # else:
-#     #     return Response({'error': 'You are not authenticated.'}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-# Simple logout view
-# @api_view(["POST"])
-# def logout_view(request):
-#     print(request.user)
-#     if request.user.is_authenticated:
-#         logout(request)
-#         return Response({"message": "You are logged out."})
-#     else:
-#         return Response({"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 
 
 
+#===================================================================================================
 # Register view
 
 @api_view(["POST"])
@@ -326,7 +278,7 @@ def register_view(request):
 
 
 
-
+#===================================================================================================
 #Update User
 @csrf_protect
 @api_view(["PUT"])
@@ -355,3 +307,58 @@ def update_user(request, pk):
         return Response({"message": "User updated successfully."}, status=status.HTTP_200_OK)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+#===================================================================================================
+#Delete User
+@csrf_protect
+@api_view(["DELETE"])
+def delete_user(request, pk):
+    print('request user is ', request.user)
+    print('pk is', pk)
+    # Retrieve the user from the database
+    try:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
+        return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    # Check if the user is the same as the authenticated user
+    if request.user != user:
+        return Response(
+            {"error": "You don't have permission to delete this user."},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
+    # Delete the user
+    user.delete()
+    return Response({"message": "User deleted successfully."}, status=status.HTTP_200_OK)
+
+
+#===================================================================================================
+#Apply for a job
+
+@api_view(['POST'])
+def apply_for_job_view(request):
+    print('request is', request.data)
+    serializer = JobApplicationSerializer(data=request.data)
+    if serializer.is_valid():
+        # Retrieve the authenticated user
+        user = request.user
+
+        # Set the jobseeker and joblisting based on the user and request data
+        jobseeker = user.jobseeker
+        joblisting_id = serializer.validated_data['joblisting']
+        joblisting = JobListing.objects.get(id=joblisting_id)
+
+        # Set the application status
+        application_status = 'Submitted'
+
+        # Create the job application instance
+        job_application = JobApplication.objects.create(
+            applicationstatus=application_status,
+            jobseeker=jobseeker,
+            joblisting=joblisting
+        )
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

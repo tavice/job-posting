@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.hashers import make_password
+import datetime
 
 # Create your models here.
 
@@ -132,14 +133,20 @@ class Resume(models.Model):
 
 
 class JobApplication(models.Model):
-    applicationstatus = models.CharField(max_length=50)
-    applicationdate = models.CharField(max_length=50)
-    applicationfeedback = models.CharField(max_length=50)
-    jobseeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
-    joblisting = models.ForeignKey(JobListing, on_delete=models.CASCADE, default=1)
+    APPLICATION_STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected'),
+    ]
+
+    application_status = models.CharField(max_length=50, choices=APPLICATION_STATUS_CHOICES, default='Pending')
+    application_date = models.DateField(default=datetime.date.today)
+    application_feedback = models.TextField(blank=True, default="")
+    job_seeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE, default=1)
+    job_listing = models.ForeignKey(JobListing, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
-        return self.applicationstatus
+        return self.application_status
 
 
 # Payment schema: This schema would define the payment model for the app, including fields like payment date, payment status, and payment amount. Employers can pay for job postings and feature listings using a payment gateway integration.
