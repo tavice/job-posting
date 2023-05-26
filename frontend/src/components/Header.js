@@ -26,6 +26,8 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 
 const Header = ({ baseUrl }) => {
+
+  const userName = localStorage.getItem("username");
   //================================================================//
   //Styled Components//
   const StyledLink = styled(Link)`
@@ -248,7 +250,7 @@ const Header = ({ baseUrl }) => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleClickUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="avatar" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt={userName} src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
               <Menu

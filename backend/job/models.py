@@ -164,3 +164,13 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.paymentdate
+    
+
+#Saved Jobs schema: This schema would define the saved jobs model for the app,
+class SavedJob(models.Model):
+    job_listing = models.ForeignKey(JobListing, on_delete=models.CASCADE, default=1)
+    job_seeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE, default=1)
+    save_date = models.DateField(default=date.today)
+
+    def __str__(self):
+        return str(self.save_date) 

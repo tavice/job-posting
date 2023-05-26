@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Employer, JobListing, JobSeeker, Resume, JobApplication, Payment
+from .models import User, Employer, JobListing, JobSeeker, Resume, JobApplication, Payment, SavedJob
 
 
 
@@ -77,6 +77,9 @@ class JobApplicationAdmin(admin.ModelAdmin):
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('joblisting', 'jobseeker', 'employer', 'paymentamount')
 
+class SavedJobAdmin(admin.ModelAdmin):
+    list_display = ('job_listing', 'job_seeker')    
+
 # Register your models here.
 admin.site.register(User, UserAdmin)
 admin.site.register(Employer, EmployerAdmin)
@@ -85,3 +88,4 @@ admin.site.register(JobSeeker, JobSeekerAdmin)
 admin.site.register(Resume, ResumeAdmin)
 admin.site.register(JobApplication, JobApplicationAdmin)
 admin.site.register(Payment, PaymentAdmin)
+admin.site.register(SavedJob, SavedJobAdmin)

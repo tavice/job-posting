@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User
+from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User, SavedJob
 from .serializers import (
     UserSerializer,
     EmployerSerializer,
@@ -10,6 +10,7 @@ from .serializers import (
     PaymentSerializer,
     UserUpdateSerializer,
     UserRegistrationSerializer,
+    SavedJobSerializer
 )
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
@@ -87,6 +88,12 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+
+
+# Saved job views
+class SavedJobViewSet(viewsets.ModelViewSet):
+    queryset = SavedJob.objects.all()
+    serializer_class = SavedJobSerializer    
 
 
 # ===================================================================================================
@@ -384,7 +391,59 @@ def apply_for_job_view(request):
         ### NOTES TO MY SELF ###
         ###In the future will send emil to employer and job seeker
 
+
+# ===================================================================================================
+# Save job
+
+@api_view(["POST"])
+def save_job_view(request):
+    try:
+        print("request is", request.data)
+
+        # Extract the job id and job seeker id from the request data
+        job_id = request.data.get("job_id")
+        job_seeker_id = request.data.get("job_seeker_id")
+
+        print("job id is", job_id)
+        print("job seeker id is", job_seeker_id)
+
+        # Retrieve the job and job seeker from the database
+        try:
+            job = JobListing.objects.get(pk=job_id)
+            print("job is", job)
+            job_seeker = JobSeeker.objects.get(pk=job_seeker_id)
+            print("job seeker is", job_seeker)
+        except JobListing.DoesNotExist:
+            print("Job not found.")
+            return Response({"error": "Job not found."}, status=status.HTTP_404_NOT_FOUND)
+        except JobSeeker.DoesNotExist:
+            print("Job seeker not found.")
+            return Response({"error": "Job seeker not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if the job seeker has already saved the job
+        if SavedJob.objects.filter(job_listing=job, job_seeker=job_seeker).exists():
+            print("You have already saved this job.")
+            return Response(
+                {"error": "You have already saved this job."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        else:
+            # Create a new saved job
+            saved_job = SavedJob.objects.create(
+                job_listing=job, job_seeker=job_seeker
+            )
     
+            print("saved job is", saved_job)
+    
+            return Response({"success": "Job saved."}, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        print("An error occurred:", str(e))
+        return Response({"error": "An error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+        ### NOTES TO MY SELF ###
+        ###In the future will send emil to employer and job seeker    
 
 
     

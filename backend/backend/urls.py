@@ -35,6 +35,7 @@ router.register(r'user', views.UserViewSet)
 
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', (include(router.urls))),
@@ -46,5 +47,6 @@ urlpatterns = [
     #path('api/delete/<int:pk>/', csrf_exempt(views.delete_user), name='delete_view'), #STILL NEED TO WORK ON THAT 
     path('generator/', include('generator.urls')),
     path('api/apply-for-job/', csrf_exempt(views.apply_for_job_view), name='apply_for_job'),
+    path('api/save-job/', csrf_exempt(views.save_job_view), name='save_job'),
 
 ]

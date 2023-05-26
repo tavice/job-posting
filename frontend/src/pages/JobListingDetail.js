@@ -84,9 +84,9 @@ const JobListingDetail = ({ baseUrl }) => {
   console.log(currentUser);
 
 
-  //Apply for job
+ 
   //====================================================================================================
-
+ //Apply for job
 
   const applyToJob = async () => {
     try {
@@ -107,6 +107,29 @@ const JobListingDetail = ({ baseUrl }) => {
       // Handle the error if needed
     }
   };
+
+//====================================================================================================
+//Save job
+
+const saveJob = async () => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/api/save-job/`,
+      {
+        job_id: id,
+        job_seeker_id: jobSeekerId,
+      }
+ 
+    );
+    // You can handle the response if needed
+    console.log(response.data);
+    // Redirect the user to a success page or any other desired page
+    navigate("/dashboard");
+  } catch (error) {
+    console.log(error);
+    // Handle the error if needed
+  }
+};
   
 
 
@@ -168,7 +191,7 @@ const JobListingDetail = ({ baseUrl }) => {
             <Button variant="contained" color="success" style={{marginTop:'20%'}} onClick={applyToJob}>
             <AutoAwesomeIcon/> Apply for this job !
             </Button>
-            <Button variant="contained" color="secondary" href="/joblistings" style={{marginTop:'20%'}}>
+            <Button variant="contained" color="secondary" href="/joblistings" style={{marginTop:'20%'}} onClick ={saveJob}>
             <FavoriteBorderIcon/>  Save for later
             </Button>
             <Button variant="contained" color="primary" href="/Job Listings" style={{marginTop:'20%'}}>
