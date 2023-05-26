@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 //Import components
 import ListOfJobsYouAppliedTo from "./ListOfJobsYouAppliedTo";
 import ListOfJobsYouPosted from "./ListOfJobsYouPosted";
+import ListOfJobsYouSaved from "./ListOfJobsYouSaved";
 import Profile from "./Profile";
 
 const Dashboard = ({ baseUrl }) => {
@@ -189,7 +190,7 @@ const Dashboard = ({ baseUrl }) => {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={6} lg={7}>
               <Paper
                 sx={{
                   p: 2,
@@ -206,7 +207,7 @@ const Dashboard = ({ baseUrl }) => {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12} md={6} lg={5}>
               <Paper
                 sx={{
                   p: 2,
@@ -218,6 +219,7 @@ const Dashboard = ({ baseUrl }) => {
                 <Typography variant="h4" style={{ marginBottom: 10 }}>
                   {" "}
                   List of the jobs you saved
+                  <ListOfJobsYouSaved baseUrl={baseUrl} />
                 </Typography>
               </Paper>
             </Grid>

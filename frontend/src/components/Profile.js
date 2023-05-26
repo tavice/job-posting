@@ -12,7 +12,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 
 const Profile = ({ baseUrl }) => {
-  console.log(baseUrl);
+  //console.log(baseUrl);
   const userType = localStorage.getItem("user_type");
 
   const [currentUser, setCurrentUser] = useState({});
