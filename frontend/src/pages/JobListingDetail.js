@@ -191,7 +191,7 @@ const saveJob = async () => {
             <Button variant="contained" color="success" style={{marginTop:'20%'}} onClick={applyToJob}>
             <AutoAwesomeIcon/> Apply for this job !
             </Button>
-            <Button variant="contained" color="secondary" href="/joblistings" style={{marginTop:'20%'}} onClick ={saveJob}>
+            <Button variant="contained" color="secondary" style={{marginTop:'20%'}} onClick ={saveJob}>
             <FavoriteBorderIcon/>  Save for later
             </Button>
             <Button variant="contained" color="primary" href="/Job Listings" style={{marginTop:'20%'}}>
