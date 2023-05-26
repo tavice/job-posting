@@ -37,8 +37,7 @@ from django.views.decorators.csrf import csrf_protect
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-
-
+from datetime import datetime
 
 
 import json
@@ -54,11 +53,10 @@ from backend.apis.backend import CustomBackend
 # Create your views here.
 
 
-#UserJob views
+# UserJob views
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-   
 
 
 # Employer views
@@ -91,11 +89,8 @@ class PaymentViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentSerializer
 
 
-\
-
-#===================================================================================================
+# ===================================================================================================
 ##### ======== Login view ======== #####
-
 
 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -105,7 +100,7 @@ User = get_user_model()  # Access the user model
 
 @require_POST
 @csrf_exempt
- # Allow any user, including unauthenticated users, to access this endpoint
+# Allow any user, including unauthenticated users, to access this endpoint
 def login_view(request):
     try:
         body = json.loads(request.body)
@@ -123,23 +118,23 @@ def login_view(request):
         print("user logged in is", user)
 
         # Get or create the token for the user
-        
+
         token, created = Token.objects.get_or_create(user=user)
         if created:
             print("token created")
         if token is None:
             return JsonResponse({"error": "Failed to create token."}, status=500)
-        
+
         print("token is", token)
 
-        #get the user object to determine user type
+        # get the user object to determine user type
         user = User.objects.get(id=user.id)
         employer = Employer.objects.filter(user=user)
         print(employer)
         jobseeker = JobSeeker.objects.filter(user=user)
         print(jobseeker)
         # Determine user type based on associated models
-       
+
         if employer:
             user_type = "E"
             employer_id = employer[0].id
@@ -165,10 +160,8 @@ def login_view(request):
                     "userjob_type": user_type,
                     "employer_id": employer_id,
                     "jobseeker_id": jobseeker_id,
-                  
                 },
                 "token": token.key,
-                
             },
             status=200,
         )
@@ -179,8 +172,7 @@ def login_view(request):
         return HttpResponse("Invalid credentials.", status=401)
 
 
-
-#===================================================================================================
+# ===================================================================================================
 ##### ======== Logout view ======== #####
 @api_view(["POST"])
 def logout_view(request):
@@ -196,20 +188,18 @@ def logout_view(request):
         logout(request)
         return Response({"message": "You are logged out."})
     else:
-        return Response({"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(
+            {"error": "You are not authenticated."}, status=status.HTTP_401_UNAUTHORIZED
+        )
 
 
-
-
-
-
-
-#===================================================================================================
+# ===================================================================================================
 # Register view
+
 
 @api_view(["POST"])
 def register_view(request):
-    print('request is', request.data)
+    print("request is", request.data)
     serializer = UserRegistrationSerializer(data=request.data)
     if serializer.is_valid():
         # Extract user registration data from the serializer
@@ -220,9 +210,15 @@ def register_view(request):
         last_name = serializer.validated_data.get("last_name")
         user_type = serializer.validated_data.get("user_type")
         bio = serializer.validated_data.get("bio")  # Additional field for Job Seeker
-        location = serializer.validated_data.get("location")  # Additional field for both Job Seeker and Employer
-        companyname = serializer.validated_data.get("companyname")  # Additional field for Employer
-        website = serializer.validated_data.get("website")  # Additional field for Employer
+        location = serializer.validated_data.get(
+            "location"
+        )  # Additional field for both Job Seeker and Employer
+        companyname = serializer.validated_data.get(
+            "companyname"
+        )  # Additional field for Employer
+        website = serializer.validated_data.get(
+            "website"
+        )  # Additional field for Employer
 
         # Check if the username or email already exists
         if User.objects.filter(username=username).exists():
@@ -247,7 +243,7 @@ def register_view(request):
 
         # Create an authentication token for the user
         token = Token.objects.create(user=user)
-        print('token is', token)
+        print("token is", token)
 
         # Create a Job Seeker or Employer profile based on the user type
         if user_type == "E":
@@ -265,28 +261,26 @@ def register_view(request):
             )
 
         user_serializer = UserSerializer(user)
-        print('user serializer is', user_serializer.data)
+        print("user serializer is", user_serializer.data)
         return Response(
-            {"message": "User created successfully.", 
-             "user": user_serializer.data,
-             "token": token.key,
-             },
+            {
+                "message": "User created successfully.",
+                "user": user_serializer.data,
+                "token": token.key,
+            },
             status=status.HTTP_201_CREATED,
         )
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-#===================================================================================================
-#Update User
+# ===================================================================================================
+# Update User
 @csrf_protect
 @api_view(["PUT"])
 def update_user(request, pk):
-
-
-    print('request user is ', request.user)
-    print('pk is', pk)
+    print("request user is ", request.user)
+    print("pk is", pk)
     # Retrieve the user from the database
     try:
         user = User.objects.get(pk=pk)
@@ -304,18 +298,20 @@ def update_user(request, pk):
     serializer = UserUpdateSerializer(user, data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response({"message": "User updated successfully."}, status=status.HTTP_200_OK)
+        return Response(
+            {"message": "User updated successfully."}, status=status.HTTP_200_OK
+        )
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
-#===================================================================================================
-#Delete User
+
+# ===================================================================================================
+# Delete User
 @csrf_protect
 @api_view(["DELETE"])
 def delete_user(request, pk):
-    print('request user is ', request.user)
-    print('pk is', pk)
+    print("request user is ", request.user)
+    print("pk is", pk)
     # Retrieve the user from the database
     try:
         user = User.objects.get(pk=pk)
@@ -331,34 +327,56 @@ def delete_user(request, pk):
 
     # Delete the user
     user.delete()
-    return Response({"message": "User deleted successfully."}, status=status.HTTP_200_OK)
+    return Response(
+        {"message": "User deleted successfully."}, status=status.HTTP_200_OK
+    )
 
 
-#===================================================================================================
-#Apply for a job
-
-@api_view(['POST'])
+# ===================================================================================================
+# Apply for a job
+@api_view(["POST"])
 def apply_for_job_view(request):
-    print('request is', request.data)
-    serializer = JobApplicationSerializer(data=request.data)
-    if serializer.is_valid():
-        # Retrieve the authenticated user
-        user = request.user
+    print("request is", request.data)
 
-        # Set the jobseeker and joblisting based on the user and request data
-        jobseeker = user.jobseeker
-        joblisting_id = serializer.validated_data['joblisting']
-        joblisting = JobListing.objects.get(id=joblisting_id)
+    # Extract the job id and job seeker id from the request data
+    job_id = request.data.get("job_id")
+    job_seeker_id = request.data.get("job_seeker_id")
 
-        # Set the application status
-        application_status = 'Submitted'
+    print("job id is", job_id)
+    print("job seeker id is", job_seeker_id)
 
-        # Create the job application instance
-        job_application = JobApplication.objects.create(
-            applicationstatus=application_status,
-            jobseeker=jobseeker,
-            joblisting=joblisting
+    # Retrieve the job and job seeker from the database
+    try:
+        job = JobListing.objects.get(pk=job_id)
+        job_seeker = JobSeeker.objects.get(pk=job_seeker_id)
+    except JobListing.DoesNotExist:
+        return Response({"error": "Job not found."}, status=status.HTTP_404_NOT_FOUND)
+    except JobSeeker.DoesNotExist:
+        return Response(
+            {"error": "Job seeker not found."}, status=status.HTTP_404_NOT_FOUND
         )
+    
+    # Check if the job seeker has already applied for the job
+    if JobApplication.objects.filter(job_listing=job, job_seeker=job_seeker).exists():
+        return Response(
+            {"error": "You have already applied for this job."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    else:
+        # Create a new job application
+        job_application = JobApplication.objects.create(
+            job_listing=job, job_seeker=job_seeker
+        )
+        ### NOTES TO MY SELF ###
+        ###In the future will send emil to employer and job seeker
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+    
+
+
+
+   
+    
+      

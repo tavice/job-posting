@@ -21,6 +21,7 @@ from job import views
 from generator import views as generator_views
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken import views as rest_framework_views
+from django.contrib.auth.views import LoginView
 
 from rest_framework import routers
 
@@ -37,7 +38,7 @@ router.register(r'user', views.UserViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', (include(router.urls))),
-
+    #path('accounts/login/', LoginView.as_view(), name='login'),
     path('api/login/', csrf_exempt(views.login_view), name='login_view'),
     path('api/logout/', csrf_exempt(views.logout_view), name='logout_view'),
     path('api/register/', csrf_exempt(views.register_view), name='register_view'),

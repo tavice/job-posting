@@ -89,11 +89,12 @@ const JobListingDetail = ({ baseUrl }) => {
       const response = await axios.post(
         `${baseUrl}/api/apply-for-job/`,
         {
-          joblisting: id,
+          job_id: id,
+          job_seeker_id: userId,
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );

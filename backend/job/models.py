@@ -2,7 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.hashers import make_password
-import datetime
+
+from datetime import date
+
 
 # Create your models here.
 
@@ -140,7 +142,7 @@ class JobApplication(models.Model):
     ]
 
     application_status = models.CharField(max_length=50, choices=APPLICATION_STATUS_CHOICES, default='Pending')
-    application_date = models.DateField(default=datetime.date.today)
+    application_date = models.DateField(default=date.today)
     application_feedback = models.TextField(blank=True, default="")
     job_seeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE, default=1)
     job_listing = models.ForeignKey(JobListing, on_delete=models.CASCADE, default=1)
