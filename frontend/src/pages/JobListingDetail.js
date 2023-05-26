@@ -19,6 +19,7 @@ const JobListingDetail = ({ baseUrl }) => {
 
   const userId = localStorage.getItem("authenticated_user");
   const userType = localStorage.getItem("user_type");
+  const jobSeekerId = localStorage.getItem("jobseeker_id");
 
 
   //====================================================================================================
@@ -90,13 +91,9 @@ const JobListingDetail = ({ baseUrl }) => {
         `${baseUrl}/api/apply-for-job/`,
         {
           job_id: id,
-          job_seeker_id: userId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          job_seeker_id: jobSeekerId,
         }
+   
       );
       // You can handle the response if needed
       console.log(response.data);
