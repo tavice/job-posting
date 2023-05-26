@@ -11,6 +11,8 @@ const ListOfJobsYouAppliedTo = ({baseUrl}) => {
     const [jobListings, setJobListings] = useState([]);
     const [jobApplications, setJobApplications] = useState([]);
     const [filteredJobListings, setFilteredJobListings] = useState([]);
+
+    const jobSeekerId = localStorage.getItem("job_seeker_id")
   
     //=======================================================//
     //Fetch the current user the user id in the database matches the authenticated_user  id saved in local storage when logged
@@ -70,7 +72,7 @@ const ListOfJobsYouAppliedTo = ({baseUrl}) => {
       fetchJobListings();
     }, []);
   
-    console.log("job listings are ", jobListings);
+    //console.log("job listings are ", jobListings);
   
     //=======================================================//
     //Fetches all job applications
@@ -79,7 +81,7 @@ const ListOfJobsYouAppliedTo = ({baseUrl}) => {
         const response = await axios.get(`${baseUrl}/api/jobapplications`);
         const data = response.data;
         const foundJobApplication = data.find(
-          (item) => item.job_seeker === jobSeeker.id
+          (item) => item.job_seeker === jobSeekerId
         );
         if (foundJobApplication) {
           setJobApplications(foundJobApplication);

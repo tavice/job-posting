@@ -98,7 +98,7 @@ class JobListing(models.Model):
     salary = models.CharField(max_length=250)
     jobrequirements = models.CharField(max_length=1000)
     employer = models.ForeignKey(Employer, on_delete=models.CASCADE)
-    jobseeker = models.ManyToManyField("JobSeeker", through="JobApplication")
+    #jobseeker = models.ManyToManyField("JobSeeker", through="JobApplication")
 
     def __str__(self):
         return self.jobtitle

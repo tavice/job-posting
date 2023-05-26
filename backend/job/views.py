@@ -348,14 +348,14 @@ def apply_for_job_view(request):
     # Retrieve the job and job seeker from the database
     try:
         job = JobListing.objects.get(pk=job_id)
+        print("job is", job)
         job_seeker = JobSeeker.objects.get(pk=job_seeker_id)
+        print("job seeker is", job_seeker)
     except JobListing.DoesNotExist:
         return Response({"error": "Job not found."}, status=status.HTTP_404_NOT_FOUND)
     except JobSeeker.DoesNotExist:
-        return Response(
-            {"error": "Job seeker not found."}, status=status.HTTP_404_NOT_FOUND
-        )
-    
+        return Response({"error": "Job seeker not found."}, status=status.HTTP_404_NOT_FOUND)
+
     # Check if the job seeker has already applied for the job
     if JobApplication.objects.filter(job_listing=job, job_seeker=job_seeker).exists():
         return Response(
@@ -367,6 +367,11 @@ def apply_for_job_view(request):
         job_application = JobApplication.objects.create(
             job_listing=job, job_seeker=job_seeker
         )
+
+        print("job application is", job_application)
+
+        return Response({"success": "Job application created."}, status=status.HTTP_201_CREATED)
+
         ### NOTES TO MY SELF ###
         ###In the future will send emil to employer and job seeker
 
