@@ -4,7 +4,10 @@ import { useParams } from "react-router-dom";
 import { CircularProgress, Typography, Grid, Paper, Button } from "@mui/material";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
-
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
@@ -163,13 +166,13 @@ const JobListingDetail = ({ baseUrl }) => {
             <Paper elevation={3} sx={{ p: 2 }} style={{display:"flex", flexDirection:"column", padding:20}}>
             <Typography variant="h6" style={{color:"black", marginTop:'20%'}}>Hey {currentUser.first_name} !</Typography>
             <Button variant="contained" color="success" style={{marginTop:'20%'}} onClick={applyToJob}>
-              Apply for this job !
+            <AutoAwesomeIcon/> Apply for this job !
             </Button>
             <Button variant="contained" color="secondary" href="/joblistings" style={{marginTop:'20%'}}>
-              Save for later
+            <FavoriteBorderIcon/>  Save for later
             </Button>
             <Button variant="contained" color="primary" href="/Job Listings" style={{marginTop:'20%'}}>
-              Back to Job Listings
+            <KeyboardReturnIcon/> Back to Job Listings
             </Button>
             </Paper>
           </Grid>
@@ -177,14 +180,14 @@ const JobListingDetail = ({ baseUrl }) => {
             <Grid item xs={12} sm={3}>
             <Paper elevation={3} sx={{ p: 2 }} style={{display:"flex", flexDirection:"column", padding:20}}>
             <Typography variant="h6" style={{color:"black", marginTop:'20%'}}>Hey {currentUser.first_name} !</Typography>
-            <Button variant="contained" color="success" style={{marginTop:'20%'}} href={`/joblistings/${id}/edit`}>
-              Edit this job !
+            <Button variant="contained" color="success" style={{marginTop:'20%', padding: '10px 20px'}} href={`/joblistings/${id}/edit`}>
+            <AutoAwesomeIcon style={{ fontSize: 20, marginRight: 20 }}/> Edit this job !
             </Button>
             <Button variant="contained" color="secondary" href="/joblistings" style={{marginTop:'20%'}}>
-              Delete this job !
+              <DeleteIcon/> Delete this job !
             </Button>
             <Button variant="contained" color="primary" href="/Job Listings" style={{marginTop:'20%'}}>
-              Back to Job Listings  
+            <KeyboardReturnIcon/>  Back to Job Listings  
             </Button>
             </Paper>
           </Grid>
