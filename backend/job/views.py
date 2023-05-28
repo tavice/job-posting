@@ -12,6 +12,7 @@ from .serializers import (
     UserRegistrationSerializer,
     SavedJobSerializer
 )
+#django imports
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse, HttpResponse
@@ -19,8 +20,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied, BadRequest
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import csrf_protect
 
 
+
+# rest_framework imports
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
@@ -30,19 +36,17 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from rest_framework.authtoken.models import Token
-from django.contrib.auth.decorators import login_required
-from django.middleware.csrf import get_token
-from django.views.decorators.csrf import csrf_protect
 
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+# other imports
 from datetime import datetime
-
-
 import json
 from django.http import JsonResponse
+from django.core.mail import send_mail
+
 
 
 # import custom auth backend for login
@@ -380,6 +384,18 @@ def apply_for_job_view(request):
             )
     
             print("job application is", job_application)
+
+            # Send a message to the employer https://docs.djangoproject.com/en/4.2/topics/email/
+            # message = f"{job_seeker.user.first_name} {job_seeker.user.last_name} has applied for your job listing: {job.jobtitle}."
+            # print("message is", message)
+            # send_mail(
+            #     "Job Board - Job Application Received ",
+            #     message,
+            #     job_seeker.user.email,
+            #     [job.employer.user.email],
+            #     fail_silently=False,
+
+            # )
     
             return Response({"success": "Job application created."}, status=status.HTTP_201_CREATED)
 
@@ -434,6 +450,7 @@ def save_job_view(request):
             )
     
             print("saved job is", saved_job)
+
     
             return Response({"success": "Job saved."}, status=status.HTTP_201_CREATED)
 
@@ -441,9 +458,8 @@ def save_job_view(request):
         print("An error occurred:", str(e))
         return Response({"error": "An error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-        ### NOTES TO MY SELF ###
-        ###In the future will send emil to employer and job seeker    
+   
+  
 
 
     
