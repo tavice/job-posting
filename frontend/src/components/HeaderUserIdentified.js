@@ -33,7 +33,7 @@ margin: 0 1rem;
     <div className='header-user-identified'>
         <StyledLink to="/dashboard">My Dashboard</StyledLink>
         <StyledLink to="/offer-gpt">Create Resume enhanced by AI</StyledLink>
-        <StyledLink to="/current-job">Improve your Resume</StyledLink>
+        <StyledLink to="/create-your-resume">Upload your Resume</StyledLink>
        
 
     </div>
@@ -42,6 +42,7 @@ margin: 0 1rem;
           <StyledLink to="/dashboard">My Dashboard</StyledLink>
           <StyledLink to="/offer-gpt">Create Job offers enhanced by AI</StyledLink>
           <StyledLink to="/create-your-job-offer">Create your Job Offer !</StyledLink>
+
           
         </div>
     ) : (

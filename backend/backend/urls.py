@@ -33,6 +33,8 @@ router.register(r'jobapplications', views.JobApplicationViewSet)
 router.register(r'payments', views.PaymentViewSet)
 router.register(r'user', views.UserViewSet)
 router.register(r'savedjobs', views.SavedJobViewSet)
+router.register(r'resume', views.ResumeViewSet)
+
 
 
 

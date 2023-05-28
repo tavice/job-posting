@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User, SavedJob
+from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User, SavedJob, Resume
 from rest_framework_simplejwt.tokens import RefreshToken
 
 #Serializer we will use for get requests and or to display data
@@ -44,7 +44,12 @@ class PaymentSerializer(serializers.ModelSerializer):
 class SavedJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedJob
-        fields = '__all__'        
+        fields = '__all__' 
+
+class ResumeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Resume
+        fields = '__all__'               
 
 #Serializer we will use for update (PUT) requests
 class UserUpdateSerializer(serializers.ModelSerializer):

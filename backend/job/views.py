@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User, SavedJob
+from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User, SavedJob, Resume
 from .serializers import (
     UserSerializer,
     EmployerSerializer,
@@ -10,7 +10,8 @@ from .serializers import (
     PaymentSerializer,
     UserUpdateSerializer,
     UserRegistrationSerializer,
-    SavedJobSerializer
+    SavedJobSerializer,
+    ResumeSerializer
 )
 #django imports
 from django.contrib.auth import authenticate, login, logout
@@ -98,6 +99,12 @@ class PaymentViewSet(viewsets.ModelViewSet):
 class SavedJobViewSet(viewsets.ModelViewSet):
     queryset = SavedJob.objects.all()
     serializer_class = SavedJobSerializer    
+
+
+# Resume views
+class ResumeViewSet(viewsets.ModelViewSet):
+    queryset = Resume.objects.all()
+    serializer_class = ResumeSerializer
 
 
 # ===================================================================================================
@@ -457,6 +464,20 @@ def save_job_view(request):
     except Exception as e:
         print("An error occurred:", str(e))
         return Response({"error": "An error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+# ===================================================================================================
+# Unsave job
+
+#WILL WORK ON THIS LATER
+
+# @api_view(["POST"])
+# def unsave_job_view(request):
+
+
+# ===================================================================================================
+# Create resume for job seeker
+
 
    
   
