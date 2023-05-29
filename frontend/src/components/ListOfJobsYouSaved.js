@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 
 const ListOfJobsYouSaved = ({ baseUrl }) => {
   const jobSeekerId = localStorage.getItem("jobseeker_id");
-  console.log("jobSeekerId is ", jobSeekerId);
+  //console.log("jobSeekerId is ", jobSeekerId);
 
   const [jobSaved, setJobSaved] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,7 +21,7 @@ const ListOfJobsYouSaved = ({ baseUrl }) => {
     try {
       const response = await axios.get(`${baseUrl}/api/savedjobs`);
       const data = response.data;
-      console.log("data is ", data);
+      //console.log("data is ", data);
 
       const filteredListings = data.filter(
         (item) => item.job_seeker === parseInt(jobSeekerId)
@@ -38,7 +38,7 @@ const ListOfJobsYouSaved = ({ baseUrl }) => {
     fetchJobSaved();
   }, []);
 
-  console.log("jobSaved are", jobSaved);
+  //console.log("jobSaved are", jobSaved);
 
   //=================================================================//
   //fetch job listings associated with job saved
@@ -87,12 +87,12 @@ const ListOfJobsYouSaved = ({ baseUrl }) => {
     }
   }, [jobListings]);
 
-  console.log("employers are", employers);
+  //console.log("employers are", employers);
 
   //=================================================================//
   //render
 
-  console.log("jobListings are", jobListings);
+  //console.log("jobListings are", jobListings);
 
   if (isLoading) {
     return <div>Loading...</div>;
