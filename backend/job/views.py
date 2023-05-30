@@ -403,6 +403,7 @@ def apply_for_job_view(request):
             #     fail_silently=False,
 
             # )
+            #nned to get smtp server setup
     
             return Response({"success": "Job application created."}, status=status.HTTP_201_CREATED)
 
