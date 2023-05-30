@@ -412,8 +412,6 @@ def apply_for_job_view(request):
         return Response({"error": "An error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-        ### NOTES TO MY SELF ###
-        ###In the future will send emil to employer and job seeker
 
 
 # ===================================================================================================
@@ -478,6 +476,7 @@ def save_job_view(request):
 
 # ===================================================================================================
 # Create resume for job seeker
+#see serializer 
 
 
    

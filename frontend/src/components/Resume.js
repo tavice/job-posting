@@ -38,7 +38,7 @@ const Resume = ({ baseUrl }) => {
     fetchResumes();
   }, []);
 
-  console.log("resumes are", resumes);
+  //console.log("resumes are", resumes);
 
   //====================================================================================================
   //render resume

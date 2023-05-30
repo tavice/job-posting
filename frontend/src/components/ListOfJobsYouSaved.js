@@ -123,6 +123,7 @@ const ListOfJobsYouSaved = ({ baseUrl }) => {
               <Typography>{jobListing.jobtitle}</Typography>
               <Chip label={jobListing.salary} />
               <Chip label={jobListing.location} />
+              <Chip label={savedDate} />
               <Chip label={companyName} />
             </Stack>
           </Grid>
