@@ -42,6 +42,7 @@ margin: 0 1rem;
           <StyledLink to="/dashboard">My Dashboard</StyledLink>
           <StyledLink to="/offer-gpt">Create Job offers enhanced by AI</StyledLink>
           <StyledLink to="/create-your-job-offer">Create your Job Offer !</StyledLink>
+          <StyledLink to="/find-candidates">Find candidates</StyledLink>
 
           
         </div>
