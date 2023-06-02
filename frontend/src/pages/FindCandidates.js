@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { Typography, Grid, Paper } from "@mui/material";
+import { Typography, Grid, Paper, TextField } from "@mui/material";
 import Container from "@mui/material/Container";
 
 const FindCandidates = ({ baseUrl }) => {
@@ -10,6 +9,7 @@ const FindCandidates = ({ baseUrl }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [resume, setResume] = useState([]);
+  const [filter, setFilter] = useState(""); // Filter state
 
   // Fetch all the job seekers
   const fetchJobseeker = async () => {
@@ -21,10 +21,6 @@ const FindCandidates = ({ baseUrl }) => {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    fetchJobseeker();
-  }, []);
 
   // Fetch all the users where their ID matches the user in jobseeker
   const fetchUser = async () => {
@@ -45,10 +41,6 @@ const FindCandidates = ({ baseUrl }) => {
     }
   };
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
   // Fetch all the resumes
   const fetchResume = async () => {
     try {
@@ -60,7 +52,32 @@ const FindCandidates = ({ baseUrl }) => {
     }
   };
 
+  // Apply filter to find the perfect skill match
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
+
+const filteredJobSeekers = jobseeker.filter((jobseeker) => {
+    const userMatch = user.find((user) => user.id === jobseeker.user);
+    const resumeMatch = resume.find((resume) => resume.jobseeker === jobseeker.id);
+
+    console.log("resumeMatch is ", resumeMatch);
+    console.log("userMatch is ", userMatch);
+
+    if (!resumeMatch) {
+      return false;
+    }
+
+    const skills = resumeMatch.skills.split(",").map((skill) => skill.trim());
+    const skillsMatch = skills.some((skill) => skill.includes(filter));
+
+    return skillsMatch;
+});
+
+  // Fetch data on component mount
   useEffect(() => {
+    fetchJobseeker();
+    fetchUser();
     fetchResume();
   }, []);
 
@@ -72,13 +89,23 @@ const FindCandidates = ({ baseUrl }) => {
     return <div>{error}</div>;
   }
 
+
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h3" gutterBottom>
         Find Candidates
       </Typography>
+      <TextField
+        id="filter"
+        label=" Types the skills needed to find the right candidate!"
+        variant="outlined"
+        value={filter}
+        onChange={handleFilterChange}
+        style={{ marginBottom: 16 }}
+      />
       <Grid container spacing={2}>
-        {jobseeker.map((jobseeker) => {
+        {filteredJobSeekers.map((jobseeker) => {
           const userMatch = user.find((user) => user.id === jobseeker.user);
           const resumeMatch = resume.find(
             (resume) => resume.jobseeker === jobseeker.id
@@ -98,7 +125,7 @@ const FindCandidates = ({ baseUrl }) => {
                     Email: {userMatch.email}
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    Skills: Resume not shared yet
+                    Resume: Resume not shared yet
                   </Typography>
                 </Paper>
               </Grid>

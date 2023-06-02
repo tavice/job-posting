@@ -136,6 +136,8 @@ const Profile = ({ baseUrl }) => {
               <Chip label="ABOUT COMPANY" />
             </Divider>
           )}
+
+        
         </Grid>
         <Grid item xs={6} md={6}>
           <img

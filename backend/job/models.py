@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.hashers import make_password
+from django.contrib.postgres.fields import ArrayField
 
 from datetime import date
 
@@ -123,8 +124,8 @@ class JobSeeker(models.Model):
 class Resume(models.Model):
     education = models.CharField(max_length=50)
     experience = models.CharField(max_length=50)
-    skills = models.CharField(max_length=50)
-    certifications = models.CharField(max_length=50)
+    skills = ArrayField(models.CharField(max_length=50), blank=True, null=True)
+    certifications = ArrayField(models.CharField(max_length=50), blank=True, null=True)
     jobseeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE)
 
     def __str__(self):

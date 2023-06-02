@@ -18,7 +18,7 @@ const Dashboard = ({ baseUrl }) => {
   const userType = localStorage.getItem("user_type");
 
   return (
-    <div>
+    <>
       {userType === "E" ? (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
@@ -124,7 +124,7 @@ const Dashboard = ({ baseUrl }) => {
           </Grid>
         </Container>
       )}
-    </div>
+    </>
   );
 };
 
