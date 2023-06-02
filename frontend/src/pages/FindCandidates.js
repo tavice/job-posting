@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Typography, Grid, Paper, TextField } from "@mui/material";
 import Container from "@mui/material/Container";
+import Chip from "@mui/material/Chip";
+
 
 const FindCandidates = ({ baseUrl }) => {
   const [jobseeker, setJobseeker] = useState([]);
@@ -57,22 +59,20 @@ const FindCandidates = ({ baseUrl }) => {
     setFilter(event.target.value);
   };
 
-const filteredJobSeekers = jobseeker.filter((jobseeker) => {
+  const filteredJobSeekers = jobseeker.filter((jobseeker) => {
     const userMatch = user.find((user) => user.id === jobseeker.user);
     const resumeMatch = resume.find((resume) => resume.jobseeker === jobseeker.id);
-
-    console.log("resumeMatch is ", resumeMatch);
-    console.log("userMatch is ", userMatch);
 
     if (!resumeMatch) {
       return false;
     }
 
-    const skills = resumeMatch.skills.split(",").map((skill) => skill.trim());
-    const skillsMatch = skills.some((skill) => skill.includes(filter));
+    const skillsMatch = resumeMatch.skills.some((skill) =>
+      skill.toLowerCase().includes(filter.toLowerCase())
+    );
 
     return skillsMatch;
-});
+  });
 
   // Fetch data on component mount
   useEffect(() => {
@@ -89,8 +89,6 @@ const filteredJobSeekers = jobseeker.filter((jobseeker) => {
     return <div>{error}</div>;
   }
 
-
-
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h3" gutterBottom>
@@ -98,7 +96,7 @@ const filteredJobSeekers = jobseeker.filter((jobseeker) => {
       </Typography>
       <TextField
         id="filter"
-        label=" Types the skills needed to find the right candidate!"
+        label="Type the skills needed to find the right candidate!"
         variant="outlined"
         value={filter}
         onChange={handleFilterChange}
@@ -107,9 +105,7 @@ const filteredJobSeekers = jobseeker.filter((jobseeker) => {
       <Grid container spacing={2}>
         {filteredJobSeekers.map((jobseeker) => {
           const userMatch = user.find((user) => user.id === jobseeker.user);
-          const resumeMatch = resume.find(
-            (resume) => resume.jobseeker === jobseeker.id
-          );
+          const resumeMatch = resume.find((resume) => resume.jobseeker === jobseeker.id);
 
           if (!resumeMatch) {
             return (
@@ -146,8 +142,13 @@ const filteredJobSeekers = jobseeker.filter((jobseeker) => {
                     Email: {userMatch.email}
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    Skills: {resumeMatch.skills}
+                    Skills:
                   </Typography>
+                  <div>
+                    {resumeMatch.skills.map((skill, index) => (
+                      <Chip color="secondary" key={index} label={skill} style={{ marginRight: 5 }} />
+                    ))}
+                  </div>
                 </Paper>
               </Grid>
             );
