@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { Typography, Grid, Paper, TextField } from "@mui/material";
 import Container from "@mui/material/Container";
 import Chip from "@mui/material/Chip";
@@ -29,6 +30,10 @@ const FindCandidates = ({ baseUrl }) => {
     }
   };
 
+  useEffect(() => {
+    fetchJobseeker();
+  }, []);
+
   // Fetch all the users where their ID matches the user in jobseeker
   const fetchUser = async () => {
     try {
@@ -48,7 +53,9 @@ const FindCandidates = ({ baseUrl }) => {
     }
   };
 
-  console.log(jobseeker, user);
+useEffect(() => {
+    fetchUser();
+}, []);
 
   // Fetch all the resumes
   const fetchResume = async () => {
@@ -82,12 +89,12 @@ const FindCandidates = ({ baseUrl }) => {
     return skillsMatch;
   });
 
-  // Fetch data on component mount
   useEffect(() => {
-    fetchJobseeker();
-    fetchUser();
     fetchResume();
   }, []);
+
+  // Fetch data on component mount
+
 
   console.log(jobseeker, user, resume);
 
@@ -162,13 +169,10 @@ const saveCandidate = async (jobseekerId) => {
               <Grid item xs={12} sm={6} key={userMatch.id}>
                 <Paper elevation={3} sx={{ p: 2 }}>
                   <Typography variant="h6" gutterBottom>
+                  <Link to={`/find-candidates/${userMatch.id}`}>
                     {userMatch.first_name} {userMatch.last_name}
-                    <IconButton aria-label="save" onClick ={saveCandidate}>
-                      <FavoriteIcon
-                        color="primary"
-                        
-                      />
-                    </IconButton>
+                
+                    </Link>
                   </Typography>
 
                   <Typography variant="body1" gutterBottom>

@@ -24,6 +24,8 @@ import CreateYourJobOffer from "./pages/CreateYourJobOffer";
 import CreateYourResume from "./pages/CreateYourResume";
 import OfferGPT from "./pages/OfferGPT";
 import FindCandidates from "./pages/FindCandidates";
+import CandidatePageDetail from "./pages/CandidatePageDetail";
+
 
 function App() {
   const baseUrl = "http://127.0.0.1:8000";
@@ -64,6 +66,8 @@ function App() {
         <Route path="apply-to-job" element={<ApplyToJob baseUrl={baseUrl} />} />
         <Route path="create-your-resume" element={<CreateYourResume baseUrl={baseUrl} />} />
         <Route path="find-candidates" element={<FindCandidates baseUrl={baseUrl} />} />
+        <Route path="find-candidates/:id" element={<CandidatePageDetail baseUrl={baseUrl} />} />
+       
       </Routes>
       <Footer />
     </div>
