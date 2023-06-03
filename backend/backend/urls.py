@@ -52,5 +52,6 @@ urlpatterns = [
     path('generator/', include('generator.urls')),
     path('api/apply-for-job/', csrf_exempt(views.apply_for_job_view), name='apply_for_job'),
     path('api/save-job/', csrf_exempt(views.save_job_view), name='save_job'),
+    path('api/save-candidate/', csrf_exempt(views.save_candidate_view), name='save_candidate'),
 
 ]

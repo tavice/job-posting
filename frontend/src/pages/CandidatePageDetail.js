@@ -32,6 +32,7 @@ const CandidatePageDetail = ({ baseUrl }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const employerId = localStorage.getItem("employer_id");
 
   // Fetch user data
   const fetchUser = async () => {
@@ -100,8 +101,9 @@ const CandidatePageDetail = ({ baseUrl }) => {
   //Save candidate to favorites
   const saveProfile = async (jobseekerId) => {
     try {
-      const response = await axios.post(`${baseUrl}/api/save-candidate`, {
-        jobseeker: jobseeker.id,
+      const response = await axios.post(`${baseUrl}/api/save-candidate/`, {
+        job_seeker_id: jobseeker.id,
+        employer_id: employerId,
       });
       const data = response.data;
       console.log(data);
@@ -118,7 +120,7 @@ const CandidatePageDetail = ({ baseUrl }) => {
         <CircularProgress />
       ) : (
         <>
-          <Paper style={{ padding: 20, marginBottom: 20, height: "100%" }}>
+          <Paper style={{ padding: 20, marginBottom: 20, height: "100%", textTransform:'uppercase' }}>
             <Typography variant="h5">
               {user.first_name} {user.last_name}
             </Typography>
@@ -126,15 +128,16 @@ const CandidatePageDetail = ({ baseUrl }) => {
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               <Paper style={{ padding: 20, marginBottom: 20 }}>
-                <Typography variant="body1">
+              <Typography variant="h6" style={{textTransform:'uppercase'}}>Contact Info</Typography>
+                <Typography variant="body1" style={{ padding: 20}}>
                   <strong>Phone Number: </strong>
                   {jobseeker.phone}
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" style={{ padding: 20}}>
                   <strong>Email: </strong>
                   {user.email}
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" style={{ padding: 20}}>
                   <strong>Location: </strong>
                   {jobseeker.location}
                 </Typography>
@@ -146,7 +149,7 @@ const CandidatePageDetail = ({ baseUrl }) => {
             </Grid>
             <Grid item xs={12} md={6}>
               <Paper style={{ padding: 20, marginBottom: 20 }}>
-                <Typography variant="h6">Resume</Typography>
+                <Typography variant="h6" style={{textTransform:'uppercase'}}>Resume</Typography>
                 <List
                   sx={{
                     width: "100%",
@@ -209,6 +212,7 @@ const CandidatePageDetail = ({ baseUrl }) => {
               </Paper>
             </Grid>
           </Grid>
+          <Grid item xs={12} sm={3}>
           <Paper style={{ padding: 20, marginBottom: 20, height: "100%" }}>
             <Typography variant="h5" style={{marginBottom:20}}>
               Do you like this candidate? Hire them!
@@ -242,6 +246,7 @@ const CandidatePageDetail = ({ baseUrl }) => {
               </Paper>
             </Grid>
           </Paper>
+          </Grid>
         </>
       )}
     </Container>

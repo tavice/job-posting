@@ -53,10 +53,12 @@ const FindCandidates = ({ baseUrl }) => {
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
     fetchUser();
-}, []);
+  }, []);
 
+
+  console.log('users are', user);
   // Fetch all the resumes
   const fetchResume = async () => {
     try {
@@ -93,25 +95,19 @@ useEffect(() => {
     fetchResume();
   }, []);
 
-  // Fetch data on component mount
-
-
-  console.log(jobseeker, user, resume);
-
-//Save candidate to favorites
-const saveCandidate = async (jobseekerId) => {
-    try {
-        const response = await axios.post(`${baseUrl}/api/save-candidate`, {
-        jobseeker: jobseeker.id,
-        });
-        const data = response.data;
-        console.log(data);
-        navigate("/dashboard");
-    } catch (error) {
-        console.log(error);
-    }
-};
-
+  // Save candidate to favorites
+//   const saveCandidate = async (jobseekerId) => {
+//     try {
+//       const response = await axios.post(`${baseUrl}/api/save-candidate`, {
+//         jobseeker: jobseeker.id,
+//       });
+//       const data = response.data;
+//       console.log(data);
+//       navigate("/dashboard");
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
 
   //====================================================================================================
   // Render the list of job seekers
@@ -169,9 +165,8 @@ const saveCandidate = async (jobseekerId) => {
               <Grid item xs={12} sm={6} key={userMatch.id}>
                 <Paper elevation={3} sx={{ p: 2 }}>
                   <Typography variant="h6" gutterBottom>
-                  <Link to={`/find-candidates/${userMatch.id}`}>
-                    {userMatch.first_name} {userMatch.last_name}
-                
+                    <Link to={`/find-candidates/${userMatch.id}`}>
+                      {userMatch.first_name} {userMatch.last_name}
                     </Link>
                   </Typography>
 
@@ -194,6 +189,12 @@ const saveCandidate = async (jobseekerId) => {
                       />
                     ))}
                   </div>
+                  {/* <IconButton
+                    aria-label="Add to favorites"
+                    onClick={() => saveCandidate(jobseeker.id)}
+                  >
+                    <FavoriteIcon />
+                  </IconButton> */}
                 </Paper>
               </Grid>
             );
