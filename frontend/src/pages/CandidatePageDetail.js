@@ -12,6 +12,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Divider,
+  Button,
 } from "@mui/material";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +20,9 @@ import WorkIcon from "@mui/icons-material/Work";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import SchoolIcon from "@mui/icons-material/School";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import KeyboardReturnIcon from "@mui/icons-material/KeyboardReturn";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 const CandidatePageDetail = ({ baseUrl }) => {
   const { id } = useParams();
@@ -92,6 +96,21 @@ const CandidatePageDetail = ({ baseUrl }) => {
     }
   }, [jobseeker]);
 
+  //Save candidate profile
+  //Save candidate to favorites
+  const saveProfile = async (jobseekerId) => {
+    try {
+      const response = await axios.post(`${baseUrl}/api/save-candidate`, {
+        jobseeker: jobseeker.id,
+      });
+      const data = response.data;
+      console.log(data);
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Render the candidate page details
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -99,75 +118,129 @@ const CandidatePageDetail = ({ baseUrl }) => {
         <CircularProgress />
       ) : (
         <>
-          <Paper style={{ padding: 20, marginBottom: 20 }}>
+          <Paper style={{ padding: 20, marginBottom: 20, height: "100%" }}>
             <Typography variant="h5">
               {user.first_name} {user.last_name}
             </Typography>
-            <Typography variant="body1" ><strong>Phone Number: </strong>{jobseeker.phone}</Typography>
-            <Typography variant="body1" ><strong>Email: </strong>{user.email}</Typography>
-            <Typography variant="body1" ><strong>Location: </strong>{jobseeker.location}</Typography>
-            <Paper style={{ padding: 20, marginTop: 20 }}>
-              <Typography variant="h6">About Me</Typography>
-              <Typography variant="body1">{jobseeker.bio}</Typography>
-              </Paper>
           </Paper>
-          <Paper>
-            <Typography variant="h6">Resume</Typography>
-            <List
-              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-            >
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <WorkIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary="EXPERIENCE"
-                  secondary={resume.experience}
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <PsychologyIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary="SKILLS"
-                  secondary={resume.skills ? resume.skills.join(", ") : ""}
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <SchoolIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary="EDUCATION"
-                  secondary={resume.education}
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <WorkspacePremiumIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary="CERTIFICATIONS"
-                  secondary={
-                    resume.certifications
-                      ? resume.certifications.join(", ")
-                      : ""
-                  }
-                />
-              </ListItem>
-            </List>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Paper style={{ padding: 20, marginBottom: 20 }}>
+                <Typography variant="body1">
+                  <strong>Phone Number: </strong>
+                  {jobseeker.phone}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Email: </strong>
+                  {user.email}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Location: </strong>
+                  {jobseeker.location}
+                </Typography>
+                <Paper style={{ padding: 20, marginTop: 20 }}>
+                  <Typography variant="h6">About {user.first_name} {user.last_name}</Typography>
+                  <Typography variant="body1">{jobseeker.bio}</Typography>
+                </Paper>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper style={{ padding: 20, marginBottom: 20 }}>
+                <Typography variant="h6">Resume</Typography>
+                <List
+                  sx={{
+                    width: "100%",
+                    maxWidth: 360,
+                    bgcolor: "background.paper",
+                  }}
+                >
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <WorkIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary="EXPERIENCE"
+                      secondary={resume.experience}
+                    />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <PsychologyIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary="SKILLS"
+                      secondary={resume.skills ? resume.skills.join(", ") : ""}
+                    />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <SchoolIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary="EDUCATION"
+                      secondary={resume.education}
+                    />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <WorkspacePremiumIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary="CERTIFICATIONS"
+                      secondary={
+                        resume.certifications
+                          ? resume.certifications.join(", ")
+                          : ""
+                      }
+                    />
+                  </ListItem>
+                </List>
+              </Paper>
+            </Grid>
+          </Grid>
+          <Paper style={{ padding: 20, marginBottom: 20, height: "100%" }}>
+            <Typography variant="h5" style={{marginBottom:20}}>
+              Do you like this candidate? Hire them!
+            </Typography>
+            <Grid item xs={12} sm={3}>
+              <Paper
+                elevation={3}
+                sx={{ p: 2 }}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  padding: 20,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  style={{}}
+                  onClick={saveProfile}
+                >
+                  <FavoriteBorderIcon /> Save Candidate's Profile
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  href="/find-candidates"
+                  style={{}}
+                >
+                  <KeyboardReturnIcon /> Back to Candidates List
+                </Button>
+              </Paper>
+            </Grid>
           </Paper>
         </>
       )}
