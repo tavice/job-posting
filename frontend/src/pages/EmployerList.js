@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Container from "@mui/material/Container";
-import { Button, Typography, Grid, Paper, Divider } from "@mui/material";
+import { Button, Typography, Grid, Paper, Divider, CircularProgress } from "@mui/material";
 import Paid from "@mui/icons-material/Paid";
 import LocationOn from "@mui/icons-material/LocationOn";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -12,6 +12,7 @@ import PsychologyIcon from '@mui/icons-material/Psychology';
 
 const EmployerList = ({ baseUrl }) => {
   const [employerList, setEmployerList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   //=======================================================//
   // Fetching Employer List//
@@ -60,6 +61,8 @@ const EmployerList = ({ baseUrl }) => {
         return acc;
       }, {});
       setJobListings(jobListings);
+      setIsLoading(false);
+      
     };
     getJobListings();
   }, []);
@@ -102,6 +105,10 @@ const EmployerList = ({ baseUrl }) => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+       {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
       <Typography
         variant="h2"
         style={{ marginBottom: 20, alignItems: "center" }}
@@ -207,6 +214,8 @@ const EmployerList = ({ baseUrl }) => {
           </Paper>
         </Grid>
       ))}
+      </>
+      )}
     </Container>
   );
 };

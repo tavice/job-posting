@@ -4,9 +4,7 @@ import { Link } from "react-router-dom";
 import { Typography, Grid, Paper, TextField } from "@mui/material";
 import Container from "@mui/material/Container";
 import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
-
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 
 const FindCandidates = ({ baseUrl }) => {
@@ -19,56 +17,33 @@ const FindCandidates = ({ baseUrl }) => {
 
   const navigate = useNavigate();
 
-  // Fetch all the job seekers
-  const fetchJobseeker = async () => {
+  // Fetch all the job seekers, users, and resumes
+  const fetchData = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/api/jobseekers`);
-      const data = response.data;
-      setJobseeker(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+      const [jobseekerResponse, userResponse, resumeResponse] = await Promise.all([
+        axios.get(`${baseUrl}/api/jobseekers`),
+        axios.get(`${baseUrl}/api/user`),
+        axios.get(`${baseUrl}/api/resume`),
+      ]);
 
-  useEffect(() => {
-    fetchJobseeker();
-  }, []);
+      const jobseekerData = jobseekerResponse.data;
+      const userData = userResponse.data;
+      const resumeData = resumeResponse.data;
 
-  // Fetch all the users where their ID matches the user in jobseeker
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get(`${baseUrl}/api/user`);
-      const data = response.data;
-
-      const filteredUser = data.filter((user) =>
-        jobseeker.some((jobseeker) => jobseeker.user === user.id)
-      );
-
-      setUser(filteredUser);
+      setJobseeker(jobseekerData);
+      setUser(userData);
+      setResume(resumeData);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
       setError(error.message);
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchUser();
+    fetchData();
   }, []);
-
-
-  console.log('users are', user);
-  // Fetch all the resumes
-  const fetchResume = async () => {
-    try {
-      const response = await axios.get(`${baseUrl}/api/resume`);
-      const data = response.data;
-      setResume(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // Apply filter to find the perfect skill match
   const handleFilterChange = (event) => {
@@ -91,35 +66,18 @@ const FindCandidates = ({ baseUrl }) => {
     return skillsMatch;
   });
 
-  useEffect(() => {
-    fetchResume();
-  }, []);
-
-  // Save candidate to favorites
-//   const saveCandidate = async (jobseekerId) => {
-//     try {
-//       const response = await axios.post(`${baseUrl}/api/save-candidate`, {
-//         jobseeker: jobseeker.id,
-//       });
-//       const data = response.data;
-//       console.log(data);
-//       navigate("/dashboard");
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-  //====================================================================================================
   // Render the list of job seekers
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+
   if (error) {
     return <div>{error}</div>;
   }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
       <Typography variant="h3" gutterBottom>
         Find Candidates
       </Typography>
@@ -189,12 +147,7 @@ const FindCandidates = ({ baseUrl }) => {
                       />
                     ))}
                   </div>
-                  {/* <IconButton
-                    aria-label="Add to favorites"
-                    onClick={() => saveCandidate(jobseeker.id)}
-                  >
-                    <FavoriteIcon />
-                  </IconButton> */}
+                
                 </Paper>
               </Grid>
             );
@@ -203,6 +156,8 @@ const FindCandidates = ({ baseUrl }) => {
           return null;
         })}
       </Grid>
+      </>
+      )}
     </Container>
   );
 };

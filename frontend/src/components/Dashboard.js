@@ -35,7 +35,7 @@ const Dashboard = ({ baseUrl }) => {
                   p: 2,
                   display: "flex",
                   flexDirection: "column",
-                  height: 240,
+                  
                 }}
               >
                 <Typography variant="h4" style={{ marginBottom: 10 }}>
@@ -52,7 +52,7 @@ const Dashboard = ({ baseUrl }) => {
                   p: 2,
                   display: "flex",
                   flexDirection: "column",
-                  height: 240,
+                  
                 }}
               >
                 <Typography variant="h4" style={{ marginBottom: 10 }}>
