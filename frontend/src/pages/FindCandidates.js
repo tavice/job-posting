@@ -4,10 +4,9 @@ import { Typography, Grid, Paper, TextField } from "@mui/material";
 import Container from "@mui/material/Container";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
 
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useNavigate } from "react-router-dom";
 
 const FindCandidates = ({ baseUrl }) => {
   const [jobseeker, setJobseeker] = useState([]);
@@ -16,6 +15,8 @@ const FindCandidates = ({ baseUrl }) => {
   const [error, setError] = useState(null);
   const [resume, setResume] = useState([]);
   const [filter, setFilter] = useState(""); // Filter state
+
+  const navigate = useNavigate();
 
   // Fetch all the job seekers
   const fetchJobseeker = async () => {
@@ -88,6 +89,22 @@ const FindCandidates = ({ baseUrl }) => {
 
   console.log(jobseeker, user, resume);
 
+//Save candidate to favorites
+const saveCandidate = async (jobseekerId) => {
+    try {
+        const response = await axios.post(`${baseUrl}/api/save-candidate`, {
+        jobseeker: jobseekerId,
+        });
+        const data = response.data;
+        console.log(data);
+        navigate("/dashboard");
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
+  //====================================================================================================
   // Render the list of job seekers
   if (isLoading) {
     return <div>Loading...</div>;
@@ -144,7 +161,7 @@ const FindCandidates = ({ baseUrl }) => {
                 <Paper elevation={3} sx={{ p: 2 }}>
                   <Typography variant="h6" gutterBottom>
                     {userMatch.first_name} {userMatch.last_name}
-                    <IconButton aria-label="save" onClick={console.log("test")}>
+                    <IconButton aria-label="save" onClick ={saveCandidate}>
                       <FavoriteIcon
                         color="primary"
                         

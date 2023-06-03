@@ -98,13 +98,13 @@ const JobListingDetail = ({ baseUrl }) => {
         }
    
       );
-      // You can handle the response if needed
+   
       console.log(response.data);
-      // Redirect the user to a success page or any other desired page
+
       navigate("/dashboard");
     } catch (error) {
       console.log(error);
-      // Handle the error if needed
+
     }
   };
 
@@ -121,13 +121,13 @@ const saveJob = async () => {
       }
  
     );
-    // You can handle the response if needed
+
     console.log(response.data);
-    // Redirect the user to a success page or any other desired page
+
     navigate("/dashboard");
   } catch (error) {
     console.log(error);
-    // Handle the error if needed
+  
   }
 };
   
