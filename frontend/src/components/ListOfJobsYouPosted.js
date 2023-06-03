@@ -67,7 +67,7 @@ const ListOfJobsYouPosted = ({ baseUrl }) => {
     setFilteredJobListings(filteredJobListings);
   }, [employer, jobListings]);
 
-  console.log("filtered job listings are", filteredJobListings);
+  //console.log("filtered job listings are", filteredJobListings);
 
   //=======================================================//
   //Styling//

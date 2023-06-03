@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import ListOfJobsYouAppliedTo from "./ListOfJobsYouAppliedTo";
 import ListOfJobsYouPosted from "./ListOfJobsYouPosted";
 import ListOfJobsYouSaved from "./ListOfJobsYouSaved";
+import ListOfCandidatesYouLiked from "./ListOfCandidatesYouLiked";
 import Profile from "./Profile";
 import Resume from "./Resume";
 
@@ -28,7 +29,7 @@ const Dashboard = ({ baseUrl }) => {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={6} lg={6}>
               <Paper
                 sx={{
                   p: 2,
@@ -45,7 +46,7 @@ const Dashboard = ({ baseUrl }) => {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12} md={6} lg={6}>
               <Paper
                 sx={{
                   p: 2,
@@ -58,6 +59,7 @@ const Dashboard = ({ baseUrl }) => {
                   {" "}
                   List of the candidates you liked
                 </Typography>
+              <ListOfCandidatesYouLiked baseUrl={baseUrl} />
               </Paper>
             </Grid>
           </Grid>
