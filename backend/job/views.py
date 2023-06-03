@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User, SavedJob, Resume
+from .models import Employer, JobListing, JobSeeker, JobApplication, Payment, User, SavedJob, Resume, SavedCandidate
 from .serializers import (
     UserSerializer,
     EmployerSerializer,
@@ -11,7 +11,8 @@ from .serializers import (
     UserUpdateSerializer,
     UserRegistrationSerializer,
     SavedJobSerializer,
-    ResumeSerializer
+    ResumeSerializer,
+    SavedCandidateSerializer,
 )
 #django imports
 from django.contrib.auth import authenticate, login, logout
@@ -105,6 +106,12 @@ class SavedJobViewSet(viewsets.ModelViewSet):
 class ResumeViewSet(viewsets.ModelViewSet):
     queryset = Resume.objects.all()
     serializer_class = ResumeSerializer
+
+
+# Saved candidate views
+class SavedCandidateViewSet(viewsets.ModelViewSet):
+    queryset = SavedCandidate.objects.all()
+    serializer_class = SavedCandidateSerializer
 
 
 # ===================================================================================================
@@ -477,6 +484,57 @@ def save_job_view(request):
 # ===================================================================================================
 # Create resume for job seeker
 #see serializer 
+
+
+
+# ===================================================================================================
+#Save canadidate for the employer
+@api_view(["POST"])
+def save_candidate_view(request):
+    try:
+        print("request is", request.data)
+
+        # Extract the job id and job seeker id from the request data
+        job_seeker_id = request.data.get("job_seeker_id")
+        employer_id = request.data.get("employer_id")
+
+        print("job seeker id is", job_seeker_id)
+        print("employer id is", employer_id)
+
+        # Retrieve the job and job seeker from the database
+        try:
+            job_seeker = JobSeeker.objects.get(pk=job_seeker_id)
+            print("job seeker is", job_seeker)
+            employer = Employer.objects.get(pk=employer_id)
+            print("employer is", employer)
+        except JobSeeker.DoesNotExist:
+            print("Job seeker not found.")
+            return Response({"error": "Job seeker not found."}, status=status.HTTP_404_NOT_FOUND)
+        except Employer.DoesNotExist:
+            print("Employer not found.")
+            return Response({"error": "Employer not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if the employer has already saved the job seeker
+        if SavedCandidate.objects.filter(job_seeker=job_seeker, employer=employer).exists():
+            print("You have already saved this job seeker.")
+            return Response(
+                {"error": "You have already saved this job seeker."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        else:
+            # Create a new saved job seeker
+            saved_candidate = SavedCandidate.objects.create(
+                job_seeker=job_seeker, employer=employer
+            )
+    
+            print("saved candidate is", saved_candidate)
+
+    
+            return Response({"success": "Job seeker saved."}, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        print("An error occurred:", str(e))
+        return Response({"error": "An error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
    

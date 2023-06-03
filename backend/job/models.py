@@ -175,3 +175,12 @@ class SavedJob(models.Model):
 
     def __str__(self):
         return str(self.save_date) 
+    
+#Saved Candidates schema: This schema would define the saved candidates model for the app,
+class SavedCandidate(models.Model):
+    job_seeker = models.ForeignKey(JobSeeker, on_delete=models.CASCADE, default=1)
+    employer = models.ForeignKey(Employer, on_delete=models.CASCADE, default=1)
+    save_date = models.DateField(default=date.today)
+
+    def __str__(self):
+        return str(self.save_date)    

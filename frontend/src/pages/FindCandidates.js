@@ -48,6 +48,8 @@ const FindCandidates = ({ baseUrl }) => {
     }
   };
 
+  console.log(jobseeker, user);
+
   // Fetch all the resumes
   const fetchResume = async () => {
     try {
@@ -93,7 +95,7 @@ const FindCandidates = ({ baseUrl }) => {
 const saveCandidate = async (jobseekerId) => {
     try {
         const response = await axios.post(`${baseUrl}/api/save-candidate`, {
-        jobseeker: jobseekerId,
+        jobseeker: jobseeker.id,
         });
         const data = response.data;
         console.log(data);
