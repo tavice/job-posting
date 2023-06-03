@@ -3,7 +3,11 @@ import axios from "axios";
 import { Typography, Grid, Paper, TextField } from "@mui/material";
 import Container from "@mui/material/Container";
 import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const FindCandidates = ({ baseUrl }) => {
   const [jobseeker, setJobseeker] = useState([]);
@@ -60,8 +64,9 @@ const FindCandidates = ({ baseUrl }) => {
   };
 
   const filteredJobSeekers = jobseeker.filter((jobseeker) => {
-    const userMatch = user.find((user) => user.id === jobseeker.user);
-    const resumeMatch = resume.find((resume) => resume.jobseeker === jobseeker.id);
+    const resumeMatch = resume.find(
+      (resume) => resume.jobseeker === jobseeker.id
+    );
 
     if (!resumeMatch) {
       return false;
@@ -80,6 +85,8 @@ const FindCandidates = ({ baseUrl }) => {
     fetchUser();
     fetchResume();
   }, []);
+
+  console.log(jobseeker, user, resume);
 
   // Render the list of job seekers
   if (isLoading) {
@@ -105,11 +112,13 @@ const FindCandidates = ({ baseUrl }) => {
       <Grid container spacing={2}>
         {filteredJobSeekers.map((jobseeker) => {
           const userMatch = user.find((user) => user.id === jobseeker.user);
-          const resumeMatch = resume.find((resume) => resume.jobseeker === jobseeker.id);
+          const resumeMatch = resume.find(
+            (resume) => resume.jobseeker === jobseeker.id
+          );
 
           if (!resumeMatch) {
             return (
-              <Grid item xs={12} sm={6} key={userMatch.id}>
+              <Grid item xs={12} sm={6} key={userMatch && userMatch.id}>
                 <Paper elevation={3} sx={{ p: 2 }}>
                   <Typography variant="h6" gutterBottom>
                     {userMatch.first_name} {userMatch.last_name}
@@ -118,10 +127,11 @@ const FindCandidates = ({ baseUrl }) => {
                     {jobseeker.bio}
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    Email: {userMatch.email}
+                    <strong>Email: </strong>
+                    {userMatch.email}
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    Resume: Resume not shared yet
+                    Skills: Resume not shared yet
                   </Typography>
                 </Paper>
               </Grid>
@@ -134,19 +144,31 @@ const FindCandidates = ({ baseUrl }) => {
                 <Paper elevation={3} sx={{ p: 2 }}>
                   <Typography variant="h6" gutterBottom>
                     {userMatch.first_name} {userMatch.last_name}
+                    <IconButton aria-label="save" onClick={console.log("test")}>
+                      <FavoriteIcon
+                        color="primary"
+                        
+                      />
+                    </IconButton>
                   </Typography>
+
                   <Typography variant="body1" gutterBottom>
                     {jobseeker.bio}
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    Email: {userMatch.email}
+                    <strong>Email:</strong> {userMatch.email}
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    Skills:
+                    <strong>Skills:</strong>
                   </Typography>
                   <div>
                     {resumeMatch.skills.map((skill, index) => (
-                      <Chip color="secondary" key={index} label={skill} style={{ marginRight: 5 }} />
+                      <Chip
+                        color="secondary"
+                        key={index}
+                        label={skill}
+                        style={{ marginRight: 5 }}
+                      />
                     ))}
                   </div>
                 </Paper>

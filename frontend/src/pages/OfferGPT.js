@@ -5,6 +5,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
+import SendIcon from '@mui/icons-material/Send';
 
 const OfferGPT = ({ baseUrl }) => {
   const [messages, setMessages] = useState([]);
@@ -137,7 +138,7 @@ const OfferGPT = ({ baseUrl }) => {
           style={{ width: "100%", marginRight: 20 }}
           onChange={handlePromptChange}
         />
-        <Button type="submit" style={{ width: "50%" }}>
+        <Button type="submit" style={{ width: "50%" }} endIcon={<SendIcon />}>
           {loading ? (
             <CircularProgress size={20} color="secondary" /> // Show spinner while loading
           ) : (
