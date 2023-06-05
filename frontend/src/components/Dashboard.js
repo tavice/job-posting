@@ -12,6 +12,7 @@ import ListOfJobsYouAppliedTo from "./ListOfJobsYouAppliedTo";
 import ListOfJobsYouPosted from "./ListOfJobsYouPosted";
 import ListOfJobsYouSaved from "./ListOfJobsYouSaved";
 import ListOfCandidatesYouLiked from "./ListOfCandidatesYouLiked";
+import CandidatesWhoAppliedToYourJob from "./CandidatesWhoAppliedToYourJob";
 import Profile from "./Profile";
 import Resume from "./Resume";
 
@@ -26,6 +27,23 @@ const Dashboard = ({ baseUrl }) => {
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
                 <Profile baseUrl={baseUrl} />
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={12} lg={12}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                 
+                }}
+              >
+                <Typography variant="h4" style={{ marginBottom: 10 }}>
+                  {" "}
+                  Candidates who applied to your jobs
+                
+                </Typography>
+                  <CandidatesWhoAppliedToYourJob baseUrl={baseUrl} />
               </Paper>
             </Grid>
 

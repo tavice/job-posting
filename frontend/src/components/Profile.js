@@ -132,9 +132,13 @@ const Profile = ({ baseUrl }) => {
               </Typography>
             </div>
           ) : (
+            <div>
             <Divider textAlign="left" style={{ padding: 20 }}>
               <Chip label="ABOUT COMPANY" />
-            </Divider>
+              </Divider>
+  
+              </div>
+           
           )}
 
         
