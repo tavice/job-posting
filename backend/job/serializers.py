@@ -34,7 +34,7 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     job_listing = serializers.PrimaryKeyRelatedField(queryset=JobListing.objects.all())
     class Meta:
         model = JobApplication
-        fields = ['job_seeker', 'job_listing', 'application_status', 'application_date']
+        fields = ['id', 'job_seeker', 'job_listing', 'application_status', 'application_date', 'application_feedback']
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:

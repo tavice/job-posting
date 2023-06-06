@@ -89,9 +89,13 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
     fetchData();
   }, [baseUrl, employerId]);
 
+  console.log("jobApplications", jobApplications);
+
   // Update the application status
 
   const handleChangeStatus = async (status, applicationId) => {
+    console.log("status", status);
+    console.log("applicationId", applicationId);
     try {
       await axios.put(`${baseUrl}/api/jobapplications/${applicationId}/`, {
         application_status: status,
@@ -149,7 +153,7 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
 
   options= Array.from(existingOptions); //go back to an array
 
-  console.log("options", options);
+  //console.log("options", options);
 
   const handleClick = () => {
     setOpen(true);
@@ -162,6 +166,7 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
       const selectedStatus = options[index];
       const applicationId = jobApplications[index].id;
       handleChangeStatus(selectedStatus, applicationId);
+      
     }
   };
 
@@ -205,6 +210,7 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
                 <TableRow>
                   <TableCell align="center">Job Title</TableCell>
                   <TableCell align="center">Name</TableCell>
+                  <TableCell align="center">Feebacks</TableCell>
                   <TableCell align="center">Status</TableCell>
                 </TableRow>
               </TableHead>
@@ -265,6 +271,9 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
                           {userMatch && userMatch.last_name}
                         </Link>
                       </TableCell>
+                      <TableCell align="center">
+                        {jobApplication.application_feedback}
+                        </TableCell>
                       <TableCell align="center">
                         <ButtonGroup
                           variant="contained"

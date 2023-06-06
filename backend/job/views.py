@@ -94,6 +94,9 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
+        print("Serializer validated data:", serializer.validated_data)  # Debugging print statement
+        print("Request data:", request.data)  # Debugging print statement
+        print("Errors:", serializer.errors)  # Debugging print statement
         self.perform_update(serializer)
         return Response(serializer.data)
 
