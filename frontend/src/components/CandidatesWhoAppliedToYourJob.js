@@ -4,9 +4,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
+
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
@@ -89,13 +87,9 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
     fetchData();
   }, [baseUrl, employerId]);
 
-  console.log("jobApplications", jobApplications);
-
   // Update the application status
 
   const handleChangeStatus = async (status, applicationId) => {
-    console.log("status", status);
-    console.log("applicationId", applicationId);
     try {
       await axios.put(`${baseUrl}/api/jobapplications/${applicationId}/`, {
         application_status: status,
@@ -106,79 +100,10 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
           ? { ...application, application_status: status }
           : application
       );
-      console.log("updatedApplications", updatedApplications);
       setJobApplications(updatedApplications);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  // Dropdown menu for changing the application status
-
-  //const options = ["Pending", "Approved", "Rejected"];
-  //https://mui.com/material-ui/react-button-group/
-  //beed options for the dropdown menu but will start with an empty array that we fill with the existing options
-  let options = [];
-
-  let existingOptions = new Set(
-    jobApplications.map((jobApplication) => jobApplication.application_status)
-  );
-
-  if (!existingOptions.has("Pending")) {
-    existingOptions.add("Pending");
-  }
-
-  if (!existingOptions.has("Approved")) {
-    existingOptions.add("Approved");
-  }
-
-  if (!existingOptions.has("Rejected")) {
-    existingOptions.add("Rejected");
-  }
-
-  options.forEach((option) => existingOptions.add(option));
-
-  const existingOptionsArray = Array.from(existingOptions);
-
-  options.forEach((option) => {
-    if (!existingOptions.includes(option)) {
-      existingOptions.push(option);
-    }
-  });
-
-
-
-  // Add missing options to the existingOptions set
-  options.forEach((option) => existingOptions.add(option));
-
-  options= Array.from(existingOptions); //go back to an array
-
-  //console.log("options", options);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    setOpen(false);
-    if (index >= 0) {
-      const selectedStatus = options[index];
-      const applicationId = jobApplications[index].id;
-      handleChangeStatus(selectedStatus, applicationId);
-      
-    }
-  };
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-    setOpen(false);
   };
 
   // Render the table
@@ -210,7 +135,7 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
                 <TableRow>
                   <TableCell align="center">Job Title</TableCell>
                   <TableCell align="center">Name</TableCell>
-                  <TableCell align="center">Feebacks</TableCell>
+                  <TableCell align="center">Feedbacks</TableCell>
                   <TableCell align="center">Status</TableCell>
                 </TableRow>
               </TableHead>
@@ -241,9 +166,6 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
                     chipColor = "default";
                   }
 
-                  const selectedStatus =
-                    selectedIndex === index ? options[selectedIndex] : null;
-
                   return (
                     <TableRow key={jobApplication.id}>
                       <TableCell
@@ -273,72 +195,17 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
                       </TableCell>
                       <TableCell align="center">
                         {jobApplication.application_feedback}
-                        </TableCell>
+                      </TableCell>
                       <TableCell align="center">
-                        <ButtonGroup
+                        <Button
                           variant="contained"
-                          ref={anchorRef}
-                          aria-label="split button"
                           color={chipColor}
+                          onClick={() =>
+                            handleChangeStatus(status === "Approved" ? "Rejected" : "Approved", jobApplication.id)
+                          }
                         >
-                          <Button onClick={handleClick}>
-                            {selectedStatus || status}
-                          </Button>
-                          <Button
-                            size="small"
-                            aria-controls={
-                              open ? "split-button-menu" : undefined
-                            }
-                            aria-expanded={open ? "true" : undefined}
-                            aria-label="select merge strategy"
-                            aria-haspopup="menu"
-                            onClick={handleToggle}
-                          >
-                            <ArrowDropDownIcon />
-                          </Button>
-                        </ButtonGroup>
-                        <Popper
-                          open={open && selectedIndex === index}
-                          anchorEl={anchorRef.current}
-                          role={undefined}
-                          transition
-                          disablePortal
-                        >
-                          {({ TransitionProps, placement }) => (
-                            <Grow
-                              {...TransitionProps}
-                              style={{
-                                transformOrigin:
-                                  placement === "bottom"
-                                    ? "center top"
-                                    : "center bottom",
-                              }}
-                            >
-                              <Paper>
-                                <ClickAwayListener onClickAway={handleClose}>
-                                  <MenuList
-                                    id="split-button-menu"
-                                    autoFocusItem
-                                  >
-                                    {existingOptionsArray.map(
-                                      (option, index) => (
-                                        <MenuItem
-                                          key={option}
-                                          selected={index === selectedIndex}
-                                          onClick={(event) =>
-                                            handleMenuItemClick(event, index)
-                                          }
-                                        >
-                                          {option}
-                                        </MenuItem>
-                                      )
-                                    )}
-                                  </MenuList>
-                                </ClickAwayListener>
-                              </Paper>
-                            </Grow>
-                          )}
-                        </Popper>
+                          {status}
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
