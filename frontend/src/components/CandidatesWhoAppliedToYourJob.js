@@ -20,8 +20,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Link } from "react-router-dom";
 
-const options = ["Pending", "Approved", "Rejected"];
-
 const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
   const [jobApplications, setJobApplications] = useState([]);
   const [jobListings, setJobListings] = useState([]);
@@ -29,13 +27,14 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [open, setOpen] = useState(false); //https://mui.com/material-ui/react-button-group/#split-button
+  const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
   // Get employer id
   const employerId = localStorage.getItem("employer_id");
 
+  // Fetch all the job applications, job listings, job seekers, and user data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -90,6 +89,8 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
     fetchData();
   }, [baseUrl, employerId]);
 
+  // Update the application status
+
   const handleChangeStatus = async (status, applicationId) => {
     try {
       await axios.put(`${baseUrl}/api/jobapplications/${applicationId}/`, {
@@ -101,21 +102,67 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
           ? { ...application, application_status: status }
           : application
       );
+      console.log("updatedApplications", updatedApplications);
       setJobApplications(updatedApplications);
     } catch (error) {
       console.log(error);
     }
   };
 
-//===================================================
-//button to change status
-const handleClick = () => {
-    console.info(`You clicked ${options[selectedIndex]}`);
+  // Dropdown menu for changing the application status
+
+  //const options = ["Pending", "Approved", "Rejected"];
+  //https://mui.com/material-ui/react-button-group/
+  //beed options for the dropdown menu but will start with an empty array that we fill with the existing options
+  let options = [];
+
+  let existingOptions = new Set(
+    jobApplications.map((jobApplication) => jobApplication.application_status)
+  );
+
+  if (!existingOptions.has("Pending")) {
+    existingOptions.add("Pending");
+  }
+
+  if (!existingOptions.has("Approved")) {
+    existingOptions.add("Approved");
+  }
+
+  if (!existingOptions.has("Rejected")) {
+    existingOptions.add("Rejected");
+  }
+
+  options.forEach((option) => existingOptions.add(option));
+
+  const existingOptionsArray = Array.from(existingOptions);
+
+  options.forEach((option) => {
+    if (!existingOptions.includes(option)) {
+      existingOptions.push(option);
+    }
+  });
+
+
+
+  // Add missing options to the existingOptions set
+  options.forEach((option) => existingOptions.add(option));
+
+  options= Array.from(existingOptions); //go back to an array
+
+  console.log("options", options);
+
+  const handleClick = () => {
+    setOpen(true);
   };
 
   const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
     setOpen(false);
+    if (index >= 0) {
+      const selectedStatus = options[index];
+      const applicationId = jobApplications[index].id;
+      handleChangeStatus(selectedStatus, applicationId);
+    }
   };
 
   const handleToggle = () => {
@@ -126,11 +173,10 @@ const handleClick = () => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
   };
-  //================================================================
-  // Render
+
+  // Render the table
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -220,56 +266,70 @@ const handleClick = () => {
                         </Link>
                       </TableCell>
                       <TableCell align="center">
-                      <ButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
-        <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-        <Button
-          size="small"
-          aria-controls={open ? 'split-button-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-label="select merge strategy"
-          aria-haspopup="menu"
-          onClick={handleToggle}
-        >
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
-      <Popper
-        sx={{
-          zIndex: 1,
-        }}
-        open={open}
-        anchorEl={anchorRef.current}
-        role={undefined}
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === 'bottom' ? 'center top' : 'center bottom',
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList id="split-button-menu" autoFocusItem>
-                  {options.map((option, index) => (
-                    <MenuItem
-                      key={option}
-                      disabled={index === 2}
-                      selected={index === selectedIndex}
-                      onClick={(event) => handleMenuItemClick(event, index)}
-                    >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
+                        <ButtonGroup
+                          variant="contained"
+                          ref={anchorRef}
+                          aria-label="split button"
+                          color={chipColor}
+                        >
+                          <Button onClick={handleClick}>
+                            {selectedStatus || status}
+                          </Button>
+                          <Button
+                            size="small"
+                            aria-controls={
+                              open ? "split-button-menu" : undefined
+                            }
+                            aria-expanded={open ? "true" : undefined}
+                            aria-label="select merge strategy"
+                            aria-haspopup="menu"
+                            onClick={handleToggle}
+                          >
+                            <ArrowDropDownIcon />
+                          </Button>
+                        </ButtonGroup>
+                        <Popper
+                          open={open && selectedIndex === index}
+                          anchorEl={anchorRef.current}
+                          role={undefined}
+                          transition
+                          disablePortal
+                        >
+                          {({ TransitionProps, placement }) => (
+                            <Grow
+                              {...TransitionProps}
+                              style={{
+                                transformOrigin:
+                                  placement === "bottom"
+                                    ? "center top"
+                                    : "center bottom",
+                              }}
+                            >
+                              <Paper>
+                                <ClickAwayListener onClickAway={handleClose}>
+                                  <MenuList
+                                    id="split-button-menu"
+                                    autoFocusItem
+                                  >
+                                    {existingOptionsArray.map(
+                                      (option, index) => (
+                                        <MenuItem
+                                          key={option}
+                                          selected={index === selectedIndex}
+                                          onClick={(event) =>
+                                            handleMenuItemClick(event, index)
+                                          }
+                                        >
+                                          {option}
+                                        </MenuItem>
+                                      )
+                                    )}
+                                  </MenuList>
+                                </ClickAwayListener>
+                              </Paper>
+                            </Grow>
+                          )}
+                        </Popper>
                       </TableCell>
                     </TableRow>
                   );
