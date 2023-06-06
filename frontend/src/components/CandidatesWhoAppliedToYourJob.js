@@ -5,155 +5,179 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { Link } from "react-router-dom";
 
 const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
   const [jobApplications, setJobApplications] = useState([]);
   const [jobListings, setJobListings] = useState([]);
   const [jobSeekers, setJobSeekers] = useState([]);
   const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Get employer id
   const employerId = localStorage.getItem("employer_id");
 
-  // Fetch all the job listings
-  const fetchJobListings = async () => {
-    try {
-      const response = await axios.get(`${baseUrl}/api/joblistings`);
-      const data = response.data;
-      const filteredJobListings = data.filter(
-        (jobListing) => jobListing.employer === parseInt(employerId)
-      );
-      setJobListings(filteredJobListings);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  //fetch all the data using Promise.all (need job listings, job applications, job seekers, user) and filter them
   useEffect(() => {
-    fetchJobListings();
-  }, []);
+    const fetchData = async () => {
+      try {
+        const [
+          listingsResponse,
+          applicationsResponse,
+          seekersResponse,
+          userResponse,
+        ] = await Promise.all([
+          axios.get(`${baseUrl}/api/joblistings`),
+          axios.get(`${baseUrl}/api/jobapplications`),
+          axios.get(`${baseUrl}/api/jobseekers`),
+          axios.get(`${baseUrl}/api/user`),
+        ]);
 
-  console.log('job listing is', jobListings);
+        const listings = listingsResponse.data;
+        const applications = applicationsResponse.data;
+        const seekers = seekersResponse.data;
+        const userData = userResponse.data;
 
-  // Fetch job applications for each job listing
-  const fetchJobApplications = async () => {
-    try {
-      const response = await axios.get(`${baseUrl}/api/jobapplications`);
-      const data = response.data;
-      console.log(data);
-  
-      const filteredJobApplications = data.filter((jobApplication) =>
-        jobListings.some((jobListing) => jobListing.id === jobApplication.job_listing)
-      );
-      
-      setJobApplications(filteredJobApplications);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  
+        const filteredJobListings = listings.filter(
+          (jobListing) => jobListing.employer === parseInt(employerId)
+        );
+        setJobListings(filteredJobListings);
 
-    useEffect(() => {
-        fetchJobApplications();
-    }, [jobListings]);
+        const filteredJobApplications = applications.filter((jobApplication) =>
+          filteredJobListings.some(
+            (jobListing) => jobListing.id === jobApplication.job_listing
+          )
+        );
+        setJobApplications(filteredJobApplications);
 
-    console.log('job application is', jobApplications);
+        const filteredJobSeekers = seekers.filter((jobSeeker) =>
+          filteredJobApplications.some(
+            (jobApplication) => jobApplication.job_seeker === jobSeeker.id
+          )
+        );
+        setJobSeekers(filteredJobSeekers);
 
-    //fetch job seeker associated with each job application
-    const fetchJobSeekers = async () => {
-        try {
-            const response = await axios.get(`${baseUrl}/api/jobseekers`);
-            const data = response.data;
-            const filteredJobSeekers = data.filter((jobSeeker) =>
-                jobApplications.some((jobApplication) => jobApplication.job_seeker === jobSeeker.id)
-            );
-            setJobSeekers(filteredJobSeekers);
-        } catch (error) {
-            console.log(error);
-        }
+        const filteredUser = userData.filter((user) =>
+          filteredJobSeekers.some((jobSeeker) => jobSeeker.user === user.id)
+        );
+        setUser(filteredUser);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        setError(error.message);
+        setIsLoading(false);
+      }
     };
 
-    useEffect(() => {
-        fetchJobSeekers();
-    }, [jobApplications]);
+    fetchData();
+  }, [baseUrl, employerId]);
 
-    console.log('job seeker is', jobSeekers);
+  //===============================================================================================================
+  //render
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-    //fetch user associated with each job seeker
-    const fetchUser = async () => {
-        try {
-            const response = await axios.get(`${baseUrl}/api/user`);
-            const data = response.data;
-            const filteredUser = data.filter((user) =>
-                jobSeekers.some((jobSeeker) => jobSeeker.user === user.id)
-            );
-            setUser(filteredUser);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+  if (error) {
+    return <div>{error}</div>;
+  }
 
-    useEffect(() => {
-        fetchUser();
-    }, [jobSeekers]);
+  if (user.length === 0) {
+    return <div>No applications yet</div>;
+  }
 
-    console.log('user is', user);
+  return (
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead  style={{
+                          textTransform: "uppercase",
+                          fontWeight: "bold",
+                        }}>
+                <TableRow>
+                  <TableCell>Job Title</TableCell>
+                  <TableCell align="center">Name</TableCell>
 
+                  <TableCell align="center">Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {jobApplications.map((jobApplication) => {
+                  const jobSeeker = jobSeekers.find(
+                    (jobSeeker) => jobSeeker.id === jobApplication.job_seeker
+                  );
+                  const userMatch = user.find(
+                    (user) => user.id === jobSeeker.user
+                  );
+                  const jobListing = jobListings.find(
+                    (jobListing) => jobListing.id === jobApplication.job_listing
+                  );
 
+                  const status = jobApplication
+                  ? jobApplication.application_status
+                  : "Unknown Status";
+                let chipColor;
+        
+                if (status === "Pending") {
+                  chipColor = "warning";
+                } else if (status === "Approved") {
+                  chipColor = "success";
+                } else if (status === "Rejected") {
+                  chipColor = "error";
+                } else {
+                  chipColor = "default";
+                }
 
-    return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Job Title</TableCell>
-                      <TableCell align="right">Name</TableCell>
-                      <TableCell align="right">Bio</TableCell>
-                      <TableCell align="right">Status</TableCell>
+                  return (
+                    <TableRow key={jobApplication.id}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{
+                          textTransform: "uppercase",
+                          fontWeight: "bold",
+                        }}
+                      
+                      >
+                        <Link to={`/Job Listings/${jobListing.id}`} style={{textDecoration:"none"}}>
+
+                        {jobListing.jobtitle}
+                        </Link>
+                      </TableCell>
+                      <TableCell align="center">
+                      <Link to={`/find-candidates/${userMatch?.id}`} style={{textDecoration:"none"}}>
+                        {userMatch && userMatch.first_name}{" "}
+                        {userMatch && userMatch.last_name}
+                        </Link>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Chip
+                          label={jobApplication.application_status}
+                         
+                          color={chipColor}
+                        />
+                      </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {jobApplications.map((jobApplication) => {
-                      const jobSeeker = jobSeekers.find(
-                        (jobSeeker) => jobSeeker.id === jobApplication.job_seeker
-                      );
-                      const userMatch = user.find((user) => user.id === jobSeeker.user);
-                      const jobListing = jobListings.find(
-                        (jobListing) => jobListing.id === jobApplication.job_listing
-                      );
-    
-                      return (
-                        <TableRow key={jobApplication.id}>
-                          <TableCell component="th" scope="row" style={{textTransform:"uppercase", fontWeight:"bold"}}>
-                            {jobListing.jobtitle}
-                          </TableCell>
-                          <TableCell align="right">{userMatch && userMatch.first_name}{" "}{userMatch && userMatch.last_name}</TableCell>
-                          <TableCell align="right">{jobSeeker && jobSeeker.bio}</TableCell>
-                          <TableCell align="right">
-                            <Chip label={jobApplication.application_status} variant="outlined" />
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-          </Grid>
-        </Container>
-      );
-      
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Grid>
+    </Container>
+  );
 };
 
 export default CandidatesWhoAppliedToYourJob;

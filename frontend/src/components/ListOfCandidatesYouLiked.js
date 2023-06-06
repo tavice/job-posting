@@ -72,7 +72,7 @@ const ListOfCandidatesYouLiked = ({ baseUrl }) => {
           <Grid container spacing={2} key={candidate.id}>
             <Grid item xs={12} sm={6}>
               <Typography variant="h6" gutterBottom>
-                <Link to={`/find-candidates/${user?.id}`}>
+                <Link to={`/find-candidates/${user?.id}`} style={{textDecoration:"none"}}>
                   {user?.first_name} {user?.last_name}:
                 </Link>
               </Typography>
