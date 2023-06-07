@@ -5,7 +5,6 @@ import Grid from "@mui/material/Grid";
 
 import Button from "@mui/material/Button";
 
-
 import Paper from "@mui/material/Paper";
 
 import Table from "@mui/material/Table";
@@ -14,7 +13,13 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TextField from "@mui/material/TextField";
 import { Link } from "react-router-dom";
+
+import SendIcon from "@mui/icons-material/Send";
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
   const [jobApplications, setJobApplications] = useState([]);
@@ -23,7 +28,7 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [feedbacks, setFeedbacks] = useState({}); // State variable to store feedback for each job application
 
   // Get employer id
   const employerId = localStorage.getItem("employer_id");
@@ -88,22 +93,25 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
   const handleChangeStatus = async (status, applicationId) => {
     console.log(status, applicationId);
     try {
-        const applicationToUpdate = jobApplications.find(
-          (application) => application.id === applicationId
-        );
+      const applicationToUpdate = jobApplications.find(
+        (application) => application.id === applicationId
+      );
 
-        console.log('applicationToUpdaye', applicationToUpdate);
-    
-        await axios.put(`${baseUrl}/api/jobapplications/${applicationId}/`, {
-          application_status: status,
-          id: applicationId,
-          job_seeker: applicationToUpdate.job_seeker,
-          job_listing: applicationToUpdate.job_listing,
-        });
+      console.log("applicationToUpdate", applicationToUpdate);
 
-        console.log('applicationToUpdate.job_seeker', applicationToUpdate.job_seeker);
+      await axios.put(`${baseUrl}/api/jobapplications/${applicationId}/`, {
+        application_status: status,
+        id: applicationId,
+        job_seeker: applicationToUpdate.job_seeker,
+        job_listing: applicationToUpdate.job_listing,
+      });
+
+      console.log(
+        "applicationToUpdate.job_seeker",
+        applicationToUpdate.job_seeker
+      );
       // Update the jobApplications state to reflect the updated status
-      const updatedApplications = jobApplications.map((application) => 
+      const updatedApplications = jobApplications.map((application) =>
         application.id === applicationId // Find the application that was updated and return it
           ? { ...application, application_status: status } // Update the status
           : application
@@ -115,7 +123,41 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
     }
   };
 
-  //console.log('jobApplications is', jobApplications);
+  // Update the feedback for a specific job application
+
+  const handleChangeFeedback = async (feedback, applicationId) => {
+    console.log(feedback, applicationId);
+    try {
+      const applicationToUpdate = jobApplications.find(
+        (application) => application.id === applicationId
+      );
+
+      console.log("applicationToUpdate", applicationToUpdate);
+
+      await axios.put(`${baseUrl}/api/jobapplications/${applicationId}/`, {
+        application_feedback: feedback,
+        id: applicationId,
+        job_seeker: applicationToUpdate.job_seeker,
+        job_listing: applicationToUpdate.job_listing,
+      });
+
+      console.log(
+        "applicationToUpdate.job_seeker",
+        applicationToUpdate.job_seeker
+      );
+      // Update the jobApplications state to reflect the updated feedback
+      const updatedApplications = jobApplications.map((application) =>
+        application.id === applicationId
+          ? { ...application, application_feedback: feedback }
+          : application
+      );
+      setJobApplications(updatedApplications);
+      // Optionally redirect to another page
+      // window.location.href = "/Dashboard";
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // Render the table
 
@@ -205,14 +247,42 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
                         </Link>
                       </TableCell>
                       <TableCell align="center">
-                        {jobApplication.application_feedback}
+                        <TextField
+                          id={`feedback-${jobApplication.id}`} // Unique ID for each feedback input field
+                          variant="standard"
+                          label="Enter your feedback"
+                          value={feedbacks[jobApplication.id] || jobApplication.application_feedback}
+                          multiline
+                      
+                          onChange={(event) =>
+                            setFeedbacks((prevFeedbacks) => ({
+                              ...prevFeedbacks,
+                              [jobApplication.id]: event.target.value,
+                            }))
+                          } // Update the specific feedback using the job application ID as the key
+                        />
+                        <IconButton
+                          aria-label="submit-feedback"
+                          onClick={() =>
+                            handleChangeFeedback(
+                              feedbacks[jobApplication.id],
+                              jobApplication.id
+                            )
+                          } // Pass the feedback and applicationId to the handleChangeFeedback function
+                        >
+                          <AddIcon />
+                        </IconButton>
                       </TableCell>
+
                       <TableCell align="center">
                         <Button
                           variant="contained"
                           color={chipColor}
                           onClick={() =>
-                            handleChangeStatus(status === "Approved" ? "Rejected" : "Approved", jobApplication.id) // If the status is approved, change it to rejected, otherwise change it to approved
+                            handleChangeStatus(
+                              status === "Approved" ? "Rejected" : "Approved",
+                              jobApplication.id
+                            ) // If the status is approved, change it to rejected, otherwise change it to approved
                           }
                         >
                           {status}
