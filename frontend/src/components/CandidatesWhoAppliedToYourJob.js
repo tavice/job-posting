@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+
 import Button from "@mui/material/Button";
 
-import Grow from "@mui/material/Grow";
+
 import Paper from "@mui/material/Paper";
-import Popper from "@mui/material/Popper";
-import MenuItem from "@mui/material/MenuItem";
-import MenuList from "@mui/material/MenuList";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -25,9 +23,7 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
-  const [selectedIndex, setSelectedIndex] = useState(1);
+
 
   // Get employer id
   const employerId = localStorage.getItem("employer_id");
@@ -92,9 +88,20 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
   const handleChangeStatus = async (status, applicationId) => {
     console.log(status, applicationId);
     try {
-      await axios.put(`${baseUrl}/api/jobapplications/${applicationId}/`, {
-        application_status: status,
-      });
+        const applicationToUpdate = jobApplications.find(
+          (application) => application.id === applicationId
+        );
+
+        console.log('applicationToUpdaye', applicationToUpdate);
+    
+        await axios.put(`${baseUrl}/api/jobapplications/${applicationId}/`, {
+          application_status: status,
+          id: applicationId,
+          job_seeker: applicationToUpdate.job_seeker,
+          job_listing: applicationToUpdate.job_listing,
+        });
+
+        console.log('applicationToUpdate.job_seeker', applicationToUpdate.job_seeker);
       // Update the jobApplications state to reflect the updated status
       const updatedApplications = jobApplications.map((application) => 
         application.id === applicationId // Find the application that was updated and return it
@@ -102,6 +109,7 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
           : application
       );
       setJobApplications(updatedApplications);
+      window.location.href = "/Dashboard";
     } catch (error) {
       console.log(error);
     }

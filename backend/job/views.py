@@ -93,20 +93,24 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
         try:
             instance = self.get_object()
             print("Existing data:", instance)  # current status of the job application
-            print("Request data:", request.data)  #what is being sent in the request status of the application
+            print("Request data:", request.data)  # what is being sent in the request status of the application
             serializer = self.get_serializer(instance, data=request.data)
-            print("Serializer data:", serializer)  # check the serializer data
+            # print("Serializer data:", serializer)  # check the serializer data
             serializer.is_valid(raise_exception=True)
+            print("Validated data:", serializer.validated_data)  # check the validated data
+            print("Validation errors:", serializer.errors)
             serializer.save()
-            print("Updated data:", serializer.data)  # print the updated data
-            return Response(serializer.data)
+            print("Updated data:", serializer.validated_data)  # print the updated data
+            return Response(serializer.validated_data)
         except BadRequest:
             return JsonResponse({"error": "Invalid request"})
         except PermissionDenied:
             return JsonResponse({"error": "Permission denied"})
         except Exception as e:
+            print("Save error:", str(e))  # print any error during saving
             return JsonResponse({"error": str(e)})
-        return Response(serializer.data)
+        return Response(serializer.validated_data)
+
     
 
 # Payment views
