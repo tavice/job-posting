@@ -23,6 +23,8 @@ const JobListingDetail = ({ baseUrl }) => {
   const userId = localStorage.getItem("authenticated_user");
   const userType = localStorage.getItem("user_type");
   const jobSeekerId = localStorage.getItem("jobseeker_id");
+  const employerId = localStorage.getItem("employer_id");
+  console.log(employerId)
 
 
   //====================================================================================================
@@ -60,6 +62,8 @@ const JobListingDetail = ({ baseUrl }) => {
       fetchEmployer();
     }
   }, [jobListing.employer]);
+
+  console.log('employer id is ', employer.id)
 
   //====================================================================================================
   //fetch current user
@@ -123,6 +127,7 @@ const saveJob = async () => {
     );
 
     console.log(response.data);
+    
 
     navigate("/dashboard");
   } catch (error) {
@@ -130,6 +135,24 @@ const saveJob = async () => {
   
   }
 };
+
+
+//Delete job
+const deleteJob = async () => {
+  try {
+    const response = await axios.delete(
+      `${baseUrl}/api/joblistings/${id}/`
+ 
+    );
+
+    console.log(response.data);
+    console.log('job deleted')  
+    navigate("/Home");
+  } catch (error) {
+    console.log(error);
+  
+  }
+}
   
 
 
@@ -197,23 +220,27 @@ const saveJob = async () => {
             <Button variant="contained" color="primary" href="/Job Listings" style={{marginTop:'20%'}}>
             <KeyboardReturnIcon/> Back to Job Listings
             </Button>
+            
             </Paper>
           </Grid>
-          ) : ( userType === "E" ? (
+          ) : ( (userType === "E" && parseInt(employerId) === employer.id) ? (
+          
             <Grid item xs={12} sm={3}>
             <Paper elevation={3} sx={{ p: 2 }} style={{display:"flex", flexDirection:"column", padding:20}}>
             <Typography variant="h6" style={{color:"black", marginTop:'20%'}}>Hey {currentUser.first_name} !</Typography>
             <Button variant="contained" color="success" style={{marginTop:'20%', padding: '10px 20px'}} href={`/joblistings/${id}/edit`}>
             <AutoAwesomeIcon style={{ fontSize: 20, marginRight: 20 }}/> Edit this job !
             </Button>
-            <Button variant="contained" color="secondary" href="/joblistings" style={{marginTop:'20%'}}>
+            <Button variant="contained" color="secondary" href="/joblistings" style={{marginTop:'20%'}} onClick={deleteJob}>
               <DeleteIcon/> Delete this job !
             </Button>
             <Button variant="contained" color="primary" href="/Job Listings" style={{marginTop:'20%'}}>
             <KeyboardReturnIcon/>  Back to Job Listings  
             </Button>
+            
             </Paper>
           </Grid>
+          
           ) : (
             <Grid item xs={12} sm={3}>
             <Paper elevation={3} sx={{ p: 2 }} style={{display:"flex", flexDirection:"column", padding:20}}>
@@ -221,6 +248,9 @@ const saveJob = async () => {
             <Button color="primary" href="/login" style={{marginTop:'20%'}}>
               Please login  !
             </Button>
+            {console.log("no content specific is shown")}
+            {console.log('employer id is ', employer.id)}
+            {console.log('employerId', employerId)}
            </Paper> 
           </Grid>
 
