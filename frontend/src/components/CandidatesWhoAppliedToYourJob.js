@@ -90,14 +90,15 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
   // Update the application status
 
   const handleChangeStatus = async (status, applicationId) => {
+    console.log(status, applicationId);
     try {
       await axios.put(`${baseUrl}/api/jobapplications/${applicationId}/`, {
         application_status: status,
       });
       // Update the jobApplications state to reflect the updated status
-      const updatedApplications = jobApplications.map((application) =>
-        application.id === applicationId
-          ? { ...application, application_status: status }
+      const updatedApplications = jobApplications.map((application) => 
+        application.id === applicationId // Find the application that was updated and return it
+          ? { ...application, application_status: status } // Update the status
           : application
       );
       setJobApplications(updatedApplications);
@@ -105,6 +106,8 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
       console.log(error);
     }
   };
+
+  //console.log('jobApplications is', jobApplications);
 
   // Render the table
 
@@ -201,7 +204,7 @@ const CandidatesWhoAppliedToYourJob = ({ baseUrl }) => {
                           variant="contained"
                           color={chipColor}
                           onClick={() =>
-                            handleChangeStatus(status === "Approved" ? "Rejected" : "Approved", jobApplication.id)
+                            handleChangeStatus(status === "Approved" ? "Rejected" : "Approved", jobApplication.id) // If the status is approved, change it to rejected, otherwise change it to approved
                           }
                         >
                           {status}

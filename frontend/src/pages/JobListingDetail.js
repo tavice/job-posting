@@ -81,7 +81,7 @@ const JobListingDetail = ({ baseUrl }) => {
     fetchCurrentUser();
   }, [userId]);
 
-  console.log(currentUser);
+  //console.log(currentUser);
 
 
  

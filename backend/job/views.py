@@ -90,16 +90,24 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = JobApplicationSerializer
 
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        print("Serializer validated data:", serializer.validated_data)  # Debugging print statement
-        print("Request data:", request.data)  # Debugging print statement
-        print("Errors:", serializer.errors)  # Debugging print statement
-        self.perform_update(serializer)
+        try:
+            instance = self.get_object()
+            print("Existing data:", instance)  # current status of the job application
+            print("Request data:", request.data)  #what is being sent in the request status of the application
+            serializer = self.get_serializer(instance, data=request.data)
+            print("Serializer data:", serializer)  # check the serializer data
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            print("Updated data:", serializer.data)  # print the updated data
+            return Response(serializer.data)
+        except BadRequest:
+            return JsonResponse({"error": "Invalid request"})
+        except PermissionDenied:
+            return JsonResponse({"error": "Permission denied"})
+        except Exception as e:
+            return JsonResponse({"error": str(e)})
         return Response(serializer.data)
-
+    
 
 # Payment views
 class PaymentViewSet(viewsets.ModelViewSet):
