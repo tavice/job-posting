@@ -56,7 +56,7 @@ const UpdateUserForm = ({ baseUrl }) => {
       console.log('data is ', data);
       localStorage.setItem('authenticated_user', data.id);
       localStorage.setItem('user_type', data.user_type);
-      window.location.reload();
+      window.href = '/Home';
     } catch (error) {
       console.log(error);
       setErrorMessage(error.message);

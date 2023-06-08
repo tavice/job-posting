@@ -18,6 +18,8 @@ const Profile = ({ baseUrl }) => {
   const [currentUser, setCurrentUser] = useState({});
   const [jobSeeker, setJobSeeker] = useState({});
   const [employer, setEmployer] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   //=======================================================//
   //Fetch the current user the user id in the database matches the authenticated_user  id saved in local storage when logged
@@ -48,13 +50,30 @@ const Profile = ({ baseUrl }) => {
         } else {
           console.log("no employer found");
         }
+
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setError(error.message);
+        setIsLoading(false);
       }
     };
 
     fetchUserData();
   }, []);
+
+  //=======================================================//
+  //Delete user
+
+  const deleteUser = async () => {
+    try {
+      await axios.delete(`${baseUrl}/api/user/${currentUser.id}`);
+      localStorage.clear();
+      window.location.href = "/";
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //=======================================================//
   //Style for the list
@@ -65,6 +84,14 @@ const Profile = ({ baseUrl }) => {
 
   //=======================================================//
   //render//
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>{error}</div>;
+  }
+
 
   return (
     <Box style={{ textAlign: "left" }}>
@@ -87,7 +114,7 @@ const Profile = ({ baseUrl }) => {
           <Button component={Link} to="/update-user">
             Update Profile
           </Button>
-          <Button component={Link} to="/delete-user">
+          <Button component={Link} onClick={deleteUser}>
             Delete Profile
           </Button>
 

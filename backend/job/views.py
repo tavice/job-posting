@@ -86,6 +86,20 @@ class UserViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print("Save error:", str(e))
 
+    #delete user
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            print("Existing data:", instance)  # current status of the job application
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except BadRequest:
+            return JsonResponse({"error": "Invalid request"})
+        except PermissionDenied:
+            return JsonResponse({"error": "Permission denied"})
+        except Exception as e:
+            print("Save error:", str(e))        
+
 
 # Employer views
 class EmployerViewSet(viewsets.ModelViewSet):
