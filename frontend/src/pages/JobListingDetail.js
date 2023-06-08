@@ -228,10 +228,10 @@ const deleteJob = async () => {
             <Grid item xs={12} sm={3}>
             <Paper elevation={3} sx={{ p: 2 }} style={{display:"flex", flexDirection:"column", padding:20}}>
             <Typography variant="h6" style={{color:"black", marginTop:'20%'}}>Hey {currentUser.first_name} !</Typography>
-            <Button variant="contained" color="success" style={{marginTop:'20%', padding: '10px 20px'}} href={`/joblistings/${id}/edit`}>
+            <Button variant="contained" color="success" style={{marginTop:'20%', padding: '10px 20px'}} href={`update-job-offer/${id}`}>
             <AutoAwesomeIcon style={{ fontSize: 20, marginRight: 20 }}/> Edit this job !
             </Button>
-            <Button variant="contained" color="secondary" href="/joblistings" style={{marginTop:'20%'}} onClick={deleteJob}>
+            <Button variant="contained" color="secondary"  style={{marginTop:'20%'}} onClick={deleteJob}>
               <DeleteIcon/> Delete this job !
             </Button>
             <Button variant="contained" color="primary" href="/Job Listings" style={{marginTop:'20%'}}>
