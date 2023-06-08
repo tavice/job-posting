@@ -47,7 +47,7 @@ urlpatterns = [
     path('api/login/', csrf_exempt(views.login_view), name='login_view'),
     path('api/logout/', csrf_exempt(views.logout_view), name='logout_view'),
     path('api/register/', csrf_exempt(views.register_view), name='register_view'),
-    path('api/update/<int:pk>/', csrf_exempt(views.update_user), name='update_view'), #STILL NEED TO WORK ON THAT
+    #path('api/update/<int:pk>/', csrf_exempt(views.update_user), name='update_view'), #STILL NEED TO WORK ON THAT
     #path('api/delete/<int:pk>/', csrf_exempt(views.delete_user), name='delete_view'), #STILL NEED TO WORK ON THAT 
     path('generator/', include('generator.urls')),
     path('api/apply-for-job/', csrf_exempt(views.apply_for_job_view), name='apply_for_job'),

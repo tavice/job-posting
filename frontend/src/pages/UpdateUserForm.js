@@ -9,13 +9,14 @@ const UpdateUserForm = ({ baseUrl }) => {
   const userId = localStorage.getItem('authenticated_user');
   console.log('user id is ', userId);
 
-  
-
   //================================================================================================//
   // Constants to perform the fetch
   const [user, setUser] = useState({});
   const [username, setUsername] = useState('');
   const [updatedPassword, setUpdatedPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   // Fetch the user
@@ -40,10 +41,16 @@ const UpdateUserForm = ({ baseUrl }) => {
     e.preventDefault();
     console.log('username is ', username);
     console.log('password is ', updatedPassword);
+    console.log('email is ', email);
+    console.log('first name is ', firstName);
+    console.log('last name is ', lastName);
     try {
-      const response = await axios.put(`${baseUrl}/api/update/${userId}/`, {
+      const response = await axios.put(`${baseUrl}/api/user/${userId}/`, {
         username: username,
         password: updatedPassword,
+        email: email,
+        first_name: firstName,
+        last_name: lastName,
       });
       const data = response.data;
       console.log('data is ', data);
@@ -55,8 +62,6 @@ const UpdateUserForm = ({ baseUrl }) => {
       setErrorMessage(error.message);
     }
   };
-  
-  
 
   return (
     <div style={{ padding: 20 }}>
@@ -92,6 +97,37 @@ const UpdateUserForm = ({ baseUrl }) => {
           variant="standard"
           style={{ marginBottom: 20, width: 200 }}
           onChange={(event) => setUpdatedPassword(event.target.value)}
+        />
+
+        <TextField
+          label="Email"
+          type="email"
+          name="email"
+          value={email}
+          variant="standard"
+          style={{ marginBottom: 20, width: 200 }}
+          onChange={(event) => setEmail(event.target.value)}
+          required
+        />
+
+        <TextField
+          label="First Name"
+          type="text"
+          name="first_name"
+          value={firstName}
+          variant="standard"
+          style={{ marginBottom: 20, width: 200 }}
+          onChange={(event) => setFirstName(event.target.value)}
+        />
+
+        <TextField
+          label="Last Name"
+          type="text"
+          name="last_name"
+          value={lastName}
+          variant="standard"
+          style={{ marginBottom: 20, width: 200 }}
+          onChange={(event) => setLastName(event.target.value)}
         />
 
         <Button type="submit">Update Profile</Button>

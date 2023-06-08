@@ -65,6 +65,27 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    #update user
+    def update(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            print("Existing data:", instance)  # current status of the job application
+            print("Request data:", request.data)  # what is being sent in the request status of the application
+            serializer = self.get_serializer(instance, data=request.data)
+            # print("Serializer data:", serializer)  # check the serializer data
+            serializer.is_valid(raise_exception=True)
+            print("Validated data:", serializer.validated_data)  # check the validated data
+            print("Validation errors:", serializer.errors)
+            serializer.save()
+            print("Updated data:", serializer.validated_data)  # print the updated data
+            return Response(serializer.validated_data)
+        except BadRequest:
+            return JsonResponse({"error": "Invalid request"})
+        except PermissionDenied:
+            return JsonResponse({"error": "Permission denied"})
+        except Exception as e:
+            print("Save error:", str(e))
+
 
 # Employer views
 class EmployerViewSet(viewsets.ModelViewSet):
@@ -324,33 +345,33 @@ def register_view(request):
 
 # ===================================================================================================
 # Update User
-@csrf_protect
-@api_view(["PUT"])
-def update_user(request, pk):
-    print("request user is ", request.user)
-    print("pk is", pk)
-    # Retrieve the user from the database
-    try:
-        user = User.objects.get(pk=pk)
-    except User.DoesNotExist:
-        return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+# @csrf_protect
+# @api_view(["PUT"])
+# def update_user(request, pk):
+#     print("request user is ", request.user)
+#     print("pk is", pk)
+#     # Retrieve the user from the database
+#     try:
+#         user = User.objects.get(pk=pk)
+#     except User.DoesNotExist:
+#         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Check if the user is the same as the authenticated user
-    if request.user != user:
-        return Response(
-            {"error": "You don't have permission to edit this user."},
-            status=status.HTTP_403_FORBIDDEN,
-        )
+#     # Check if the user is the same as the authenticated user
+#     if request.user != user:
+#         return Response(
+#             {"error": "You don't have permission to edit this user."},
+#             status=status.HTTP_403_FORBIDDEN,
+#         )
 
-    # Create an instance of the UserUpdateSerializer with the user and request.data
-    serializer = UserUpdateSerializer(user, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(
-            {"message": "User updated successfully."}, status=status.HTTP_200_OK
-        )
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     # Create an instance of the UserUpdateSerializer with the user and request.data
+#     serializer = UserUpdateSerializer(user, data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(
+#             {"message": "User updated successfully."}, status=status.HTTP_200_OK
+#         )
+#     else:
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # ===================================================================================================
